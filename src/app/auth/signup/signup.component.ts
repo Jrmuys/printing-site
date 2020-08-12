@@ -26,6 +26,7 @@ export class SignupComponent implements OnInit {
       email: form.value.email,
       password: form.value.password,
     };
+    console.log(user);
     this.authService.createUser(user).subscribe(() => {
       this.router.navigate(['/']);
     });
