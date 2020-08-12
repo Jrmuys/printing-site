@@ -1,0 +1,66 @@
+<div class="page-wrapper">
+  <mat-card class="login-card">
+    <form
+      (submit)="onSignup(SignupForm)"
+      #SignupForm="ngForm"
+      *ngIf="!isLoading"
+    >
+      <mat-form-field>
+        <input
+          matInput
+          name="fullName"
+          ngModel
+          type="name"
+          placeholder="Full Name"
+          #nameInput="ngModel"
+          required
+        />
+        <mat-error *ngIf="emailInput.invalid"
+          >Please enter a valid email.</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          name="email"
+          ngModel
+          type="email"
+          placeholder="Email"
+          #emailInput="ngModel"
+          required
+          email
+        />
+        <mat-error *ngIf="emailInput.invalid"
+          >Please enter a valid email.</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          name="password"
+          ngModel
+          type="password"
+          matInput
+          placeholder="Password"
+          #passwordInput="ngModel"
+          required
+        />
+        <mat-error *ngIf="">Please enter a valid password.</mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        *ngIf="!isLoading"
+        [disabled]="!SignupForm.valid"
+      >
+        Signup
+      </button>
+      <span style="margin-left: 8px;"
+        >Already have an account? <a [routerLink]="['/login']">login</a> here
+      </span>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+    </form>
+  </mat-card>
+</div>
