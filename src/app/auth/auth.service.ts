@@ -34,17 +34,6 @@ export class AuthService {
   }
 
   createUser(user: User) {
-    // const password = user.password;
-    // const email = user.email;
-    // const fullname = user.fullname;
-    // const authData: AuthData = { email: email, password: password };
-    // // this.http
-    // //   .post('http://localhost:3000/api/user/signup', authData)
-    // //   .subscribe((response) => {
-    // //     console.log(response);
-    // //   });
-    // this.setUser(user);
-
     return this.httpClient.post<User>(`${this.apiUrl}register`, user).pipe(
       switchMap((savedUser) => {
         this.setUser(savedUser as User);
@@ -61,6 +50,19 @@ export class AuthService {
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
     this.router.navigate(['/']);
+
+    return this.httpClient.post<User>(`${this.apiUrl}login`, authData).pipe(
+      switchMap((foundUser) => {
+        this.setUser(foundUser);
+        console.log(`user found`);
+        return of(foundUser);
+      }),
+      catchError((err) => {
+        console.log(' User not found! ');
+        return throwError(`User not found! Please try again`);
+      })
+    );
+
     // this.http
     //   .post<{ token: string; expiresIn: number }>(
     //     'http://localhost:3000/api/user/login',

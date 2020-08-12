@@ -28,6 +28,7 @@
           required
         />
         <mat-error *ngIf="">Please enter a valid password.</mat-error>
+        <mat-error *ngIf="error">{{ error }} </mat-error>
       </mat-form-field>
       <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">
         Login
