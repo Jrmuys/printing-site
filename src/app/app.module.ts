@@ -1,4 +1,8 @@
-import { HttpClient, HttpHandler } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHandler,
+  HttpClientModule,
+} from '@angular/common/http';
 import { ViewerEngineComponent } from './viewer-engine/viewer-engine.component';
 import { StlModelViewerModule } from 'angular-stl-model-viewer';
 import { BrowserModule } from '@angular/platform-browser';
@@ -53,6 +57,7 @@ import { CartComponent } from './cart/cart.component';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

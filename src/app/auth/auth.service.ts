@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { User } from './user.model';
+import { Subject, of, throwError } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
+import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 
 @Injectable({ providedIn: 'root' })
@@ -12,8 +13,9 @@ export class AuthService {
   private token: string;
   private tokenTimer: any;
   private userListener$ = new Subject<User>();
+  private apiUrl = '/api/auth/';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private httpClient: HttpClient) {}
   // private http: HttpClient,
   getToken() {
     return this.token;
@@ -32,17 +34,28 @@ export class AuthService {
   }
 
   createUser(user: User) {
-    const password = user.password;
-    const email = user.email;
-    const fullname = user.fullname;
-    const authData: AuthData = { email: email, password: password };
-    // this.http
-    //   .post('http://localhost:3000/api/user/signup', authData)
-    //   .subscribe((response) => {
-    //     console.log(response);
-    //   });
-    this.setUser(user);
-    this.router.navigate(['/']);
+    // const password = user.password;
+    // const email = user.email;
+    // const fullname = user.fullname;
+    // const authData: AuthData = { email: email, password: password };
+    // // this.http
+    // //   .post('http://localhost:3000/api/user/signup', authData)
+    // //   .subscribe((response) => {
+    // //     console.log(response);
+    // //   });
+    // this.setUser(user);
+
+    return this.httpClient.post<User>(`${this.apiUrl}register`, user).pipe(
+      switchMap((savedUser) => {
+        this.setUser(savedUser as User);
+        console.log(`user registered successfully`, savedUser);
+        return of(savedUser);
+      }),
+      catchError((err) => {
+        console.log(`server error occoured`, err);
+        return throwError(`Registration failed, please contact admin`);
+      })
+    );
   }
 
   login(email: string, password: string) {

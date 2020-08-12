@@ -61,7 +61,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "printing-site:build"
+            "browserTarget": "printing-site:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {

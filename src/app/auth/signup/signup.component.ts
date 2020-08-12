@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { User } from './../user.model';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
@@ -12,7 +13,7 @@ export class SignupComponent implements OnInit {
   isLoading = false;
   validForm = false;
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
   onSignup(form: NgForm) {
     if (form.invalid) {
@@ -25,11 +26,9 @@ export class SignupComponent implements OnInit {
       email: form.value.email,
       password: form.value.password,
     };
-
-    user.fullname = form.value.fullname;
-    user.password = form.value.password;
-    user.email = form.value.email;
-    this.authService.createUser(user);
+    this.authService.createUser(user).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   ngOnInit(): void {}
