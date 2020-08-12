@@ -29,5 +29,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Set .env file
 
 Copy example .env file:
+
 `cp .env.sample .env`
+
 Change the .env to suit needs.
