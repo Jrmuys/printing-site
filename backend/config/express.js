@@ -16,7 +16,7 @@ if (config.env === "development") {
 }
 
 // get dist folder
-const distDir = path.join(__dirname, "../../dist");
+const distDir = path.join(__dirname, "../../dist/printing-site");
 
 // use dist folder as hosting folder by express
 app.use(express.static(distDir));

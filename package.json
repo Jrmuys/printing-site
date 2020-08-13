@@ -7,9 +7,11 @@
     "server:start": "node backend/app.js",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "npm run build -- --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "debug": "nodemon --nolazy --inspect-brk=5252 backend"
   },
   "private": true,
   "dependencies": {

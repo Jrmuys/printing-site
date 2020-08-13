@@ -46,8 +46,12 @@ export class ViewerEngineService implements OnDestroy {
     this.width = document
       .getElementById('engine')
       .getBoundingClientRect().width;
+
     this.height =
       document.getElementById('engine').getBoundingClientRect().width - 16;
+    if (this.height > 768) {
+      this.height = 768;
+    }
     console.log('Width: ' + this.width + ' Height: ' + this.height);
 
     this.renderer = new THREE.WebGLRenderer({
@@ -170,9 +174,12 @@ export class ViewerEngineService implements OnDestroy {
 
   public resize(): void {
     this.width =
-      document.getElementById('engine').getBoundingClientRect().width - 48;
+      document.getElementById('engine').getBoundingClientRect().width - 35;
     this.height =
       document.getElementById('engine').getBoundingClientRect().width - 16;
+    if (this.height > 650) {
+      this.height = 650;
+    }
     const width = window.innerWidth / 2;
     const height = window.innerHeight / 2;
 
