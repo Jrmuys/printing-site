@@ -1,18 +1,23 @@
+import { SignupComponent } from './components/signup/signup.component';
+import { LoginComponent } from './components/login/login.component';
+import { ViewerEngineComponent } from './components/viewer-engine/viewer-engine.component';
+import { HeaderComponent } from './components/header/header.component';
+import { AppComponent } from './app.component';
+import { MainComponent } from './components/main/main.component';
+import { CartComponent } from './components/cart/cart.component';
+
 import {
   HttpClient,
   HttpHandler,
   HttpClientModule,
 } from '@angular/common/http';
-import { ViewerEngineComponent } from './viewer-engine/viewer-engine.component';
 import { StlModelViewerModule } from 'angular-stl-model-viewer';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MainComponent } from './main/main.component';
-import { HeaderComponent } from './header/header.component';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -25,9 +30,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [

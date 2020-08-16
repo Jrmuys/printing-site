@@ -1,0 +1,45 @@
+<mat-toolbar color="primary">
+  <span>
+    <a routerLink="">3DPrint</a>
+  </span>
+  <span class="spacer"></span>
+  <ul>
+    <li>
+      <a mat-button routerLink="" routerLinkActive="mat-accent">Order</a>
+    </li>
+    <li *ngIf="!user">
+      <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
+    </li>
+    <li *ngIf="!user">
+      <a mat-button routerLink="/signup" routerLinkActive="mat-accent"
+        >Signup</a
+      >
+    </li>
+    <li>
+      <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Test</a>
+    </li>
+    <!-- <li *ngIf="user">
+      <button mat-button (click)="logout()">Logout</button>
+    </li> -->
+    <li>
+      <a mat-icon-button routerLink="/cart" routerLinkActive="mat-accent">
+        <mat-icon matBadge="2" matBadgeColor="accent">
+          shopping_cart
+        </mat-icon>
+      </a>
+    </li>
+    <li>
+      <div>
+        <a mat-button *ngIf="user" [matMenuTriggerFor]="menu">
+          <mat-icon>
+            account_circle
+          </mat-icon>
+          {{ user.fullname.split(" ")[0] }}
+        </a>
+        <mat-menu #menu="matMenu">
+          <button (click)="logout()" mat-menu-item>logout</button>
+        </mat-menu>
+      </div>
+    </li>
+  </ul>
+</mat-toolbar>

@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+<div class="w3-main">
+  <div class="w3-row-padding">
+    <div class="w3-col s12 m8 l9">
+      <mat-card id="engine" style="max-height: 50rem;">
+        <app-viewer-engine></app-viewer-engine>
+        <button mat-stroked-button type="button" (click)="filePicker.click()">
+          UPLOAD STL
+        </button>
+        <input
+          type="file"
+          style="visibility: hidden;"
+          #filePicker
+          (change)="onFilePicked($event)"
+        />
+      </mat-card>
+      <mat-card>
+        <label id="example-radio-group-label" style="display: flex;"
+          >Pick the units for your model</label
+        >
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [(ngModel)]="unit"
+          (ngModelChange)="onUnitSelect()"
+        >
+          <mat-radio-button
+            class="example-radio-button"
+            *ngFor="let unit of units"
+            [value]="unit"
+          >
+            {{ unit }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+    <div class="w3-col s12 m4 l3">
+      <mat-card>
+        <mat-card-title>Order</mat-card-title>
+        <mat-card-content
+          >Your model will be printed on a MarkForged 3D Printer using Onyx
+          filament.</mat-card-content
+        >
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <p style="text-align: left;">
+            Volume:
+            <span style="float: right; font-weight: bold;">
+              {{ modelVolume }} {{ modelUnit }}^3
+            </span>
+          </p>
+          <mat-divider [inset]="true"> </mat-divider>
+          <div id="textContainer">
+            <p style="text-align: left;">
+              Cost to print:
+
+              <span style="float: right; font-weight: bold; color: #cc2400;">
+                ${{ modelCost }}
+              </span>
+            </p>
+          </div>
+          <mat-divider [inset]="true"></mat-divider>
+          <div>
+            <button mat-flat-button color="accent" class="button">
+              <mat-icon>play_arrow </mat-icon>
+              ORDER NOW
+            </button>
+          </div>
+          <div>
+            <button mat-flat-button color="accent" class="button">
+              <mat-icon>
+                add_shopping_cart
+              </mat-icon>
+              ADD TO CART
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
