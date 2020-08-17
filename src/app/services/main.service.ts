@@ -8,6 +8,7 @@ let unitSubject = new Subject<string>();
 })
 export class MainService {
   public unitChange(unit: string) {
+    console.log('next unit...');
     unitSubject.next(unit);
   }
 

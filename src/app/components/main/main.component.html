@@ -22,23 +22,48 @@
         />
       </mat-card>
       <mat-card>
-        <label id="example-radio-group-label" style="display: flex;"
-          >Pick the units for your model</label
-        >
-        <mat-radio-group
-          aria-labelledby="example-radio-group-label"
-          class="example-radio-group"
-          [(ngModel)]="unit"
-          (ngModelChange)="onUnitSelect()"
-        >
-          <mat-radio-button
-            class="example-radio-button"
-            *ngFor="let unit of units"
-            [value]="unit"
-          >
-            {{ unit }}
-          </mat-radio-button>
-        </mat-radio-group>
+        <form [formGroup]="modelForm" (ngSubmit)="onFormSubmit()">
+          <div>
+            <mat-form-field>
+              <input
+                matInput
+                formControlName="title"
+                placeholder="Project Title"
+                required
+              />
+              <mat-error *ngIf="modelForm.get('title').invalid"></mat-error>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <label id="example-radio-group-label" style="display: flex;"
+              >Pick the units for your model</label
+            >
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label"
+              class="example-radio-group"
+              [(ngModel)]="unit"
+              (ngModelChange)="onUnitSelect()"
+              formControlName="units"
+            >
+              <mat-radio-button
+                class="example-radio-button"
+                *ngFor="let unit of units"
+                [value]="unit"
+              >
+                {{ unit }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div>
+            <mat-form-field>
+              <textarea
+                matInput
+                placeholder="Special instructions for printing"
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </form>
       </mat-card>
     </div>
     <div class="w3-col s12 m4 l3">

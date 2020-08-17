@@ -7,6 +7,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { FormGroup, FormControl } from '@angular/forms';
 
 export interface Tile {
   color: string;
@@ -35,9 +36,16 @@ export class MainComponent implements OnInit {
   modelVolume;
   modelUnit;
   fileUpload: ElementRef;
+  modelForm = new FormGroup({
+    title: new FormControl('title'),
+    units: new FormControl('mm'),
+    comments: new FormControl(),
+  });
 
   unit: string;
   units: string[] = ['mm', 'cm', 'in'];
+
+  onFormSubmit() {}
 
   onUnitSelect() {
     console.log('Units have changed to ' + this.unit + '!');
@@ -52,8 +60,10 @@ export class MainComponent implements OnInit {
     console.log('file:', file);
     this.uploadService.upload(name, file, this.unit).subscribe((result) => {
       console.log(typeof result);
-
-      this.engServ.createScene(this.rendererCanvas, result.filePath);
+      this.engServ.createScene(this.rendererCanvas, result.filePath, () => {
+        this.modelVolume =
+          Math.round(this.engServ.getVolumeService() * 100) / 100;
+      });
       this.engServ.animate();
     });
   }

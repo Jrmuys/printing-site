@@ -56,7 +56,8 @@ export class ViewerEngineService implements OnDestroy {
 
   public createScene(
     canvas: ElementRef<HTMLCanvasElement>,
-    filePath: string
+    filePath: string,
+    callback
   ): void {
     // The first step is to get the reference of the canvas element from our HTML document
     console.log('createScene... \ncanvas:', canvas);
@@ -98,7 +99,7 @@ export class ViewerEngineService implements OnDestroy {
       1000
     );
     this.resize();
-    this.camera.position.z = 40;
+    this.camera.position.z = 10;
     this.scene.add(this.camera);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -135,6 +136,7 @@ export class ViewerEngineService implements OnDestroy {
       this.model.rotation.y += 41;
       this.resize();
       this.loading = false;
+      callback();
     });
 
     // const geometry = new THREE.BoxGeometry(1, 2, 1);

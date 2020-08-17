@@ -1,24 +1,88 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic&subset=latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic&amp;subset=latin-ext");
+
 @import "~@angular/material/theming";
-@include mat-core();
-$my-app-primary: mat-palette($mat-teal, 500);
-$my-app-accent: mat-palette($mat-amber);
-$my-app-warn: mat-palette($mat-deep-orange);
+
+$general-typography: mat-typography-config(
+  $font-family: '"lato", sans-serif',
+  $body-2: mat-typography-level(14px, 24px, 600),
+);
+
+$secondary-typography: mat-typography-config(
+  $font-family: "' rubik', san-serif",
+);
+
+// Be sure that you only ever include this mixin once!
+@include mat-core($general-typography);
+
+$my-app-primary: mat-palette($mat-indigo);
+$my-app-accent: mat-palette($mat-amber, A200, A100, A400);
+$my-app-warn: mat-palette($mat-red);
+
 $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
 
 @include angular-material-theme($my-app-theme);
-.alternate-theme {
-  $alternate-primary: mat-palette($mat-light-blue);
-  $alternate-accent: mat-palette($mat-yellow, 400);
-  $alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
-  @include angular-material-theme($alternate-theme);
+
+.grey-alternate-theme {
+  $grey-alternate-primary: mat-palette($mat-blue-grey, 800);
+  $grey-alternate-accent: mat-palette($mat-yellow, 400);
+
+  $grey-alternate-theme: mat-dark-theme(
+    $grey-alternate-primary,
+    $grey-alternate-accent
+  );
+
+  // better use 'mat-app-background' class (if your app does not use side-nav)
+  // in 'body' element instead of defining color here.
+  // Both side-nav-container and 'mat-app-background' class gets 'color' defined
+  // according to theme color specified.
+  color: rgba(
+    150,
+    150,
+    150,
+    0.8
+  ); //No default color defined in themes apparently
+
+  @include mat-core-theme(
+    $grey-alternate-theme
+  ); //angular-material-theme() is an owerkill
+
+  @include mat-toolbar-typography($secondary-typography);
 }
 
-@import "~@angular/material/theming";
+// @import "~@angular/material/theming";
 
-// Define a custom typography config that overrides the font-family as well as the
-// `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
-  $font-family: "Roboto, monospace",
-  $headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(16px, 24px, 500),
-);
+// @import url("https://fonts.googleapis.com/css2?family=Lato&family=Rubik:ital,wght@1,900&display=swap");
+
+// // Define a custom typography config that overrides the font-family as well as the
+// // `headlines` and `body-1` levels.
+// $custom-typography: mat-typography-config(
+//   $font-family: "rubik, sans-serif",
+//   $headline: mat-typography-level(32px, 48px, 700),
+//   $body-1: mat-typography-level(16px, 24px, 500),
+// );
+// @include angular-material-typography($custom-typography);
+// @include mat-core($custom-typography);
+// $config: mat-typography-config();
+
+// @include mat-core();
+// $my-app-primary: mat-palette($mat-teal, 500);
+// $my-app-accent: mat-palette($mat-amber);
+// $my-app-warn: mat-palette($mat-deep-orange);
+// $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+// @include angular-material-theme($my-app-theme);
+// .alternate-theme {
+//   $alternate-primary: mat-palette($mat-light-blue);
+//   $alternate-accent: mat-palette($mat-yellow, 400);
+//   $alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
+//   @include angular-material-theme($alternate-theme);
+// }
+
+// // Define a custom typography config that overrides the font-family as well as the
+// // `headlines` and `body-1` levels.
+// // $custom-typography: mat-typography-config(
+// //   $font-family: "Roboto, monospace",
+// //   $headline: mat-typography-level(32px, 48px, 700),
+// //   $body-1: mat-typography-level(16px, 24px, 500),
+// // );
