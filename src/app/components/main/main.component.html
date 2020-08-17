@@ -3,7 +3,14 @@
   <div class="w3-row-padding">
     <div class="w3-col s12 m8 l9">
       <mat-card id="engine" style="max-height: 50rem;">
-        <app-viewer-engine></app-viewer-engine>
+        <div class="engine-wrapper" width="100%">
+          <canvas
+            #rendererCanvas
+            id="renderCanvas"
+            width="100%"
+            height="100px"
+          ></canvas>
+        </div>
         <button mat-stroked-button type="button" (click)="filePicker.click()">
           UPLOAD STL
         </button>

@@ -54,8 +54,12 @@ export class ViewerEngineService implements OnDestroy {
     return this.getVolume(this.geometry);
   }
 
-  public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
+  public createScene(
+    canvas: ElementRef<HTMLCanvasElement>,
+    filePath: string
+  ): void {
     // The first step is to get the reference of the canvas element from our HTML document
+    console.log('createScene... \ncanvas:', canvas);
     this.canvas = canvas.nativeElement;
     console.log('Testing loading STL:');
     this.testLoadSTL('./assets/peter.stl').then((result) => {
@@ -100,7 +104,7 @@ export class ViewerEngineService implements OnDestroy {
 
     // soft white light
     this.light = new THREE.AmbientLight(0x404040);
-    this.light.position.z = 15;
+    this.light.position.z = 1;
     this.scene.add(this.light);
     this.scene.add(new THREE.HemisphereLight(0xffffff, 1.0));
 
@@ -108,14 +112,14 @@ export class ViewerEngineService implements OnDestroy {
 
     this.loader = new STLLoader();
     this.loading = true;
-    this.loader.load('./assets/Cactus1.stl', (geometry) => {
+    this.loader.load(filePath, (geometry) => {
       var material = new THREE.MeshPhongMaterial({
         color: 0xaaaaaa,
         specular: 50,
         shininess: 50,
       });
       console.log('Test');
-      geometry.scale(1, 1, 1);
+      geometry.scale(0.1, 0.1, 0.1);
       this.geometry = geometry;
       this.material = material;
       console.log('Volume: ' + Math.round(this.getVolume(this.geometry)));

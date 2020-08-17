@@ -61,7 +61,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatInputModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [ViewerEngineComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
