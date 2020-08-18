@@ -32,6 +32,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
@@ -61,6 +62,7 @@ import { FooterComponent } from './components/footer/footer.component';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
+    MatProgressBarModule,
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,

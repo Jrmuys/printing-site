@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject, of, throwError } from 'rxjs';
+import { Subject, of, throwError, BehaviorSubject } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
 import { User } from '../models/user.model';
@@ -12,8 +12,9 @@ export class AuthService {
   private isAuthenticated = false;
   private token: string;
   private tokenTimer: any;
-  private userListener$ = new Subject<User>();
+  private userListener$ = new BehaviorSubject<User>(null);
   private apiUrl = '/api/auth/';
+  private;
 
   constructor(private router: Router, private httpClient: HttpClient) {}
   // private http: HttpClient,
@@ -27,6 +28,10 @@ export class AuthService {
 
   getUserListener() {
     return this.userListener$.asObservable();
+  }
+
+  getUser() {
+    return this.userListener$.getValue();
   }
 
   private setUser(user: User) {

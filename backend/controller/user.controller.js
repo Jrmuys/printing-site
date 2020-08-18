@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
+const { delete } = require("../routes");
 
 async function insert(user) {
   // make mongoose call to save user in db
@@ -26,7 +27,28 @@ async function getUserByEmailIdAndPassword(email, password) {
   }
 }
 
+async function getUserById(id) {
+  let user = await User.findOne({ id });
+  if (user) {
+    user = user.toObject();
+    delete user.hashedPassword;
+    return user;
+  } else {
+    return null;
+  }
+}
+
+async function getUserByEmail(email) {
+  let user = await User.findOne({ email });
+  if (user) {
+    return user;
+  } else {
+    return null;
+  }
+}
+
 module.exports = {
   insert,
   getUserByEmailIdAndPassword,
+  getUserByEmail,
 };

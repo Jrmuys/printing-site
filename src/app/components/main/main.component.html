@@ -3,6 +3,10 @@
   <div class="w3-row-padding">
     <div class="w3-col s12 m8 l9">
       <mat-card id="engine" style="max-height: 50rem;">
+        <mat-progress-bar
+          *ngIf="loading"
+          mode="indeterminate"
+        ></mat-progress-bar>
         <div class="engine-wrapper" width="100%">
           <canvas
             #rendererCanvas
@@ -51,7 +55,7 @@
                 ><p style="margin: 6px;">Units:</p>
                 <mat-radio-button
                   class="example-radio-button"
-                  [checked]="unit === 'mm'"
+                  [checked]="unit === model.units"
                   *ngFor="let unit of units"
                   [value]="unit"
                 >
@@ -74,6 +78,7 @@
                   name="units"
                   #quantity="ngModel"
                   [disabled]="!formDisplay"
+                  (input)="updateTotal()"
                   required
                 />
                 <mat-error *ngIf="!quantity.valid">Enter a quantity</mat-error>
@@ -101,6 +106,7 @@
                 color="accent"
                 type="submit"
                 [disabled]="!modelForm.form.valid"
+                (click)="updateModel()"
               >
                 UPDATE
               </button>
@@ -136,9 +142,19 @@
               </span>
             </p>
           </div>
+          <div id="textContainer">
+            <p style="text-align: left;">
+              Total price:
+
+              <span style="float: right; font-weight: bold; color: #cc2400;">
+                ${{ totalCost }}
+              </span>
+            </p>
+          </div>
           <mat-divider [inset]="true"></mat-divider>
           <div>
             <button
+              [disabled]="!formDisplay"
               mat-flat-button
               color="accent"
               class="button"
@@ -150,6 +166,7 @@
           </div>
           <div>
             <button
+              [disabled]="!formDisplay"
               mat-flat-button
               color="accent"
               class="button"

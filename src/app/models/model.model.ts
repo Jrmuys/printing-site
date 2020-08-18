@@ -1,3 +1,5 @@
+import { User } from './user.model';
+
 export interface Model {
   id: string;
   title: string;
@@ -5,4 +7,5 @@ export interface Model {
   units: string;
   comment: string;
   quantity: number;
+  user: User;
 }

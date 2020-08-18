@@ -176,7 +176,9 @@ export class ViewerEngineService implements OnDestroy {
       if (document.readyState !== 'loading') {
         this.render();
       } else {
+        this.loading = true;
         window.addEventListener('DOMContentLoaded', () => {
+          this.loading = false;
           this.render();
         });
       }
@@ -217,5 +219,12 @@ export class ViewerEngineService implements OnDestroy {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(this.width, this.height);
+  }
+
+  public cleanup() {
+    this.scene.remove(this.model);
+    // clean up
+    this.geometry.dispose();
+    this.material.dispose();
   }
 }
