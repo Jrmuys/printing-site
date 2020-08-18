@@ -1,3 +1,5 @@
+import { MainService } from './../../services/main.service';
+import { MainComponent } from './../main/main.component';
 import { User } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -13,7 +15,11 @@ export class HeaderComponent implements OnInit {
   user: User;
   userSub: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private mainService: MainService
+  ) {}
 
   logout() {
     this.authService.logout();
@@ -24,5 +30,9 @@ export class HeaderComponent implements OnInit {
     this.userSub = this.authService.getUserListener().subscribe((user) => {
       this.user = user;
     });
+  }
+
+  toggleSidenav() {
+    this.mainService.toggleSidnav();
   }
 }

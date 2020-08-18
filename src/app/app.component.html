@@ -1,7 +1,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<mat-sidenav-container fullscreen>
+  <mat-sidenav
+    mode="slide"
+    #sidenav
+    [(opened)]="sidenavToggle"
+    (openedChange)="updateToggle()"
+  >
+    <a
+      mat-menu-item
+      routerLink="/order"
+      routerLinkActive="highlight"
+      (click)="sidenav.toggle()"
+      >Order</a
+    >
 
-<app-header></app-header>
+    <a
+      mat-menu-item
+      routerLink="/login"
+      routerLinkActive="highlight"
+      (click)="sidenav.toggle()"
+    >
+      Login</a
+    >
 
-<main class="mat-typography page-wrapper">
-  <router-outlet class="mat-typography"></router-outlet>
-</main>
+    <a
+      mat-menu-item
+      routerLink="/signup"
+      routerLinkActive="highlight"
+      (click)="sidenav.toggle()"
+      >Signup</a
+    >
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header></app-header>
+    <p>Test</p>
+    <div style="height: 88vh;" class="main">
+      <router-outlet class="mat-typography"></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<app-footer></app-footer>

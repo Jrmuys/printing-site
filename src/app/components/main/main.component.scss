@@ -18,6 +18,7 @@ button {
   display: flex;
   flex-direction: row;
   margin: 15px 0;
+  justify-content: center;
 }
 
 .example-radio-button {
@@ -34,4 +35,12 @@ button {
 
 .mat-stroked-button {
   border: 1px solid #656565;
+}
+
+#example-radio-group-label {
+  text-align: center;
+}
+
+mat-radio-button {
+  margin: 8px;
 }

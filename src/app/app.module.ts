@@ -1,3 +1,4 @@
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { SignupComponent } from './components/signup/signup.component';
 import { LoginComponent } from './components/login/login.component';
 import { ViewerEngineComponent } from './components/viewer-engine/viewer-engine.component';
@@ -30,6 +31,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,7 @@ import { MatMenuModule } from '@angular/material/menu';
     LoginComponent,
     SignupComponent,
     CartComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +60,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatDividerModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSidenavModule,
+    FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,

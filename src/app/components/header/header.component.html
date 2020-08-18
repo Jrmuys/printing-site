@@ -1,26 +1,31 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="sticky" color="primary">
+  <button
+    class="show-on-small-screen"
+    mat-icon-button
+    (click)="toggleSidenav()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
   <span>
-    <a routerLink="" class="h1" style="font-size: xx-large;">3DPrint</a>
+    <a routerLink="" class="h1">ThrifyPrint</a>
   </span>
   <span class="spacer"></span>
   <ul>
-    <li>
-      <a mat-button routerLink="" routerLinkActive="mat-accent">Order</a>
+    <li class="hide-on-small-screen">
+      <a mat-button routerLink="/order" routerLinkActive="mat-accent">Order</a>
     </li>
-    <li *ngIf="!user">
+    <li *ngIf="!user" class="hide-on-small-screen">
       <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
     </li>
-    <li *ngIf="!user">
+    <li *ngIf="!user" class="hide-on-small-screen">
       <a mat-button routerLink="/signup" routerLinkActive="mat-accent"
         >Signup</a
       >
     </li>
-    <li>
-      <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Test</a>
-    </li>
+
     <!-- <li *ngIf="user">
-      <button mat-button (click)="logout()">Logout</button>
-    </li> -->
+              <button mat-button (click)="logout()">Logout</button>
+            </li> -->
     <li>
       <a mat-icon-button routerLink="/cart" routerLinkActive="mat-accent">
         <mat-icon matBadge="2" matBadgeColor="accent">

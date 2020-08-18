@@ -1,3 +1,4 @@
+import { Model } from './../../models/model.model';
 import { ViewerEngineComponent } from './../viewer-engine/viewer-engine.component';
 import { Router } from '@angular/router';
 import { UploadService } from './../../services/upload.service';
@@ -8,6 +9,9 @@ import { Subject } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormControl } from '@angular/forms';
+import { matMenuAnimations } from '@angular/material/menu';
+import { JsonPipe } from '@angular/common';
+import { stringify } from '@angular/compiler/src/util';
 
 export interface Tile {
   color: string;
@@ -32,24 +36,23 @@ export class MainComponent implements OnInit {
 
   @ViewChild('rendererCanvas', { static: true })
   public rendererCanvas: ElementRef<HTMLCanvasElement>;
+
+  formDisplay = false;
+
+  model: Model;
   modelCost;
   modelVolume;
   modelUnit;
   fileUpload: ElementRef;
-  modelForm = new FormGroup({
-    title: new FormControl('title'),
-    units: new FormControl('mm'),
-    comments: new FormControl(),
-  });
 
-  unit: string;
-  units: string[] = ['mm', 'cm', 'in'];
+  units = ['mm', 'cm', 'in'];
+  // formDisplay = true;
 
   onFormSubmit() {}
 
   onUnitSelect() {
-    console.log('Units have changed to ' + this.unit + '!');
-    this.mainService.unitChange(this.unit);
+    console.log('Units have changed to ' + this.model.units + '!');
+    this.mainService.unitChange(this.model.units);
   }
 
   onFilePicked(event: Event) {
@@ -58,14 +61,19 @@ export class MainComponent implements OnInit {
     const name = file.name.split('.')[0];
     var progress = 0;
     console.log('file:', file);
-    this.uploadService.upload(name, file, this.unit).subscribe((result) => {
-      console.log(typeof result);
-      this.engServ.createScene(this.rendererCanvas, result.filePath, () => {
-        this.modelVolume =
-          Math.round(this.engServ.getVolumeService() * 100) / 100;
+    this.uploadService
+      .upload(name, file, this.model.units)
+      .subscribe((result) => {
+        console.log(typeof result);
+        this.engServ.createScene(this.rendererCanvas, result.filePath, () => {
+          this.modelVolume =
+            Math.round(this.engServ.getVolumeService() * 100) / 100;
+          this.onUnitSelect();
+          this.model.title = result.title;
+          this.formDisplay = true;
+        });
+        this.engServ.animate();
       });
-      this.engServ.animate();
-    });
   }
 
   // .pipe(
@@ -83,13 +91,22 @@ export class MainComponent implements OnInit {
   // );
 
   ngOnInit(): void {
+    this.model = {
+      id: null,
+      title: null,
+      modelPath: null,
+      units: 'mm',
+      comment: null,
+      quantity: 1,
+    };
     var conversionFactor = 1;
     this.mainService.getUnitSubject().subscribe((data) => {
+      console.log('Switching units:' + data);
       this.modelUnit = data;
-      this.modelVolume =
-        Math.round(this.engServ.getVolumeService() * 100) / 100;
+      // this.modelVolume =
+      //   Math.round(this.engServ.getVolumeService() * 100) / 100;
 
-      switch (this.unit) {
+      switch (this.model.units) {
         case 'mm':
           conversionFactor = 1 / 2.54 / 100;
           break;
@@ -105,5 +122,6 @@ export class MainComponent implements OnInit {
       this.modelCost =
         Math.round(this.modelVolume * 5.323 * 100 * conversionFactor) / 100;
     });
+    this.onUnitSelect();
   }
 }

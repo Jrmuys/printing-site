@@ -1,19 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
-let unitSubject = new Subject<string>();
-
 @Injectable({
   providedIn: 'root',
 })
 export class MainService {
+  private unitSubject = new Subject<string>();
+
+  private toggleState = new Subject();
+  public toggleState$ = this.toggleState.asObservable();
+  private toggleVal = false;
+
   public unitChange(unit: string) {
-    console.log('next unit...');
-    unitSubject.next(unit);
+    console.log('next unit...', unit);
+    this.unitSubject.next(unit);
   }
 
   public getUnitSubject() {
-    return unitSubject.asObservable();
+    return this.unitSubject.asObservable();
+  }
+
+  public toggleSidnav() {
+    this.toggleVal = !this.toggleVal;
+    this.toggleState.next(this.toggleVal);
   }
 
   constructor() {}

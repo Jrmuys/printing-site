@@ -115,7 +115,7 @@ export class ViewerEngineService implements OnDestroy {
     this.loading = true;
     this.loader.load(filePath, (geometry) => {
       var material = new THREE.MeshPhongMaterial({
-        color: 0xaaaaaa,
+        color: 0x545454,
         specular: 50,
         shininess: 50,
       });
