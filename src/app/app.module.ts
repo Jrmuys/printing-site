@@ -1,3 +1,4 @@
+import { AuthHeaderInterceptorService } from './interceptors/auth-header-interceptor.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SignupComponent } from './components/signup/signup.component';
 import { LoginComponent } from './components/login/login.component';
@@ -11,6 +12,7 @@ import {
   HttpClient,
   HttpHandler,
   HttpClientModule,
+  HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { StlModelViewerModule } from 'angular-stl-model-viewer';
 import { BrowserModule } from '@angular/platform-browser';
@@ -69,7 +71,16 @@ import { FooterComponent } from './components/footer/footer.component';
     MatInputModule,
     HttpClientModule,
   ],
-  providers: [ViewerEngineComponent],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHeaderInterceptorService,
+      multi: true,
+    },
+    {
+      provide: ViewerEngineComponent,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

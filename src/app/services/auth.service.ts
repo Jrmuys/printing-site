@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject, of, throwError, BehaviorSubject } from 'rxjs';
+import { Subject, of, throwError, BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
 import { User } from '../models/user.model';
 import { AuthData } from '../models/auth-data.model';
+import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -90,6 +91,24 @@ export class AuthService {
     //       this.router.navigate(['/']);
     //     }
     //   });
+  }
+
+  findMe() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return EMPTY;
+    }
+    return this.httpClient.get<any>(`${this.apiUrl}findme`).pipe(
+      switchMap(({ user }) => {
+        this.setUser(user);
+        console.log(`User found`, user);
+        return of(user);
+      }),
+      catchError((err) => {
+        console.log(`Your login details could not be verified.`);
+        return throwError(`Your login details could not be verified.`);
+      })
+    );
   }
 
   autoAuthUser() {

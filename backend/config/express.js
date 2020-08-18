@@ -35,7 +35,7 @@ app.use(helmet());
 app.use(cors());
 
 // authenticate
-app.use(passport.initialize);
+app.use(passport.initialize());
 
 // api router
 app.use("/api/", routes);
