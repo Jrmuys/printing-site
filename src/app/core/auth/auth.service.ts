@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject, of, throwError, BehaviorSubject, EMPTY } from 'rxjs';
+import { of, throwError, BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
-import { User } from '../models/user.model';
-import { AuthData } from '../models/auth-data.model';
-import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
+import { User } from '../user.model';
+import { AuthData } from './auth-data.model';
 
 interface UserDto {
   user: User;
@@ -118,6 +117,7 @@ export class AuthService {
     if (!token) {
       return EMPTY;
     }
+    console.log(token);
     return this.httpClient.get<any>(`${this.apiUrl}findme`).pipe(
       switchMap(({ user }) => {
         this.setUser(user);
@@ -127,7 +127,7 @@ export class AuthService {
         return of(user);
       }),
       catchError((err) => {
-        console.log(`Your login details could not be verified.`);
+        console.log(`Your login details could not be verified.`, err);
         return throwError(`Your login details could not be verified.`);
       })
     );

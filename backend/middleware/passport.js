@@ -26,7 +26,7 @@ const localLogin = new LocalStrategy(
 
 const jwtLogin = new JwtStrategy(
   {
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("Bearer"),
     secretOrKey: config.jwtSecret,
   },
   async (payload, done) => {
@@ -42,4 +42,4 @@ const jwtLogin = new JwtStrategy(
   }
 );
 
-module.exports = passport.use(localLogin).use(jwtLogin);
+module.exports = passport.use(jwtLogin).use(localLogin);

@@ -14,7 +14,12 @@ router.post(
   passport.authenticate("local", { session: false }),
   login
 );
-router.get("/findme", passport.authenticate("jwt", { session: false }), login);
+router.get(
+  "/findme",
+  test,
+  passport.authenticate("jwt", { session: false }),
+  login
+);
 
 async function insert(req, res, next) {
   const savedUser = req.body;
@@ -24,15 +29,20 @@ async function insert(req, res, next) {
   next();
 }
 
-async function getUserByEmailIdAndPassword(req, res, next) {
-  const user = req.body;
-  console.log(`searching user for `, user);
+// async function getUserByEmailIdAndPassword(req, res, next) {
+//   const user = req.body;
+//   console.log(`searching user for `, user);
 
-  const savedUser = await userController.getUserByEmailIdAndPassword(
-    user.email,
-    user.password
-  );
-  req.user = savedUser;
+//   const savedUser = await userController.getUserByEmailIdAndPassword(
+//     user.email,
+//     user.password
+//   );
+//   req.user = savedUser;
+//   next();
+// }
+
+function test(req, res, next) {
+  console.log("test...");
   next();
 }
 

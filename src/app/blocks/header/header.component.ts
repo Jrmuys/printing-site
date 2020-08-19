@@ -1,10 +1,9 @@
-import { MainService } from './../../services/main.service';
-import { MainComponent } from './../main/main.component';
-import { User } from '../../models/user.model';
+import { MainService } from '../../core/main/main.service';
+import { User } from '../../core/user.model';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/core/auth/auth.service';
 
 @Component({
   selector: 'app-header',

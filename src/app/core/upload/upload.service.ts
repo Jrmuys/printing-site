@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
-import { User } from './../models/user.model';
-import { Model } from './../models/model.model';
+import { User } from '../user.model';
+import { Model } from '../model.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

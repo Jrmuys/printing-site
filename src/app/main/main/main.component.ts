@@ -1,10 +1,10 @@
-import { AuthService } from 'src/app/services/auth.service';
-import { Model } from './../../models/model.model';
+import { AuthService } from 'src/app/core/auth/auth.service';
+import { Model } from '../../core/model.model';
 import { ViewerEngineComponent } from './../viewer-engine/viewer-engine.component';
 import { Router } from '@angular/router';
-import { UploadService } from './../../services/upload.service';
-import { ViewerEngineService } from '../../services/viewer-engine.service';
-import { MainService } from '../../services/main.service';
+import { UploadService } from '@core/upload/upload.service';
+import { ViewerEngineService } from '@core/main/viewer-engine.service';
+import { MainService } from '../../core/main/main.service';
 import {
   Component,
   OnInit,

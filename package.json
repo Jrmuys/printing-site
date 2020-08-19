@@ -26,6 +26,7 @@
     "@angular/platform-browser": "~10.0.6",
     "@angular/platform-browser-dynamic": "~10.0.6",
     "@angular/router": "~10.0.6",
+    "angular-router-loader": "^0.8.5",
     "angular-stl-model-viewer": "^1.0.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

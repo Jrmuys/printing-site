@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ViewerEngineService } from '../../services/viewer-engine.service';
+import { ViewerEngineService } from '@core/main/viewer-engine.service';
 
 @Component({
   selector: 'app-viewer-engine',

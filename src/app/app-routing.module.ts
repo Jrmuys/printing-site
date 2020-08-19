@@ -1,26 +1,19 @@
+import { MainModule } from './main/main.module';
+import { AuthModule } from './auth/auth.module';
 import { CartComponent } from './components/cart/cart.component';
-import { SignupComponent } from './components/signup/signup.component';
-import { LoginComponent } from './components/login/login.component';
-import { MainComponent } from './components/main/main.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: '/order', pathMatch: 'full' },
-  { path: 'order', component: MainComponent },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'signup',
-    component: SignupComponent,
-  },
+  { path: 'order', loadChildren: () => MainModule },
+
   {
     path: 'cart',
     component: CartComponent,
   },
+  { path: 'auth', loadChildren: () => AuthModule },
 ];
 
 @NgModule({

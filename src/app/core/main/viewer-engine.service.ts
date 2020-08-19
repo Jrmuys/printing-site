@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { Injectable, OnDestroy, NgZone, ElementRef } from '@angular/core';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { BufferGeometry } from 'three';
 
 @Injectable({
   providedIn: 'root',

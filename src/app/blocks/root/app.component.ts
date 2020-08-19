@@ -1,6 +1,6 @@
-import { AuthService } from 'src/app/services/auth.service';
-import { User } from './models/user.model';
-import { MainService } from './services/main.service';
+import { AuthService } from 'src/app/core/auth/auth.service';
+import { User } from '../../core/user.model';
+import { MainService } from '../../core/main/main.service';
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
