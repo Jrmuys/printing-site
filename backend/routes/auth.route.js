@@ -1,13 +1,20 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 
+const config = require("../config/config");
 const userController = require("../controller/user.controller");
 const authController = require("../controller/auth.controller");
+const passport = require("../middleware/passport");
 
 const router = express.Router();
 
 router.post("/register", asyncHandler(insert), login);
-router.post("/login", asyncHandler(getUserByEmailIdAndPassword), login);
+router.post(
+  "/login",
+  passport.authenticate("local", { session: false }),
+  login
+);
+router.get("/findme", passport.authenticate("jwt", { session: false }), login);
 
 async function insert(req, res, next) {
   const savedUser = req.body;
@@ -30,9 +37,13 @@ async function getUserByEmailIdAndPassword(req, res, next) {
 }
 
 function login(req, res) {
+  const expiresIn = config.expiresIn;
+  console.log("Expires in : ", expiresIn);
   const user = req.user;
   const token = authController.generateToken(user);
-  res.json({ user, token });
+  console.log("User: ", user);
+  console.log("Token", token);
+  res.json({ user, token, expiresIn });
 }
 
 module.exports = router;

@@ -14,25 +14,31 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HeaderComponent implements OnInit {
   user: User;
   userSub: Subscription;
+  authSub: Subscription;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private mainService: MainService
-  ) {}
+  ) {
+    this.userSub = this.authService.getUserListener().subscribe((user) => {
+      this.user = user;
+    });
+    this.authSub = this.authService
+      .findMe()
+      .subscribe((user) => (this.user = user));
+  }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
   }
 
-  ngOnInit(): void {
-    this.userSub = this.authService.getUserListener().subscribe((user) => {
-      this.user = user;
-    });
-  }
+  ngOnInit(): void {}
 
   toggleSidenav() {
     this.mainService.toggleSidnav();
+    this.authSub.unsubscribe();
+    this.userSub.unsubscribe();
   }
 }

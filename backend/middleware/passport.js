@@ -11,7 +11,11 @@ const localLogin = new LocalStrategy(
     usernameField: "email",
   },
   async (email, password, done) => {
-    const user = userController.getUserByEmailIdAndPassword(email, password);
+    console.log("Local Login: ", email, password);
+    const user = await userController.getUserByEmailIdAndPassword(
+      email,
+      password
+    );
     return user
       ? done(null, user)
       : done(null, false, {
@@ -26,7 +30,10 @@ const jwtLogin = new JwtStrategy(
     secretOrKey: config.jwtSecret,
   },
   async (payload, done) => {
+    console.log("JWT Stratey", payload);
+
     const user = await userController.getUserById(payload._id);
+    console.log("Payload Strat: User: ", user);
     return user
       ? done(null, user)
       : done(null, false, {

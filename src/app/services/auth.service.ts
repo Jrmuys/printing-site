@@ -8,6 +8,12 @@ import { User } from '../models/user.model';
 import { AuthData } from '../models/auth-data.model';
 import { findReadVarNames } from '@angular/compiler/src/output/output_ast';
 
+interface UserDto {
+  user: User;
+  token: string;
+  expiresIn: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private isAuthenticated = false;
@@ -39,29 +45,43 @@ export class AuthService {
     this.userListener$.next(user);
   }
 
-  createUser(user: User) {
-    return this.httpClient.post<User>(`${this.apiUrl}register`, user).pipe(
-      switchMap((savedUser) => {
-        this.setUser(savedUser as User);
-        console.log(`user registered successfully`, savedUser);
-        return of(savedUser);
-      }),
-      catchError((err) => {
-        console.log(`server error occoured`, err);
-        return throwError(`Registration failed, please contact admin`);
-      })
-    );
+  createUser(userToSave: User) {
+    return this.httpClient
+      .post<UserDto>(`${this.apiUrl}register`, userToSave)
+      .pipe(
+        switchMap(({ user, token }) => {
+          this.setUser(user as User);
+          localStorage.setItem('token', token);
+          console.log(`user registered successfully`, user);
+          return of(user);
+        }),
+        catchError((err) => {
+          console.log(`server error occoured`, err);
+          return throwError(`Registration failed, please contact admin`);
+        })
+      );
   }
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
     this.router.navigate(['/']);
 
-    return this.httpClient.post<User>(`${this.apiUrl}login`, authData).pipe(
-      switchMap((foundUser) => {
-        this.setUser(foundUser);
+    return this.httpClient.post<UserDto>(`${this.apiUrl}login`, authData).pipe(
+      switchMap(({ user, token, expiresIn }) => {
+        this.setUser(user);
+        console.log('expires in from json: ', expiresIn);
+        const expiresInDuration = +expiresIn;
+        console.log('Expires duration: ', expiresInDuration);
+        this.setAuthTimer(expiresInDuration);
+        this.isAuthenticated = true;
+        const now = new Date();
+        const expirationDate = new Date(
+          now.getTime() + expiresInDuration * 1000
+        );
+        console.log(expirationDate);
+        this.saveAuthData(token, expirationDate);
         console.log(`user found`);
-        return of(foundUser);
+        return of(user);
       }),
       catchError((err) => {
         console.log(' User not found! ');
@@ -102,6 +122,8 @@ export class AuthService {
       switchMap(({ user }) => {
         this.setUser(user);
         console.log(`User found`, user);
+        this.autoAuthUser();
+
         return of(user);
       }),
       catchError((err) => {
