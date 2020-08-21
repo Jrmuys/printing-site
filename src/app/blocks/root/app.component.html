@@ -1,43 +1,58 @@
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<mat-sidenav-container fullscreen>
-  <mat-sidenav
-    mode="slide"
-    #sidenav
-    [(opened)]="sidenavToggle"
-    (openedChange)="updateToggle()"
-  >
-    <a
-      mat-menu-item
-      routerLink="/order"
-      routerLinkActive="highlight"
-      (click)="sidenav.toggle()"
-      >Order</a
-    >
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Optimal Internet Explorer compatibility -->
 
-    <a
-      mat-menu-item
-      routerLink="/auth"
-      routerLinkActive="highlight"
-      (click)="sidenav.toggle()"
+    <script
+      src="https://www.paypal.com/sdk/js?client-id=ASo29H6AXV4zhdJiJBNDjxp1VXECNJF2CFApAIloYin79pP9HjbHH85AS1adEcLy9hrEtEf4Qu5sORkL"
     >
-      Login</a
-    >
+      // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    </script>
+  </head>
+  <body>
+    <mat-sidenav-container fullscreen>
+      <mat-sidenav
+        mode="slide"
+        #sidenav
+        [(opened)]="sidenavToggle"
+        (openedChange)="updateToggle()"
+      >
+        <a
+          mat-menu-item
+          routerLink="/order"
+          routerLinkActive="highlight"
+          (click)="sidenav.toggle()"
+          >Order</a
+        >
 
-    <a
-      mat-menu-item
-      routerLink="/auth/signup"
-      routerLinkActive="highlight"
-      (click)="sidenav.toggle()"
-      >Signup</a
-    >
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <app-header></app-header>
-    <p>Test</p>
-    <div style="height: 88vh;" class="main">
-      <router-outlet class="mat-typography"></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        <a
+          mat-menu-item
+          routerLink="/auth"
+          routerLinkActive="highlight"
+          (click)="sidenav.toggle()"
+        >
+          Login</a
+        >
 
-<app-footer></app-footer>
+        <a
+          mat-menu-item
+          routerLink="/auth/signup"
+          routerLinkActive="highlight"
+          (click)="sidenav.toggle()"
+          >Signup</a
+        >
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <app-header></app-header>
+        <p>Test</p>
+        <div style="height: 88vh;" class="main">
+          <router-outlet class="mat-typography"></router-outlet>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+    <app-footer></app-footer>
+  </body>
+</html>

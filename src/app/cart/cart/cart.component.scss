@@ -1,12 +1,28 @@
 table {
   box-shadow: none;
   width: 100%;
+  // display: block;
 }
 
 mat-card {
-  margin: 16px;
+  // display: block;
+  // margin: 16px;
 }
 
 .delete-button {
-  width: 79.5 + 16 * 2;
+  margin: auto;
+  display: flex;
+  width: 80px;
+  justify-content: center;
+}
+
+ng-container {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.no-over-flow {
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
