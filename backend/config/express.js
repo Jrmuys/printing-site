@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/modelFiles", express.static(path.join("backend/modelFiles")));
+app.use("/api/images", express.static(path.join("backend/images")));
 
 // sercure app http
 app.use(helmet());

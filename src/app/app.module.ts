@@ -1,9 +1,9 @@
+import { CartModule } from './cart/cart.module';
 import { AuthHeaderInterceptorService } from './core/interceptors/auth-header-interceptor.service';
 import { MainModule } from './main/main.module';
 import { AppComponent } from './blocks/root/app.component';
 import { BlocksModule } from './blocks/blocks.module';
 import { SharedModule } from './shared/shared.module';
-import { CartComponent } from './components/cart/cart.component';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StlModelViewerModule } from 'angular-stl-model-viewer';
@@ -15,7 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [CartComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,6 +25,7 @@ import { CoreModule } from '@angular/flex-layout';
     BlocksModule,
     CoreModule,
     MainModule,
+    CartModule,
   ],
   providers: [
     {

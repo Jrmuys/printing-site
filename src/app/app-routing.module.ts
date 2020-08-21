@@ -1,6 +1,6 @@
+import { CartModule } from './cart/cart.module';
 import { MainModule } from './main/main.module';
 import { AuthModule } from './auth/auth.module';
-import { CartComponent } from './components/cart/cart.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -11,7 +11,7 @@ const routes: Routes = [
 
   {
     path: 'cart',
-    component: CartComponent,
+    loadChildren: () => CartModule,
   },
   { path: 'auth', loadChildren: () => AuthModule },
 ];

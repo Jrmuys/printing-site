@@ -22,6 +22,7 @@ export class SignupComponent implements OnInit {
     }
     this.isLoading = true;
     var user: User = {
+      _id: null,
       fullname: form.value.fullname,
       email: form.value.email,
       password: form.value.password,

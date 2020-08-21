@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Injectable, OnDestroy, NgZone, ElementRef } from '@angular/core';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +87,7 @@ export class ViewerEngineService implements OnDestroy {
       canvas: this.canvas,
       alpha: true, // transparent background
       antialias: true, // smooth edges
+      preserveDrawingBuffer: true,
     });
     this.renderer.setSize(this.width, this.height);
 
@@ -226,4 +228,32 @@ export class ViewerEngineService implements OnDestroy {
     this.geometry.dispose();
     this.material.dispose();
   }
+  public snapshot(): File {
+    return this.blobToFile(
+      this.convertDataUrlToBlob(this.renderer.domElement.toDataURL()),
+      'snapshot'
+    );
+  }
+  convertDataUrlToBlob(dataUrl): Blob {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  }
+  public blobToFile = (theBlob: Blob, fileName: string): File => {
+    var b: any = theBlob;
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+
+    //Cast to a File() type
+    return <File>theBlob;
+  };
 }

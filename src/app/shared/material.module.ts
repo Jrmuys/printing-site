@@ -12,6 +12,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatBadgeModule } from '@angular/material/badge';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
@@ -29,6 +33,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatGridListModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTableModule,
+    MatDialogModule,
+    MatBadgeModule,
     FlexLayoutModule,
   ],
 })

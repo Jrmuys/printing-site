@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-<div class="w3-main">
+<div class="w3-main" style="max-width: 1250px; margin: auto;">
   <div class="w3-row-padding">
     <div class="w3-col s12 m8 l9">
       <mat-card id="engine" style="max-height: 50rem;">
@@ -171,6 +171,7 @@
               color="accent"
               class="button"
               style="margin-bottom: 0;"
+              (click)="addToCart()"
             >
               <mat-icon>
                 add_shopping_cart

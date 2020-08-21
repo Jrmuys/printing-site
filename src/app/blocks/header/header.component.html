@@ -26,25 +26,44 @@
     <!-- <li *ngIf="user">
               <button mat-button (click)="logout()">Logout</button>
             </li> -->
-    <li>
-      <a mat-icon-button routerLink="/cart" routerLinkActive="mat-accent">
-        <mat-icon matBadge="2" matBadgeColor="accent">
-          shopping_cart
-        </mat-icon>
-      </a>
-    </li>
+
     <li>
       <div>
         <a mat-button *ngIf="user" [matMenuTriggerFor]="menu">
           <mat-icon>
             account_circle
           </mat-icon>
-          {{ user.fullname.split(" ")[0] }}
+          <label class="hide-on-small-screen">
+            {{ user.fullname.split(" ")[0] }}
+          </label>
         </a>
+        <label></label>
         <mat-menu #menu="matMenu">
-          <button (click)="logout()" mat-menu-item>logout</button>
+          <label
+            *ngIf="user"
+            mat-menu-item
+            class="show-on-small-screen menu-text"
+            style="color: red;"
+          >
+            {{ user.fullname.split(" ")[0] }}
+          </label>
+          <button (click)="logout()" mat-menu-item class="menu-text">
+            logout
+          </button>
         </mat-menu>
       </div>
+    </li>
+    <li>
+      <a mat-icon-button *ngIf="user" routerLink="/cart">
+        <mat-icon matBadge="{{ cartItemCount }}" matBadgeColor="accent">
+          shopping_cart
+        </mat-icon>
+      </a>
+      <a mat-icon-button *ngIf="!user" routerLink="/auth">
+        <mat-icon matBadge="0" matBadgeColor="accent">
+          shopping_cart
+        </mat-icon>
+      </a>
     </li>
   </ul>
 </mat-toolbar>

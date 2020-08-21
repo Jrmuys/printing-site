@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const config = require("../config/config");
 const userController = require("../controller/user.controller");
 const authController = require("../controller/auth.controller");
+const cartController = require("../controller/cart.controller.js");
 const passport = require("../middleware/passport");
 
 const router = express.Router();
@@ -24,8 +25,12 @@ router.get(
 async function insert(req, res, next) {
   const savedUser = req.body;
   console.log(`registering user`, savedUser);
-  req.user = await userController.insert(savedUser);
 
+  req.user = await userController.insert(savedUser);
+  console.log("User saved...", req.user);
+  foundUser = await userController.getUserByEmail(req.user.email);
+  req.user = foundUser;
+  cartController.createCart(foundUser._id);
   next();
 }
 
@@ -50,6 +55,7 @@ function login(req, res) {
   const expiresIn = config.expiresIn;
   console.log("Expires in : ", expiresIn);
   const user = req.user;
+  console.log("loggin in user:", user);
   const token = authController.generateToken(user);
   console.log("User: ", user);
   console.log("Token", token);

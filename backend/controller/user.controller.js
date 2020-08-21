@@ -41,6 +41,8 @@ async function getUserById(id) {
 async function getUserByEmail(email) {
   let user = await User.findOne({ email });
   if (user) {
+    user = user.toObject();
+    delete user.hashedPassword;
     return user;
   } else {
     return null;
@@ -51,4 +53,5 @@ module.exports = {
   insert,
   getUserByEmailIdAndPassword,
   getUserById,
+  getUserByEmail,
 };

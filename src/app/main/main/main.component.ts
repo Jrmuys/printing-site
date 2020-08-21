@@ -1,5 +1,7 @@
+import { Subscription } from 'rxjs';
+import { CartService } from './../../core/cart/cart.service';
 import { AuthService } from 'src/app/core/auth/auth.service';
-import { Model } from '../../core/model.model';
+import { Model } from '@core/model.model';
 import { ViewerEngineComponent } from './../viewer-engine/viewer-engine.component';
 import { Router } from '@angular/router';
 import { UploadService } from '@core/upload/upload.service';
@@ -12,13 +14,8 @@ import {
   ViewChild,
   OnDestroy,
 } from '@angular/core';
-import { Subject, Subscriber } from 'rxjs';
-import { HttpEventType } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { FormGroup, FormControl } from '@angular/forms';
-import { matMenuAnimations } from '@angular/material/menu';
-import { JsonPipe } from '@angular/common';
-import { stringify } from '@angular/compiler/src/util';
+import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface Tile {
   color: string;
@@ -38,15 +35,20 @@ export class MainComponent implements OnInit, OnDestroy {
     private engServ: ViewerEngineService,
     private uploadService: UploadService,
     private authService: AuthService,
+    private cartService: CartService,
+    private signInDialog: MatDialog,
     private router: Router,
     private viewerCompontent: ViewerEngineComponent
   ) {}
 
   loading = true;
   private unitSub;
+  private userSub: Subscription;
+  user;
 
   ngOnDestroy(): void {
     this.unitSub.unsubscribe();
+    this.userSub.unsubscribe();
     this.engServ.cleanup();
   }
 
@@ -130,7 +132,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
   getStoredModel() {
     this.loading = true;
-    if (localStorage.getItem('modelSaved') == 'true') {
+    if (localStorage.getItem('id')) {
       this.uploadService
         .getModel(localStorage.getItem('id'))
         .subscribe((res) => {
@@ -216,5 +218,45 @@ export class MainComponent implements OnInit, OnDestroy {
         Math.round(this.modelCost * this.model.quantity * 100) / 100;
     });
     this.onUnitSelect();
+    this.userSub = this.authService.getUserListener().subscribe((user) => {
+      console.log(`Old user:${this.user}, New user: ${user}`);
+      if (this.user && !user) {
+        this.model = {
+          id: null,
+          title: null,
+          modelPath: null,
+          units: 'mm',
+          quantity: 1,
+          user: null,
+          comment: '',
+        };
+        this.engServ.cleanup();
+        this.modelCost = 0;
+        this.totalCost = 0;
+        localStorage.removeItem('id');
+      }
+      this.user = user;
+    });
+  }
+
+  addToCart() {
+    console.log(this.authService.getUser());
+    if (!this.authService.getUser()) {
+      const dialogRef = this.signInDialog.open(SignInDialogComponent);
+      dialogRef.afterClosed().subscribe((result) => {
+        result ? this.router.navigate(['/login']) : console.log(closed);
+      });
+    } else {
+      let image = this.engServ.snapshot();
+      this.cartService.addCartItem(
+        this.model.id,
+        this.modelCost,
+        this.model.title,
+        image,
+        this.model.quantity,
+        this.model.modelPath
+      );
+      this.cartService.getCart();
+    }
   }
 }

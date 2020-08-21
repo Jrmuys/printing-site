@@ -37,6 +37,7 @@ export class AuthService {
   }
 
   getUser() {
+    console.log('getting user: ', this.userListener$.getValue());
     return this.userListener$.getValue();
   }
 
@@ -123,7 +124,7 @@ export class AuthService {
         this.setUser(user);
         console.log(`User found`, user);
         this.autoAuthUser();
-
+        this.userListener$.next(user);
         return of(user);
       }),
       catchError((err) => {

@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Please sign in to add to your cart.</h2>
+<mat-dialog-content class="mat-typography"> </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>CLOSE</button>
+  <a
+    mat-stroked-button
+    mat-dialog-close="true"
+    [routerLink]="['/auth']"
+    routerLinkActive="router-link-active"
+    cdkFocusInitial
+    >SIGN IN</a
+  >
+  <a
+    mat-stroked-button
+    mat-dialog-close="true"
+    [routerLink]="['/auth/signup']"
+    routerLinkActive="router-link-active"
+    >SIGN UP</a
+  >
+</mat-dialog-actions>
+
+<!-- Copyright 2020 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
