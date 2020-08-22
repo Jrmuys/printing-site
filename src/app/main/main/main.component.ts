@@ -27,7 +27,7 @@ export interface Tile {
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss', '../../../../node_modules/w3.css'],
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit, OnDestroy {
   constructor(

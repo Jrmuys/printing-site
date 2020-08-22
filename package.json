@@ -27,6 +27,7 @@
     "@angular/platform-browser-dynamic": "~10.0.6",
     "@angular/router": "~10.0.6",
     "@auth0/angular-jwt": "^5.0.1",
+    "@paypal/checkout-server-sdk": "^1.0.2",
     "angular-router-loader": "^0.8.5",
     "angular-stl-model-viewer": "^1.0.0",
     "bcrypt": "^5.0.0",

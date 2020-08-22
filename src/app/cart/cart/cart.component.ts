@@ -13,6 +13,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import decode from 'jwt-decode';
 
 interface PayPalItem {
   description: string;
@@ -91,13 +92,19 @@ export class CartComponent implements OnInit, OnDestroy {
             });
           },
           onApprove: async (data, actions) => {
-            return fetch('/api/payment', {
+            const token = localStorage.getItem('token');
+            // decode the token to get its payload
+            const tokenPayload = decode(token);
+            console.log(tokenPayload._id);
+            return fetch('/api/payment/get-transaction', {
               headers: {
                 'Content-Type': 'application/json',
               },
               method: 'post',
               body: JSON.stringify({
                 orderID: data.orderID,
+                userID: tokenPayload._id,
+                cartItems: this.cart,
               }),
             })
               .then((res) => {

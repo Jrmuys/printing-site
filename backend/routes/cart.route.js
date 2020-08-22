@@ -72,4 +72,8 @@ router.post(
   }
 );
 
+router.post("", (req, res, next) => {
+  console.log("Test", req);
+});
+
 module.exports = router;
