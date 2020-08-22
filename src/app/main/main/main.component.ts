@@ -27,7 +27,7 @@ export interface Tile {
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
+  styleUrls: ['./main.component.scss', '../../../../node_modules/w3.css'],
 })
 export class MainComponent implements OnInit, OnDestroy {
   constructor(
@@ -49,7 +49,7 @@ export class MainComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unitSub.unsubscribe();
     this.userSub.unsubscribe();
-    this.engServ.cleanup();
+    if (this.model.modelPath) this.engServ.cleanup();
   }
 
   @ViewChild('rendererCanvas', { static: true })
@@ -257,6 +257,21 @@ export class MainComponent implements OnInit, OnDestroy {
         this.model.modelPath
       );
       this.cartService.getCart();
+      this.model = {
+        id: null,
+        title: null,
+        modelPath: null,
+        units: 'mm',
+        quantity: 1,
+        user: null,
+        comment: '',
+      };
+      this.engServ.cleanup();
+      this.modelCost = 0;
+      this.totalCost = 0;
+      this.modelVolume = 0;
+      this.formDisplay = false;
+      localStorage.removeItem('id');
     }
   }
 }

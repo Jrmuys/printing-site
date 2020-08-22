@@ -79,6 +79,44 @@
   </div>
   <div class="w3-col s12 l3">
     <mat-card>
+      <mat-card-content>
+        <p style="text-align: left;">
+          Item Subtotal:
+          <span style="float: right; font-weight: bold;">
+            {{ totalPrice | currency }}
+          </span>
+        </p>
+        <mat-divider style="margin-bottom: 8px;" [inset]="true"> </mat-divider>
+        <div id="textContainer">
+          <p style="text-align: left;">
+            Shipping:
+
+            <span style="float: right; font-weight: bold;">
+              {{ shippingCost | currency }}
+            </span>
+          </p>
+        </div>
+        <div id="textContainer">
+          <p style="text-align: left;">
+            Estimated Tax:
+
+            <span style="float: right; font-weight: bold;">
+              {{ totalPrice * 0.05 | currency }}
+            </span>
+          </p>
+        </div>
+        <mat-divider [inset]="true" style="margin-bottom: 8px;"></mat-divider>
+        <div id="textContainer">
+          <p style="text-align: left;">
+            Final Total:
+
+            <span style="float: right; font-weight: bold; color: #cc2400;">
+              {{ totalPrice + totalPrice * 0.05 + shippingCost | currency }}
+            </span>
+          </p>
+        </div>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
       <div #paypal></div>
     </mat-card>
   </div>

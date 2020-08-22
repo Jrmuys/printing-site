@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { CartItem } from '@core/cart/cart-item';
 import { Subscription } from 'rxjs';
 import { AuthService } from './../../core/auth/auth.service';
@@ -31,7 +32,8 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild('paypal', { static: true }) paypalElement: ElementRef;
   constructor(
     private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private httpClient: HttpClient
   ) {}
 
   private authSub: Subscription;
@@ -46,6 +48,7 @@ export class CartComponent implements OnInit, OnDestroy {
     'price',
     'delete',
   ];
+  shippingCost: number = 4.99;
 
   paypalGetItems(): PayPalItem[] {
     let paypalItems: PayPalItem[];
@@ -69,20 +72,41 @@ export class CartComponent implements OnInit, OnDestroy {
       paypal
         .Buttons({
           createOrder: (data, actions) => {
+            let finalTotal: number =
+              Math.round(
+                (this.totalPrice + this.totalPrice * 0.05 + this.shippingCost) *
+                  100
+              ) / 100;
+            console.log(finalTotal);
             return actions.order.create({
               purchase_units: [
                 {
-                  description: 'test',
+                  description: `Order of different models`,
                   amount: {
                     currency_code: 'USD',
-                    value: 20,
+                    value: finalTotal,
                   },
                 },
               ],
             });
           },
           onApprove: async (data, actions) => {
-            const order = await actions.order.capture();
+            return fetch('/api/payment', {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'post',
+              body: JSON.stringify({
+                orderID: data.orderID,
+              }),
+            })
+              .then((res) => {
+                console.log(res);
+                return res.text();
+              })
+              .then((details) => {
+                // alert('Transaction approved by ' + details.payer_given_name);
+              });
           },
         })
         .render(this.paypalElement.nativeElement);

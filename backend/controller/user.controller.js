@@ -10,20 +10,21 @@ async function insert(user) {
   return await new User(user).save();
 }
 
-function isUserValid(user, password, hashedPassword) {
-  return user && bcrypt.compare(password, hashedPassword);
+async function isUserValid(user, password, hashedPassword) {
+  return user && (await bcrypt.compare(password, hashedPassword));
 }
 
 async function getUserByEmailIdAndPassword(email, password) {
   let user = await User.findOne({ email });
-
-  if (isUserValid(user, password, user.hashedPassword)) {
-    user = user.toObject();
-    delete user.hashedPassword;
-    return user;
-  } else {
-    return null;
-  }
+  if (user) {
+    if (await isUserValid(user, password, user.hashedPassword)) {
+      user = user.toObject();
+      delete user.hashedPassword;
+      return user;
+    } else {
+      return null;
+    }
+  } else return null;
 }
 
 async function getUserById(id) {

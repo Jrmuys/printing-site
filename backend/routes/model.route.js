@@ -4,7 +4,7 @@ const multer = require("multer");
 const userController = require("../controller/user.controller");
 const User = require("../models/user.model");
 const Model = require("../models/model.model");
-const router = require("./auth.route");
+const router = express.Router();
 
 // const MIME_TYPE_MAP = {
 //   ""

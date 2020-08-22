@@ -20,13 +20,15 @@ export class LoginComponent {
     }
     this.error = '';
     this.isLoading = true;
-    this.authService
-      .login(form.value.email, form.value.password)
-      .subscribe(() => {
-        this.router.navigate(['']),
-          (expetion) => {
-            this.error = expetion;
-          };
-      });
+    this.authService.login(form.value.email, form.value.password).subscribe(
+      (result) => {
+        this.router.navigate(['']);
+      },
+      (error) => {
+        this.error = 'User not found';
+        this.isLoading = false;
+        console.log(this.error);
+      }
+    );
   }
 }

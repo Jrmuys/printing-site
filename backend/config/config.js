@@ -11,4 +11,6 @@ module.exports = {
   },
   jwtSecret: envVars.JWT_SECRET,
   expiresIn: envVars.EXPIRES_IN,
+  paypalSecret: envVars.PAYPAL_SECRET,
+  paypalClient: envVars.PAYPAL_CLIENT,
 };

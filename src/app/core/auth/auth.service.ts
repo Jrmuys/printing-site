@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { of, throwError, BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import decode from 'jwt-decode';
 
 import { User } from '../user.model';
 import { AuthData } from './auth-data.model';
@@ -21,7 +23,7 @@ export class AuthService {
   private userListener$ = new BehaviorSubject<User>(null);
   private apiUrl = '/api/auth/';
   private;
-
+  public jwtHelper: JwtHelperService = new JwtHelperService();
   constructor(private router: Router, private httpClient: HttpClient) {}
   // private http: HttpClient,
   getToken() {
@@ -45,6 +47,13 @@ export class AuthService {
     this.userListener$.next(user);
   }
 
+  public ifAuthenticated(): boolean {
+    const token = localStorage.getItem('token');
+    // Check whether the token is expired and return
+    // true or false
+    return !this.jwtHelper.isTokenExpired(token);
+  }
+
   createUser(userToSave: User) {
     return this.httpClient
       .post<UserDto>(`${this.apiUrl}register`, userToSave)
@@ -64,7 +73,6 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
-    this.router.navigate(['/']);
 
     return this.httpClient.post<UserDto>(`${this.apiUrl}login`, authData).pipe(
       switchMap(({ user, token, expiresIn }) => {
@@ -81,6 +89,8 @@ export class AuthService {
         console.log(expirationDate);
         this.saveAuthData(token, expirationDate);
         console.log(`user found`);
+        this.router.navigate(['/']);
+
         return of(user);
       }),
       catchError((err) => {

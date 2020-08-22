@@ -13,6 +13,7 @@ export class CartService {
   private cart: CartItem[];
   private cartUpdated = new Subject<{ cart: CartItem[]; totalPrice: number }>();
   private cartItemCount = new Subject<number>();
+  private cartCount;
 
   getItemCountListener() {
     return this.cartItemCount.asObservable();
@@ -22,7 +23,9 @@ export class CartService {
     return this.cartUpdated.asObservable();
   }
 
-  countCartItems() {}
+  public getItemCount() {
+    return this.cartCount;
+  }
 
   public getCart() {
     this.httpClient
@@ -33,6 +36,7 @@ export class CartService {
           cart: [...this.cart],
           totalPrice: newCartItems.totalPrice,
         });
+        this.cartCount = this.cart.length;
         this.cartItemCount.next(this.cart.length);
       });
   }
@@ -74,6 +78,8 @@ export class CartService {
             cart: [...this.cart],
             totalPrice: result.totalPrice,
           });
+          this.cartCount = this.cart.length;
+
           this.cartItemCount.next(this.cart.length);
         } else {
           console.error('Could not add cart item');

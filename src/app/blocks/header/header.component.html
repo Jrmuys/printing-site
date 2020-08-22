@@ -11,6 +11,9 @@
   </span>
   <span class="spacer"></span>
   <ul>
+    <li *ngIf="user && user.roles[0] == 'admin'" class="hide-on-small-screen">
+      <a mat-button routerLink="/admin" routerLinkActive="mat-accent">Admin</a>
+    </li>
     <li class="hide-on-small-screen">
       <a mat-button routerLink="/order" routerLinkActive="mat-accent">Order</a>
     </li>

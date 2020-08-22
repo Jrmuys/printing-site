@@ -1,4 +1,6 @@
-const router = require("./auth.route");
+const express = require("express");
+
+const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
 const CartItem = require("../models/cart-item.model");
 const cartController = require("../controller/cart.controller");

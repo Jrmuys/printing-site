@@ -1,3 +1,4 @@
+import { RoleGuard } from './../core/auth/role.guard';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
 import { SharedModule } from './../shared/shared.module';
 import { ViewerEngineComponent } from './viewer-engine/viewer-engine.component';
@@ -13,6 +14,9 @@ import { MainRoutingModule } from './main-routing.module';
   providers: [
     {
       provide: ViewerEngineComponent,
+    },
+    {
+      provide: RoleGuard,
     },
   ],
 })

@@ -1,3 +1,6 @@
+import { AdminComponent } from './admin/admin/admin.component';
+import { RoleGuard } from './core/auth/role.guard';
+import { AdminModule } from './admin/admin.module';
 import { CartModule } from './cart/cart.module';
 import { MainModule } from './main/main.module';
 import { AuthModule } from './auth/auth.module';
@@ -14,6 +17,12 @@ const routes: Routes = [
     loadChildren: () => CartModule,
   },
   { path: 'auth', loadChildren: () => AuthModule },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [RoleGuard],
+    data: { expectedRole: 'admin' },
+  },
 ];
 
 @NgModule({
