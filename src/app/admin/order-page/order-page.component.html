@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+
+<div style="padding: 16px;">
+  <mat-card style="max-width: 1250px; margin: auto; margin-bottom: 16px;">
+    <a routerLink="/admin" mat-flat-button color="primary">
+      <mat-icon>arrow_back_ios</mat-icon>BACK
+    </a>
+
+    <label style="font-size: large;"> Order {{ id }}</label>
+    <!-- <mat-form-field appearance="fill" class="background-red"> -->
+    <select
+      style="float: right;"
+      [ngClass]="{
+        red: order.orderStatus == 'RECIEVED',
+        yellow: order.orderStatus == 'PRINTING',
+        blue: order.orderStatus == 'SHIPPED',
+        green: order.orderStatus == 'DELIVERED'
+      }"
+      [(ngModel)]="order.orderStatus"
+    >
+      <option value="RECIEVED">RECIEVED</option>
+      <option value="PRINTING">PRINTING</option>
+      <option value="SHIPPED">SHIPPED</option>
+
+      <option value="DELIVERED">DELIVERED</option>
+    </select>
+    <p style="float: right; font-size: 18px; margin: 8px;">Order Status:</p>
+    <mat-divider
+      [inset]="true"
+      style="margin-bottom: 8px; margin-top: 16px;"
+    ></mat-divider>
+    <div class="w3-row-padding">
+      <div class="w3-col s6">
+        <mat-card-content>
+          <ul>
+            <li style="font-size: large;">
+              <span>{{ order.customerName }}</span>
+            </li>
+            <li>
+              Email: <span>{{ order.customerEmail }}</span>
+            </li>
+            <li>Customer ID: {{ order.userId }}</li>
+            <li>Payment Status: {{ order.paymentStatus }}</li>
+            <li>Date of Order: {{ order.date | date }}</li>
+          </ul>
+        </mat-card-content>
+      </div>
+      <div class="w3-col s6">
+        <ul>
+          <li style="font-size: large;">
+            Shipping Address
+          </li>
+          <li>
+            {{ order.shipping.address.address_line_1 }}
+          </li>
+          <li>
+            {{ order.shipping.address.address_line_2 }}
+          </li>
+          <li>
+            {{ order.shipping.address.admin_area_2 }},
+            {{ order.shipping.address.admin_area_1 }}
+            {{ order.shipping.address.postal_code }}
+          </li>
+          <li>
+            {{ order.shipping.address.country_code }}
+          </li>
+          <li></li>
+        </ul>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card style="max-width: 1250px; margin: auto;">
+    <table mat-table [dataSource]="orderItems" class="mat-elevation-z8">
+      <!-- Image Column -->
+      <ng-container matColumnDef="imgUrl">
+        <th mat-header-cell *matHeaderCellDef>Image Url</th>
+        <td mat-cell *matCellDef="let element">
+          <img style="max-height: 56px;" [src]="element.imgUrl" />
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+      <!-- Item Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">
+          <p class="no-over-flow">{{ element.title }}</p>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.quantity }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Cost Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let transaction">
+          {{ transaction.price * transaction.quantity | currency }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Print Status</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- <mat-form-field appearance="fill" class="background-red"> -->
+          <select
+            [ngClass]="{
+              red: element.printStatus == 'NOT STARTED',
+              yellow: element.printStatus == 'PRINTING',
+              green: element.printStatus == 'COMPLETE'
+            }"
+            [(ngModel)]="element.printStatus"
+            (change)="updateOrder()"
+          >
+            <option value="NOT STARTED">NOT STARTED</option>
+            <option value="PRINTING">PRINTING</option>
+            <option value="COMPLETE">COMPLETE</option>
+          </select>
+          <!-- </mat-form-field> -->
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="download">
+        <th mat-header-cell *matHeaderCellDef>Download</th>
+        <td mat-cell *matCellDef="let element">
+          <a href="/images/myw3schoolsimage.jpg" download></a>
+          <a [href]="element.modelPath" dowload mat-stroked-button>
+            DOWNLOAD
+          </a>
+        </td>
+        <td mat-footer-cell *matFooterCellDef>
+          <button mat-stroked-button (click)="downloadAll()">
+            DOWNLOAD ALL
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+  </mat-card>
+</div>

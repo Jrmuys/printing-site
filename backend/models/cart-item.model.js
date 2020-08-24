@@ -7,7 +7,8 @@ function CartItem(
   imgUrl,
   quantity,
   itemTotal,
-  modelPath
+  modelPath,
+  printStatus
 ) {
   this.modelId = modelId;
   this.price = price;
@@ -16,6 +17,7 @@ function CartItem(
   this.quantity = quantity;
   this.itemTotal = itemTotal;
   this.modelPath = modelPath;
+  this.printStatus = printStatus | "NA";
 }
 
 module.exports = CartItem;

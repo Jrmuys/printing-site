@@ -1,3 +1,4 @@
+import { CartService } from './../cart/cart.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -24,7 +25,11 @@ export class AuthService {
   private apiUrl = '/api/auth/';
   private;
   public jwtHelper: JwtHelperService = new JwtHelperService();
-  constructor(private router: Router, private httpClient: HttpClient) {}
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient,
+    private cartService: CartService
+  ) {}
   // private http: HttpClient,
   getToken() {
     return this.token;
@@ -66,7 +71,9 @@ export class AuthService {
         }),
         catchError((err) => {
           console.log(`server error occoured`, err);
-          return throwError(`Registration failed, please contact admin`);
+          return throwError(
+            err.error.message || `Registration failed, please contact admin`
+          );
         })
       );
   }
@@ -90,6 +97,7 @@ export class AuthService {
         this.saveAuthData(token, expirationDate);
         console.log(`user found`);
         this.router.navigate(['/']);
+        this.cartService.getCart();
 
         return of(user);
       }),
@@ -98,29 +106,6 @@ export class AuthService {
         return throwError(`User not found! Please try again`);
       })
     );
-
-    // this.http
-    //   .post<{ token: string; expiresIn: number }>(
-    //     'http://localhost:3000/api/user/login',
-    //     authData
-    //   )
-    //   .subscribe((response) => {
-    //     const token = response.token;
-    //     this.token = token;
-    //     if (token) {
-    //       const expiresInDuration = response.expiresIn;
-    //       this.setAuthTimer(expiresInDuration);
-    //       this.isAuthenticated = true;
-    //       this.userListener.next(true);
-    //       const now = new Date();
-    //       const expirationDate = new Date(
-    //         now.getTime() + expiresInDuration * 1000
-    //       );
-    //       console.log(expirationDate);
-    //       this.saveAuthData(token, expirationDate);
-    //       this.router.navigate(['/']);
-    //     }
-    //   });
   }
 
   findMe() {
@@ -128,13 +113,14 @@ export class AuthService {
     if (!token) {
       return EMPTY;
     }
-    console.log(token);
     return this.httpClient.get<any>(`${this.apiUrl}findme`).pipe(
       switchMap(({ user }) => {
         this.setUser(user);
         console.log(`User found`, user);
         this.autoAuthUser();
         this.userListener$.next(user);
+        this.cartService.getCart();
+
         return of(user);
       }),
       catchError((err) => {

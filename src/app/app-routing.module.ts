@@ -1,5 +1,9 @@
+import { NotFoundComponent } from './blocks/not-found/not-found.component';
+import { PathResolveService } from './core/path-resolve.service';
+
+import { AuthGuardService } from './core/auth/auth.guard';
 import { AdminComponent } from './admin/admin/admin.component';
-import { RoleGuard } from './core/auth/role.guard';
+import { RoleGuardService as RoleGuard } from './core/auth/role.guard';
 import { AdminModule } from './admin/admin.module';
 import { CartModule } from './cart/cart.module';
 import { MainModule } from './main/main.module';
@@ -9,19 +13,30 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/order', pathMatch: 'full' },
-  { path: 'order', loadChildren: () => MainModule },
-
+  // { path: '', redirectTo: '/order', pathMatch: 'full' },
+  { path: '', loadChildren: () => MainModule },
+  { path: 'order', redirectTo: '', pathMatch: 'full' },
   {
     path: 'cart',
     loadChildren: () => CartModule,
+    canActivate: [AuthGuardService],
   },
   { path: 'auth', loadChildren: () => AuthModule },
+  { path: 'login', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: 'signup', redirectTo: 'auth/signup', pathMatch: 'full' },
+
   {
     path: 'admin',
-    component: AdminComponent,
-    canActivate: [RoleGuard],
+    loadChildren: () => AdminModule,
+    // canActivate: [RoleGuard],
     data: { expectedRole: 'admin' },
+  },
+  {
+    path: '**',
+    resolve: {
+      path: PathResolveService,
+    },
+    component: NotFoundComponent,
   },
 ];
 

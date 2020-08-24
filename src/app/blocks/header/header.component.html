@@ -7,7 +7,7 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>
-    <a routerLink="" class="h1">ThrifyPrint</a>
+    <a routerLink="" class="h1">ThriftyPrint</a>
   </span>
   <span class="spacer"></span>
   <ul>
@@ -15,10 +15,18 @@
       <a mat-button routerLink="/admin" routerLinkActive="mat-accent">Admin</a>
     </li>
     <li class="hide-on-small-screen">
-      <a mat-button routerLink="/order" routerLinkActive="mat-accent">Order</a>
+      <a
+        mat-button
+        routerLink=""
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="mat-accent"
+        >Order</a
+      >
     </li>
     <li *ngIf="!user" class="hide-on-small-screen">
-      <a mat-button routerLink="/auth" routerLinkActive="mat-accent">Login</a>
+      <a mat-button routerLink="/auth/login" routerLinkActive="mat-accent"
+        >Login</a
+      >
     </li>
     <li *ngIf="!user" class="hide-on-small-screen">
       <a mat-button routerLink="/auth/signup" routerLinkActive="mat-accent"
@@ -63,7 +71,7 @@
         </mat-icon>
       </a>
       <a mat-icon-button *ngIf="!user" routerLink="/auth">
-        <mat-icon matBadge="0" matBadgeColor="accent">
+        <mat-icon>
           shopping_cart
         </mat-icon>
       </a>

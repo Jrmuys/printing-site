@@ -7,9 +7,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreRoutingModule } from './core-routing.module';
 import { throwIfAlreadyLoaded } from './utils/module-import.guard';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [NotFoundComponent],
   imports: [CommonModule, CoreRoutingModule, SharedModule],
   // providers: [
   //   {

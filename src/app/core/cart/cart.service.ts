@@ -13,7 +13,7 @@ export class CartService {
   private cart: CartItem[];
   private cartUpdated = new Subject<{ cart: CartItem[]; totalPrice: number }>();
   private cartItemCount = new Subject<number>();
-  private cartCount;
+  private cartCount: number = 0;
 
   getItemCountListener() {
     return this.cartItemCount.asObservable();

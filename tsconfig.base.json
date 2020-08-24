@@ -17,5 +17,6 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"]
     }
+    // "enableIvy": false
   }
 }

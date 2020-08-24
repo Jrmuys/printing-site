@@ -13,9 +13,13 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from '@angular/flex-layout';
+import { RoleGuardService } from './core/auth/role.guard';
+import { AuthGuardService } from './core/auth/auth.guard';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
+    // CommonModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -32,6 +36,12 @@ import { CoreModule } from '@angular/flex-layout';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHeaderInterceptorService,
       multi: true,
+    },
+    {
+      provide: RoleGuardService,
+    },
+    {
+      provide: AuthGuardService,
     },
   ],
   bootstrap: [AppComponent],

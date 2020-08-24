@@ -7,7 +7,11 @@ async function insert(user) {
   delete user.password;
 
   console.log(`saving user to db`, user);
-  return await new User(user).save();
+  return await new User(user).save().catch((error) => {
+    console.log("FOUND ERROR", error.code);
+    if (error.code == 11000) error = new Error("Email already registered");
+    throw error;
+  });
 }
 
 async function isUserValid(user, password, hashedPassword) {

@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { CartItem } from '@core/cart/cart-item';
+import { CartItem } from '../../core/cart/cart-item';
 import { Subscription } from 'rxjs';
 import { AuthService } from './../../core/auth/auth.service';
 import { CartService } from './../../core/cart/cart.service';
@@ -34,7 +35,8 @@ export class CartComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private authService: AuthService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private router: Router
   ) {}
 
   private authSub: Subscription;
@@ -105,13 +107,18 @@ export class CartComponent implements OnInit, OnDestroy {
                 orderID: data.orderID,
                 userID: tokenPayload._id,
                 cartItems: this.cart,
+                userName: tokenPayload.fullname,
+                userEmail: tokenPayload.email,
               }),
             })
               .then((res) => {
                 console.log(res);
+
                 return res.text();
               })
               .then((details) => {
+                // this.cartService.clearCart();
+                this.router.navigate(['cart/confirmation', data.orderID]);
                 // alert('Transaction approved by ' + details.payer_given_name);
               });
           },

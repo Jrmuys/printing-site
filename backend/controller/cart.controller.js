@@ -9,9 +9,7 @@ function createCart(_id) {
     userId: _id,
     totalPrice: 0,
   });
-  cart.save().then(() => {
-    console.log("Cart generated for user with id " + _id);
-  });
+  cart.save().then(() => {});
 }
 
 function addToCart(req, res, next, host) {
@@ -44,37 +42,11 @@ function addToCart(req, res, next, host) {
   });
 }
 
-// function removeFromCart(_id, cartItem) {
-//   updatedCart = new Cart({
-//     userId: _id,
-//     cartItems: cartItems,
-//   });
-//   return Cart.findOneAndUpdate(
-//     { userId: _id },
-//     { $pop: { cartItems: cartItem } }
-//   );
-// }
-
-// async function getCart(_id) {
-//   Cart.findOne({ userId: _id }).then((cart) => {
-//     if (cart) {
-//       console.log("Got cart:", cart);
-//       return cart;
-//     } else {
-//       console.log("Didn't cart:", cart);
-
-//       return null;
-//     }
-//   });
-// }
-
 function getCart(req, res, next) {
   Cart.findOne({ userId: req.user._id }).then((cart) => {
     if (cart) {
-      console.log("Got cart:", cart);
       res.status(201).json(cart);
     } else {
-      console.log("Didn't cart:", cart);
       res.status(404).json({ message: "Cart Items not found" });
     }
   });
@@ -86,7 +58,6 @@ function updateCart(req, res, next) {
   cartItems.map((cartItem) => {
     newTotalPrice += cartItem.price * cartItem.quantity;
   });
-  console.log("New total price: ", newTotalPrice);
   updatedCart = new Cart({
     cartItems: cartItems,
     totalPrice: newTotalPrice,
@@ -120,7 +91,6 @@ function deleteItem(req, res, next) {
     { $pull: { cartItems: req.body } },
     { new: true }
   ).then((cart) => {
-    console.log(cart.totalPrice, req.body.itemTotal);
     cart.totalPrice -= req.body.itemTotal;
     cart.save().then(() => {
       res.status(201).json({ message: "Item successfully deleted" });

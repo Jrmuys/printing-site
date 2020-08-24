@@ -1,4 +1,4 @@
-import { RoleGuard } from './../core/auth/role.guard';
+import { RoleGuardService } from './../core/auth/role.guard';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
 import { SharedModule } from './../shared/shared.module';
 import { ViewerEngineComponent } from './viewer-engine/viewer-engine.component';
@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MainRoutingModule } from './main-routing.module';
+import { AuthGuardService } from './../core/auth/auth.guard';
 
 @NgModule({
   declarations: [MainComponent, ViewerEngineComponent, SignInDialogComponent],
@@ -14,9 +15,7 @@ import { MainRoutingModule } from './main-routing.module';
   providers: [
     {
       provide: ViewerEngineComponent,
-    },
-    {
-      provide: RoleGuard,
+      multi: true,
     },
   ],
 })

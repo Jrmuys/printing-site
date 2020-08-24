@@ -24,14 +24,29 @@ router.get(
 
 async function insert(req, res, next) {
   const savedUser = req.body;
-  console.log(`registering user`, savedUser);
 
-  req.user = await userController.insert(savedUser);
-  console.log("User saved...", req.user);
-  foundUser = await userController.getUserByEmail(req.user.email);
-  req.user = foundUser;
-  cartController.createCart(foundUser._id);
-  next();
+  await userController
+    .insert(savedUser)
+    .then((user) => {
+      if (user) {
+        req.user = user;
+        userController
+          .getUserByEmail(req.user.email)
+          .next((foundUser) => {
+            req.user = foundUser;
+            cartController.createCart(foundUser._id);
+            next();
+          })
+          .catch((err) => {
+            res.status(500).json({ message: "Could not find user!" });
+          });
+      } else {
+        res.status(500).json({ message: "User does not exist!" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
 }
 
 // async function getUserByEmailIdAndPassword(req, res, next) {
@@ -47,18 +62,13 @@ async function insert(req, res, next) {
 // }
 
 function test(req, res, next) {
-  console.log("test...");
   next();
 }
 
 function login(req, res) {
   const expiresIn = config.expiresIn;
-  console.log("Expires in : ", expiresIn);
   const user = req.user;
-  console.log("loggin in user:", user);
   const token = authController.generateToken(user);
-  console.log("User: ", user);
-  console.log("Token", token);
   res.json({ user, token, expiresIn });
 }
 

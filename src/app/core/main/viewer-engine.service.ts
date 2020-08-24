@@ -3,6 +3,7 @@ import { Injectable, OnDestroy, NgZone, ElementRef } from '@angular/core';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { Triangle } from 'three';
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +52,7 @@ export class ViewerEngineService implements OnDestroy {
   }
 
   public getVolumeService() {
-    return this.getVolume(this.geometry);
+    return this.getVolume();
   }
 
   public createScene(
@@ -124,7 +125,7 @@ export class ViewerEngineService implements OnDestroy {
       geometry.scale(0.1, 0.1, 0.1);
       this.geometry = geometry;
       this.material = material;
-      console.log('Volume: ' + Math.round(this.getVolume(this.geometry)));
+      console.log('Volume: ' + Math.round(this.getVolume()));
       // this.scene.add(mesh);
       this.model = new THREE.Mesh(this.geometry, this.material);
       // this.model.position.set(0, 0, 0);
@@ -137,6 +138,8 @@ export class ViewerEngineService implements OnDestroy {
       this.model.rotation.y += 41;
       this.resize();
       this.loading = false;
+      this.getBoundingBoxVolume();
+      console.log(this.getSurfaceArea());
       callback();
     });
 
@@ -154,8 +157,8 @@ export class ViewerEngineService implements OnDestroy {
     return p1.dot(p2.cross(p3)) / 6.0;
   }
 
-  public getVolume(geometry): number {
-    let position = geometry.attributes.position;
+  public getVolume(): number {
+    let position = this.geometry.attributes.position as THREE.BufferAttribute;
     let faces = position.count / 3;
     let sum = 0;
     let p1 = new THREE.Vector3(),
@@ -166,6 +169,33 @@ export class ViewerEngineService implements OnDestroy {
       p2.fromBufferAttribute(position, i * 3 + 1);
       p3.fromBufferAttribute(position, i * 3 + 2);
       sum += this.signedVolumeOfTriangle(p1, p2, p3);
+    }
+    return sum;
+  }
+
+  public getBoundingBoxVolume() {
+    const bbox = new THREE.Box3().setFromObject(this.model);
+    const bboxSize = new THREE.Vector3();
+    console.log(bbox.getSize(bboxSize));
+    console.log(bboxSize);
+    console.log(
+      `Volume of bounding box: ${bboxSize.x * bboxSize.y * bboxSize.z}`
+    );
+  }
+
+  public getSurfaceArea() {
+    let position = this.geometry.attributes.position as THREE.BufferAttribute;
+    let faces = position.count / 3;
+    let sum = 0;
+    let p1 = new THREE.Vector3(),
+      p2 = new THREE.Vector3(),
+      p3 = new THREE.Vector3();
+    for (let i = 0; i < faces; i++) {
+      p1.fromBufferAttribute(position, i * 3 + 0);
+      p2.fromBufferAttribute(position, i * 3 + 1);
+      p3.fromBufferAttribute(position, i * 3 + 2);
+      let triangle = new Triangle(p1, p2, p3);
+      sum += triangle.getArea();
     }
     return sum;
   }
@@ -234,6 +264,7 @@ export class ViewerEngineService implements OnDestroy {
       'snapshot'
     );
   }
+
   convertDataUrlToBlob(dataUrl): Blob {
     const arr = dataUrl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];

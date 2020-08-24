@@ -6,4 +6,5 @@ export interface CartItem {
   quantity: number;
   itemTotal: number;
   modelPath: string;
+  printStatus: string;
 }

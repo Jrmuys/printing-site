@@ -26,11 +26,19 @@ export class HeaderComponent implements OnInit {
   ) {
     this.userSub = this.authService.getUserListener().subscribe((user) => {
       this.user = user;
+      if (user) {
+        console.log('USER');
+        this.cartItemCount = this.cartService.getItemCount();
+        console.log('Cart item count:', this.cartItemCount);
+      } else {
+        // this.cartItemCount = 0;
+        // console.log('NO USER');
+      }
     });
-    this.authSub = this.authService
-      .findMe()
-      .subscribe((user) => (this.user = user));
-    this.cartService.getCart();
+    this.authSub = this.authService.findMe().subscribe((user) => {
+      this.user = user;
+    });
+
     this.cartCountSub = this.cartService
       .getItemCountListener()
       .subscribe((count) => {

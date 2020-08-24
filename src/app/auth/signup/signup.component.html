@@ -19,7 +19,6 @@
           >Please enter a valid email.</mat-error
         >
       </mat-form-field>
-
       <mat-form-field>
         <input
           matInput
@@ -35,6 +34,7 @@
           >Please enter a valid email.</mat-error
         >
       </mat-form-field>
+
       <mat-form-field>
         <input
           name="password"
@@ -47,6 +47,7 @@
         />
         <mat-error *ngIf="">Please enter a valid password.</mat-error>
       </mat-form-field>
+      <mat-error *ngIf="error">{{ error }}</mat-error>
 
       <button
         mat-raised-button

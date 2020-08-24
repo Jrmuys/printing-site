@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/core/auth/auth.service';
 export class SignupComponent implements OnInit {
   isLoading = false;
   validForm = false;
+  error: Error;
 
   constructor(public authService: AuthService, private router: Router) {}
 
@@ -28,9 +29,16 @@ export class SignupComponent implements OnInit {
       password: form.value.password,
     };
     console.log(user);
-    this.authService.createUser(user).subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    this.authService.createUser(user).subscribe(
+      () => {
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        this.error = error;
+        this.isLoading = false;
+        console.log(this.error);
+      }
+    );
   }
 
   ngOnInit(): void {}

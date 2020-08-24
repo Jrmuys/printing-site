@@ -39,8 +39,10 @@ async function handleRequest(req, res) {
     // if (order.result.purchase_units[0].amount.value !== cart.totalPrice) {
     //   return res.send(400);
     // }
+    console.log(order.result.purchase_units.shipping);
     let orderArray = new Array();
     for (var i = 0; i < cart.cartItems.length; i++) {
+      cart.cartItems[i].printStatus = "NOT STARTED";
       orderArray.push(cart.cartItems[i]);
     }
 
@@ -48,6 +50,12 @@ async function handleRequest(req, res) {
       userId: req.body.userID,
       orderId: req.body.orderID,
       totalPrice: order.result.purchase_units[0].amount.value,
+      date: Date.parse(order.result.create_time),
+      paymentStatus: order.result.status,
+      orderStatus: "RECIEVED",
+      customerName: req.body.userName,
+      customerEmail: req.body.userEmail,
+      shipping: order.result.purchase_units[0].shipping,
     });
     await order.save();
     await Order.findOneAndUpdate(

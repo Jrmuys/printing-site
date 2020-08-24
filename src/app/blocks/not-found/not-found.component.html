@@ -1,0 +1,12 @@
+<div class="card-container">
+  <mat-card
+    ><h1
+      style="text-align: center; font-size: xx-large; vertical-align: middle;"
+    >
+      404 - Page not found
+    </h1>
+    <p *ngIf="path" style="text-align: center;">
+      Did you mean to go to <a [routerLink]="path">"{{ path }}"</a>?
+    </p>
+  </mat-card>
+</div>

@@ -23,7 +23,7 @@
       >
         <a
           mat-menu-item
-          routerLink="/order"
+          routerLink=""
           routerLinkActive="highlight"
           (click)="sidenav.toggle()"
           >Order</a
@@ -44,6 +44,15 @@
           routerLinkActive="highlight"
           (click)="sidenav.toggle()"
           >Signup</a
+        >
+
+        <a
+          *ngIf="user && user.roles[0] == 'admin'"
+          mat-button
+          routerLink="/admin"
+          routerLinkActive="mat-accent"
+          (click)="sidenav.toggle()"
+          >Admin</a
         >
       </mat-sidenav>
       <mat-sidenav-content>

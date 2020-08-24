@@ -1,11 +1,11 @@
 import { Subscription } from 'rxjs';
 import { CartService } from './../../core/cart/cart.service';
 import { AuthService } from 'src/app/core/auth/auth.service';
-import { Model } from '@core/model.model';
+import { Model } from '../../core/model.model';
 import { ViewerEngineComponent } from './../viewer-engine/viewer-engine.component';
 import { Router } from '@angular/router';
-import { UploadService } from '@core/upload/upload.service';
-import { ViewerEngineService } from '@core/main/viewer-engine.service';
+import { UploadService } from '../../core/upload/upload.service';
+import { ViewerEngineService } from '../../core/main/viewer-engine.service';
 import { MainService } from '../../core/main/main.service';
 import {
   Component,
@@ -164,20 +164,6 @@ export class MainComponent implements OnInit, OnDestroy {
       this.loading = false;
     }
   }
-
-  // .pipe(
-  //   map((event) => {
-  //     switch (event.type) {
-  //       case HttpEventType.UploadProgress:
-  //         progress = Math.round((event.loaded * 100) / event.total);
-  //         console.log('file upload progress: ' + progress);
-  //         break;
-  //       case HttpEventType.Response:
-  //         console.log('File has been uploaded');
-  //         return event;
-  //     }
-  //   })
-  // );
 
   ngOnInit(): void {
     console.log('INIT');
