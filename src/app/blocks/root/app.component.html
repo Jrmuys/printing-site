@@ -58,12 +58,13 @@
       <mat-sidenav-content>
         <app-header></app-header>
         <p>Test</p>
-        <div style="height: 88vh;" class="main">
+        <div class="main w3-row" style="margin-bottom: 80px;">
           <router-outlet class="mat-typography"></router-outlet>
+        </div>
+        <div class="w3-row" style="position: fixed; bottom: 0; width: 100%;">
+          <app-footer style="margin-bottom: 0px;"></app-footer>
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
-
-    <app-footer></app-footer>
   </body>
 </html>

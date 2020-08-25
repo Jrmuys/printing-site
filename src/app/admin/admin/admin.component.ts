@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Order } from '../../core/admin/order.model';
 import { Subscription } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -24,28 +25,36 @@ export class AdminComponent implements OnInit {
   dataSource: MatTableDataSource<Order>;
   private orderListener: Subscription;
   orders: Order[];
+  loading = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private adminService: AdminService) {
+  constructor(private adminService: AdminService, private router: Router) {
     // Create 100 users
     // Assign the data to the data source for the table to render
   }
 
   ngOnInit() {
+    this.loading = true;
     console.log('INIT');
 
     this.adminService.getOrders();
-    this.orderListener = this.adminService
-      .getordersListener()
-      .subscribe((order) => {
+
+    this.orderListener = this.adminService.getordersListener().subscribe(
+      (order) => {
         this.orders = order;
         this.dataSource = new MatTableDataSource(this.orders);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log(this.dataSource);
-      });
+        this.loading = false;
+      },
+      (error) => {
+        console.error(error.message);
+        this.router.navigate(['/forbidden']);
+      }
+    );
   }
 
   applyFilter(event: Event) {

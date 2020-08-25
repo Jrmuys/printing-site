@@ -33,7 +33,7 @@ async function getUserByEmailIdAndPassword(email, password) {
 
 async function getUserById(id) {
   let user = await User.findById(id);
-  console.log("findById(): User = ", user);
+  // console.log("findById(): User = ", user);
   if (user) {
     user = user.toObject();
     delete user.hashedPassword;

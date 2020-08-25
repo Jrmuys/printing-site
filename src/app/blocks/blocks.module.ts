@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { BlocksRoutingModule } from './blocks-routing.module';
+import { ForbiddenComponent } from './forbidden/forbidden.component';
 
 @NgModule({
   declarations: [
@@ -14,8 +15,15 @@ import { BlocksRoutingModule } from './blocks-routing.module';
     AppComponent,
     FooterComponent,
     NotFoundComponent,
+    ForbiddenComponent,
   ],
   imports: [CommonModule, BlocksRoutingModule, SharedModule],
-  exports: [HeaderComponent, AppComponent, FooterComponent, NotFoundComponent],
+  exports: [
+    HeaderComponent,
+    AppComponent,
+    FooterComponent,
+    NotFoundComponent,
+    ForbiddenComponent,
+  ],
 })
 export class BlocksModule {}

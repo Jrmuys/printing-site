@@ -52,12 +52,14 @@ export class CartComponent implements OnInit, OnDestroy {
     'delete',
   ];
   shippingCost: number = 4.99;
+  totalVolume: number = 0;
+  taxRate: number = 0.0575;
 
   paypalGetItems(): PayPalItem[] {
     let paypalItems: PayPalItem[];
     this.cart.forEach((cartItem) => {
       let newPayPalItem: PayPalItem = {
-        description: cartItem.title,
+        description: cartItem.model.title,
         amount: {
           currency_code: 'USD',
           value: cartItem.itemTotal,
@@ -109,6 +111,8 @@ export class CartComponent implements OnInit, OnDestroy {
                 cartItems: this.cart,
                 userName: tokenPayload.fullname,
                 userEmail: tokenPayload.email,
+                shipping: this.shippingCost,
+                tax: this.taxRate * this.totalPrice,
               }),
             })
               .then((res) => {
@@ -117,7 +121,15 @@ export class CartComponent implements OnInit, OnDestroy {
                 return res.text();
               })
               .then((details) => {
-                // this.cartService.clearCart();
+                this.cartService.clearCart().subscribe(
+                  () => {
+                    console.log('success');
+                    this.cartService.getCart();
+                  },
+                  (err) => {
+                    console.error(err);
+                  }
+                );
                 this.router.navigate(['cart/confirmation', data.orderID]);
                 // alert('Transaction approved by ' + details.payer_given_name);
               });
@@ -132,6 +144,25 @@ export class CartComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.totalPrice = cartData.totalPrice;
         this.cart = cartData.cart;
+        this.totalVolume = 0;
+        this.cart.forEach((cartItem) => {
+          this.totalVolume +=
+            +cartItem.boundingVolume * cartItem.model.quantity;
+        });
+        let volume = this.totalVolume;
+        this.shippingCost = 0;
+        while (volume > 0) {
+          if (this.totalVolume < 75.3) {
+            this.shippingCost += 8.3;
+            break;
+          } else if (this.totalVolume < 514.25) {
+            this.shippingCost += 15.05;
+            break;
+          } else {
+            this.shippingCost += 19.6;
+            volume -= 792;
+          }
+        }
         console.log('Got cart: ', this.cart);
       });
   }
@@ -143,10 +174,12 @@ export class CartComponent implements OnInit, OnDestroy {
 
   onUpdate(cartItemToUpdate: CartItem) {
     cartItemToUpdate.itemTotal =
-      cartItemToUpdate.quantity * cartItemToUpdate.price;
+      cartItemToUpdate.model.quantity * cartItemToUpdate.price;
     console.log('Updating cart...');
     let cart: CartItem[] = this.cart.map((cartItem) =>
-      cartItem.modelId === cartItem.modelPath ? cartItemToUpdate : cartItem
+      cartItem.model.id === cartItem.model.modelPath
+        ? cartItemToUpdate
+        : cartItem
     );
     this.updatePrice();
 

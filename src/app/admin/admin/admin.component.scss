@@ -16,3 +16,24 @@ td,
 th {
   width: 100%/5;
 }
+
+.statusContainer {
+  display: inline-block;
+  width: 90px;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+  text-align: center;
+}
+
+.red {
+  color: #c72b04;
+}
+.yellow {
+  color: #d39b00;
+}
+.green {
+  color: #008d00;
+}
+.blue {
+  color: #2400c7;
+}

@@ -1,10 +1,9 @@
+import { Model } from '../../core/model.model';
 export interface CartItem {
-  modelId: string;
+  model: Model;
   price: number;
-  title: string;
   imgUrl: string;
-  quantity: number;
   itemTotal: number;
-  modelPath: string;
   printStatus: string;
+  boundingVolume: string;
 }

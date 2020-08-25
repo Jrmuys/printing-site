@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { saveAs, encodeBase64 } from '@progress/kendo-file-saver';
+import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 import * as JSZipUtils from 'jszip-utils';
 import { Order } from './order.model';
@@ -20,13 +20,18 @@ export class AdminService {
 
   getOrders() {
     console.log('Getting orders');
-    this.httpClient.get<Order[]>(`${this.apiUrl}`).subscribe((orders) => {
-      console.log('Got order,', orders);
-      if (orders) {
-        this.ordersUpdated$.next(orders);
-        console.log('Orders updated...');
+    this.httpClient.get<Order[]>(`${this.apiUrl}`).subscribe(
+      (orders) => {
+        console.log('Got order,', orders);
+        if (orders) {
+          this.ordersUpdated$.next(orders);
+          console.log('Orders updated...');
+        }
+      },
+      (error) => {
+        throw error;
       }
-    });
+    );
   }
   getOrder(orderId: string) {
     return this.httpClient.get<Order>(`${this.apiUrl}/${orderId}`);
@@ -36,12 +41,10 @@ export class AdminService {
     var zip = new JSZip();
     var count = 0;
     var urls: string[] = [];
-
     var zipFilename = `order_${order.orderId}_files.zip`;
     order.orderItems.forEach((orderItem) => {
-      urls.push(orderItem.modelPath);
+      urls.push(orderItem.model.modelPath);
     });
-    console.log(urls);
 
     urls.forEach(function (url) {
       var filename = url.split('/')[5];
@@ -62,6 +65,10 @@ export class AdminService {
   }
 
   public updateOrder(order: Order) {
-    return this.httpClient.post(this.apiUrl + '/update', order);
+    console.log('UPDATING...');
+    return this.httpClient.post<{ message: string }>(
+      this.apiUrl + '/update',
+      order
+    );
   }
 }

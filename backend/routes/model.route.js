@@ -32,9 +32,9 @@ router.post(
 
     const email = req.body.user;
     var user;
-    console.log(email);
+    // console.log(email);
     if (email != "null") {
-      console.log("finding user with email: " + email);
+      // console.log("finding user with email: " + email);
       try {
         user = await User.findOne({ email });
       } catch {
@@ -52,6 +52,7 @@ router.post(
       comment: req.body.comment,
       quantity: req.body.quantity,
     });
+    console.log("MODEL: ", model);
     model.save().then((createdModel) => {
       console.log("model saved to db", req.file);
       console.log("Created model: ", createdModel);

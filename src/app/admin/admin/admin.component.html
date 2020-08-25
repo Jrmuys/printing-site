@@ -9,9 +9,10 @@
         #input
       />
     </mat-form-field>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
     <div class="mat-elevation-0">
-      <table mat-table [dataSource]="dataSource" matSort>
+      <table mat-table *ngIf="!loading" [dataSource]="dataSource" matSort>
         <!-- ID Column -->
         <ng-container matColumnDef="orderId">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
@@ -23,13 +24,32 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Order Status
           </th>
-          <td mat-cell *matCellDef="let row">{{ row.orderStatus }}</td>
+          <td mat-cell *matCellDef="let row">
+            <div
+              class="statusContainer"
+              [ngClass]="{
+                red: row.orderStatus == 'RECIEVED',
+                yellow: row.orderStatus == 'PRINTING',
+                blue: row.orderStatus == 'SHIPPED',
+                green: row.orderStatus == 'DELIVERED'
+              }"
+            >
+              {{ row.orderStatus }}
+            </div>
+          </td>
         </ng-container>
         <ng-container matColumnDef="paymentStatus">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Payment Status
           </th>
-          <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
+          <td mat-cell *matCellDef="let row">
+            <div
+              class="statusContainer"
+              [ngClass]="{ green: row.paymentStatus == 'APPROVED' }"
+            >
+              {{ row.paymentStatus }}
+            </div>
+          </td>
         </ng-container>
 
         <!-- Name Column -->

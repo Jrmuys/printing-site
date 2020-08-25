@@ -15,13 +15,12 @@ function createCart(_id) {
 function addToCart(req, res, next, host) {
   const url = req.protocol + "://" + host;
   const cartItem = new CartItem(
-    req.body.modelId,
+    JSON.parse(req.body.model),
     parseFloat(req.body.price),
-    req.body.title,
     url + "/api/images/" + req.file.filename,
-    parseFloat(req.body.quantity),
     parseFloat(req.body.itemTotal),
-    req.body.modelPath
+    req.body.printStatus,
+    req.body.boundingVolume
   );
   Cart.findOneAndUpdate(
     { userId: req.user._id },
@@ -56,7 +55,7 @@ function updateCart(req, res, next) {
   let newTotalPrice = 0;
   cartItems = req.body;
   cartItems.map((cartItem) => {
-    newTotalPrice += cartItem.price * cartItem.quantity;
+    newTotalPrice += +cartItem.price * +cartItem.model.quantity;
   });
   updatedCart = new Cart({
     cartItems: cartItems,

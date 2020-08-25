@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Vector3 } from 'three';
 
 export interface Tile {
   color: string;
@@ -37,8 +38,7 @@ export class MainComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private cartService: CartService,
     private signInDialog: MatDialog,
-    private router: Router,
-    private viewerCompontent: ViewerEngineComponent
+    private router: Router
   ) {}
 
   loading = true;
@@ -63,6 +63,8 @@ export class MainComponent implements OnInit, OnDestroy {
   modelUnit;
   fileUpload: ElementRef;
   totalCost: number;
+  boundingVolume: number;
+  boundingDimentions: Vector3;
 
   units = ['mm', 'cm', 'in'];
   // formDisplay = true;
@@ -156,6 +158,14 @@ export class MainComponent implements OnInit, OnDestroy {
               this.engServ.animate();
               this.loading = false;
               this.formDisplay = true;
+              this.boundingVolume = this.engServ.getBoundingBoxVolume();
+              this.boundingDimentions = this.engServ.getBoundingBoxDimensions();
+              this.boundingDimentions.x =
+                Math.round(this.boundingDimentions.x * 10) / 10;
+              this.boundingDimentions.y =
+                Math.round(this.boundingDimentions.y * 10) / 10;
+              this.boundingDimentions.z =
+                Math.round(this.boundingDimentions.z * 10) / 10;
             }
           );
         });
@@ -207,25 +217,14 @@ export class MainComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.getUserListener().subscribe((user) => {
       console.log(`Old user:${this.user}, New user: ${user}`);
       if (this.user && !user) {
-        this.model = {
-          id: null,
-          title: null,
-          modelPath: null,
-          units: 'mm',
-          quantity: 1,
-          user: null,
-          comment: '',
-        };
-        this.engServ.cleanup();
-        this.modelCost = 0;
-        this.totalCost = 0;
-        localStorage.removeItem('id');
+        this.resetModel();
       }
       this.user = user;
     });
   }
 
   addToCart() {
+    this.updateModel();
     console.log(this.authService.getUser());
     if (!this.authService.getUser()) {
       const dialogRef = this.signInDialog.open(SignInDialogComponent);
@@ -233,31 +232,51 @@ export class MainComponent implements OnInit, OnDestroy {
         result ? this.router.navigate(['/login']) : console.log(closed);
       });
     } else {
+      // let boundingVolume = this.engServ.getBoundingBoxVolume();
+      console.log('bounding volume: ', this.boundingVolume);
       let image = this.engServ.snapshot();
+      switch (this.model.units) {
+        case 'mm':
+          this.boundingVolume *= 6.10237e-5;
+          break;
+        case 'cm':
+          this.boundingVolume *= 0.0610237;
+          break;
+        case 'in':
+          break;
+        default:
+          console.error('Invalid Unit!');
+      }
       this.cartService.addCartItem(
-        this.model.id,
-        this.modelCost,
-        this.model.title,
+        this.model,
         image,
-        this.model.quantity,
-        this.model.modelPath
+        this.modelCost,
+        this.boundingVolume
       );
       this.cartService.getCart();
-      this.model = {
-        id: null,
-        title: null,
-        modelPath: null,
-        units: 'mm',
-        quantity: 1,
-        user: null,
-        comment: '',
-      };
-      this.engServ.cleanup();
-      this.modelCost = 0;
-      this.totalCost = 0;
-      this.modelVolume = 0;
-      this.formDisplay = false;
-      localStorage.removeItem('id');
+      // this.resetModel();
     }
+  }
+
+  private resetModel() {
+    this.model = {
+      id: null,
+      title: null,
+      modelPath: null,
+      units: 'mm',
+      quantity: 1,
+      user: null,
+      comment: '',
+    };
+    this.engServ.cleanup();
+    this.modelCost = 0;
+    this.totalCost = 0;
+    this.modelVolume = 0;
+    this.boundingDimentions.y = 0;
+    this.boundingDimentions.x = 0;
+    this.boundingDimentions.z = 0;
+
+    this.formDisplay = false;
+    localStorage.removeItem('id');
   }
 }

@@ -4,10 +4,17 @@ export interface Order {
   orderItems: CartItem[];
   userId: string;
   orderId: string;
-  totalPrice: number;
+
   date: Date;
   orderStatus: string;
-  paymentStatus: string;
+
+  paymentDetails: {
+    totalPrice: number;
+    shipping: number;
+    tax: number;
+    paymentStatus: string;
+  };
+
   customerName: string;
   customerEmail: string;
   shipping: {

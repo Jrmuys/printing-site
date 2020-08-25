@@ -176,11 +176,16 @@ export class ViewerEngineService implements OnDestroy {
   public getBoundingBoxVolume() {
     const bbox = new THREE.Box3().setFromObject(this.model);
     const bboxSize = new THREE.Vector3();
-    console.log(bbox.getSize(bboxSize));
+    bbox.getSize(bboxSize);
     console.log(bboxSize);
-    console.log(
-      `Volume of bounding box: ${bboxSize.x * bboxSize.y * bboxSize.z}`
-    );
+    return bboxSize.x * bboxSize.y * bboxSize.z;
+  }
+
+  public getBoundingBoxDimensions() {
+    const bbox = new THREE.Box3().setFromObject(this.model);
+    const bboxSize = new THREE.Vector3();
+    bbox.getSize(bboxSize);
+    return bboxSize;
   }
 
   public getSurfaceArea() {

@@ -49,9 +49,13 @@ async function handleRequest(req, res) {
     order = new Order({
       userId: req.body.userID,
       orderId: req.body.orderID,
-      totalPrice: order.result.purchase_units[0].amount.value,
       date: Date.parse(order.result.create_time),
-      paymentStatus: order.result.status,
+      paymentDetails: {
+        totalPrice: order.result.purchase_units[0].amount.value,
+        paymentStatus: order.result.status,
+        tax: req.body.tax,
+        shipping: req.body.shipping,
+      },
       orderStatus: "RECIEVED",
       customerName: req.body.userName,
       customerEmail: req.body.userEmail,

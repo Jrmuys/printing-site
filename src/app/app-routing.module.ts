@@ -1,9 +1,11 @@
+import { BlocksModule } from './blocks/blocks.module';
+import { ForbiddenComponent } from './blocks/forbidden/forbidden.component';
 import { NotFoundComponent } from './blocks/not-found/not-found.component';
 import { PathResolveService } from './core/path-resolve.service';
 
 import { AuthGuardService } from './core/auth/auth.guard';
 import { AdminComponent } from './admin/admin/admin.component';
-import { RoleGuardService as RoleGuard } from './core/auth/role.guard';
+import { RoleGuardService } from './core/auth/role.guard';
 import { AdminModule } from './admin/admin.module';
 import { CartModule } from './cart/cart.module';
 import { MainModule } from './main/main.module';
@@ -28,8 +30,12 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => AdminModule,
-    // canActivate: [RoleGuard],
+    canActivate: [RoleGuardService],
     data: { expectedRole: 'admin' },
+  },
+  {
+    path: 'forbidden',
+    loadChildren: () => BlocksModule,
   },
   {
     path: '**',

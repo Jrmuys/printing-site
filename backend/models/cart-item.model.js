@@ -1,23 +1,20 @@
 const mongoose = require("mongoose");
+const Model = require("../models/model.model");
 
 function CartItem(
-  modelId,
+  model,
   price,
-  title,
   imgUrl,
-  quantity,
   itemTotal,
-  modelPath,
-  printStatus
+  printStatus,
+  boundingVolume
 ) {
-  this.modelId = modelId;
+  this.model = model;
   this.price = price;
-  this.title = title;
   this.imgUrl = imgUrl;
-  this.quantity = quantity;
   this.itemTotal = itemTotal;
-  this.modelPath = modelPath;
   this.printStatus = printStatus | "NA";
+  this.boundingVolume = boundingVolume;
 }
 
 module.exports = CartItem;

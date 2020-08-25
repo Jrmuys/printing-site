@@ -1,8 +1,14 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 
-<div class="w3-row-padding" style="max-width: 1250px; margin: auto;">
+<div
+  class="w3-row-padding"
+  style="max-width: 1250px; margin: auto; padding-top: 16px;"
+>
   <div class="w3-col s12 l9">
     <mat-card>
+      <a routerLink="" mat-flat-button color="primary">
+        <mat-icon>arrow_back_ios</mat-icon>BACK
+      </a>
       <table mat-table [dataSource]="cart" class="mat-elevation-z8">
         <!-- Image Column -->
         <ng-container matColumnDef="imgUrl">
@@ -16,7 +22,7 @@
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef>Title</th>
           <td mat-cell *matCellDef="let element">
-            <p class="no-over-flow">{{ element.title }}</p>
+            <p class="no-over-flow">{{ element.model.title }}</p>
           </td>
           <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
@@ -29,7 +35,7 @@
                 type="number"
                 matInput
                 (change)="onUpdate(element)"
-                [(ngModel)]="element.quantity"
+                [(ngModel)]="element.model.quantity"
               />
             </mat-form-field>
           </td>
@@ -40,7 +46,7 @@
         <ng-container matColumnDef="price">
           <th mat-header-cell *matHeaderCellDef>Price</th>
           <td mat-cell *matCellDef="let transaction">
-            {{ transaction.price * transaction.quantity | currency }}
+            {{ transaction.price * transaction.model.quantity | currency }}
           </td>
           <td mat-footer-cell *matFooterCellDef>
             {{ totalPrice | currency }}
@@ -101,7 +107,7 @@
             Estimated Tax:
 
             <span style="float: right; font-weight: bold;">
-              {{ totalPrice * 0.05 | currency }}
+              {{ totalPrice * taxRate | currency }}
             </span>
           </p>
         </div>
@@ -111,7 +117,7 @@
             Final Total:
 
             <span style="float: right; font-weight: bold; color: #cc2400;">
-              {{ totalPrice + totalPrice * 0.05 + shippingCost | currency }}
+              {{ totalPrice + totalPrice * taxRate + shippingCost | currency }}
             </span>
           </p>
         </div>

@@ -127,9 +127,18 @@
       <mat-card>
         <mat-card-content>
           <p style="text-align: left;">
-            Volume:
+            Model Volume:
             <span style="float: right; font-weight: bold;">
               {{ modelVolume }} {{ modelUnit }}^3
+            </span>
+          </p>
+          <p style="text-align: left;">
+            Dimentions:
+
+            <span style="float: right; font-weight: bold;">
+              {{ boundingDimentions.x | number }} x
+              {{ boundingDimentions.y | number }} x
+              {{ boundingDimentions.x | number }} {{ modelUnit }}
             </span>
           </p>
           <mat-divider style="margin-bottom: 8px;" [inset]="true">
@@ -184,6 +193,16 @@
           </div>
         </mat-card-content>
       </mat-card>
+      <!-- <mat-card>
+        <mat-card-title>
+          How we deterimine print costs
+        </mat-card-title>
+        <mat-card-content>
+          We take the volume and the surface area of your print and find how
+          much time it will take to print your model. We add this to the labor
+          and determine the overall cost to print.
+        </mat-card-content>
+      </mat-card> -->
     </div>
   </div>
 </div>

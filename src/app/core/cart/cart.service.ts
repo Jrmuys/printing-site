@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { CartItem } from './cart-item';
+import { Model } from '../model.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +42,7 @@ export class CartService {
       });
   }
 
-  clearCart() {
+  public clearCart() {
     return this.httpClient.delete(this.apiUrl + '/clear');
   }
 
@@ -50,22 +51,17 @@ export class CartService {
   }
 
   addCartItem(
-    modelId: string,
-    price: number,
-    title: string,
+    model: Model,
     image: File,
-    quantity: number,
-    modelPath: string
+    price: number,
+    boundingVolume: number
   ) {
     const cartData = new FormData();
-    cartData.append('modelId', modelId);
+    cartData.append('model', JSON.stringify(model));
     cartData.append('price', price.toString());
-    cartData.append('title', title);
-    cartData.append('image', image, title);
-    cartData.append('quantity', quantity.toString());
-    cartData.append('modelPath', modelPath);
-    cartData.append('itemTotal', (price * quantity).toString());
-    console.log(this.apiUrl);
+    cartData.append('image', image, model.title);
+    cartData.append('itemTotal', (price * model.quantity).toString());
+    cartData.append('boundingVolume', boundingVolume.toString());
     this.httpClient
       .post<{ cart: CartItem[]; totalPrice: number }>(
         `${this.apiUrl}/add`,
