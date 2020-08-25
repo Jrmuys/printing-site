@@ -135,7 +135,10 @@
           <p style="text-align: left;">
             Dimentions:
 
-            <span style="float: right; font-weight: bold;">
+            <span
+              *ngIf="!loading && formDisplay"
+              style="float: right; font-weight: bold;"
+            >
               {{ boundingDimentions.x | number }} x
               {{ boundingDimentions.y | number }} x
               {{ boundingDimentions.x | number }} {{ modelUnit }}

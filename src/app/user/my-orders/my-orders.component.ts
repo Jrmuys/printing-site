@@ -1,0 +1,67 @@
+import { Router } from '@angular/router';
+import { Order } from '../../core/admin/order.model';
+import { Subscription } from 'rxjs';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { AdminService } from '../../core/admin/admin.service';
+
+@Component({
+  selector: 'app-my-orders',
+  templateUrl: './my-orders.component.html',
+  styleUrls: ['./my-orders.component.scss'],
+})
+export class MyOrdersComponent implements OnInit {
+  // Create 100 users
+  // Assign the data to the data source for the table to render
+
+  displayedColumns: string[] = [
+    'orderId',
+    'orderStatus',
+    // 'paymentStatus',
+    'totalPrice',
+    'date',
+    'details',
+  ];
+  dataSource: MatTableDataSource<Order>;
+  private orderListener: Subscription;
+  orders: Order[];
+  loading = false;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  constructor(private adminService: AdminService, private router: Router) {
+    // Create 100 users
+    // Assign the data to the data source for the table to render
+  }
+  ngOnInit() {
+    this.loading = true;
+    console.log('INIT');
+
+    this.adminService.getUserOrders().subscribe(
+      (order) => {
+        this.orders = order;
+        this.dataSource = new MatTableDataSource(this.orders);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        console.log(this.dataSource);
+        this.loading = false;
+      },
+      (error) => {
+        console.error(error.message);
+        this.router.navigate(['/forbidden']);
+      }
+    );
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+}

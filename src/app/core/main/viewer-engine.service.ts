@@ -63,15 +63,15 @@ export class ViewerEngineService implements OnDestroy {
     // The first step is to get the reference of the canvas element from our HTML document
     console.log('createScene... \ncanvas:', canvas);
     this.canvas = canvas.nativeElement;
-    console.log('Testing loading STL:');
-    this.testLoadSTL('./assets/peter.stl').then((result) => {
-      if (result) {
-        console.log('STL is valid', result);
-      } else {
-        console.log(result);
-        console.error('STL is invalid');
-      }
-    });
+    // console.log('Testing loading STL:');
+    // this.testLoadSTL('./assets/peter.stl').then((result) => {
+    //   if (result) {
+    //     console.log('STL is valid', result);
+    //   } else {
+    //     console.log(result);
+    //     console.error('STL is invalid');
+    //   }
+    // });
 
     this.width = document
       .getElementById('engine')

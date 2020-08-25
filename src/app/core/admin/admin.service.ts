@@ -33,8 +33,13 @@ export class AdminService {
       }
     );
   }
+
+  getUserOrders() {
+    return this.httpClient.get<Order[]>(`api/admin/user`);
+  }
+
   getOrder(orderId: string) {
-    return this.httpClient.get<Order>(`${this.apiUrl}/${orderId}`);
+    return this.httpClient.get<Order>(`${this.apiUrl}/order/${orderId}`);
   }
 
   public downloadAll(order: Order) {

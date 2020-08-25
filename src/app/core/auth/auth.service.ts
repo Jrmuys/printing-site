@@ -70,7 +70,7 @@ export class AuthService {
           return of(user);
         }),
         catchError((err) => {
-          console.log(`server error occoured`, err);
+          console.log(`server error occurred`, err);
           return throwError(
             err.error.message || `Registration failed, please contact admin`
           );

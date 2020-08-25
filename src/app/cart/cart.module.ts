@@ -4,10 +4,9 @@ import { CommonModule } from '@angular/common';
 
 import { CartRoutingModule } from './cart-routing.module';
 import { CartComponent } from './cart/cart.component';
-import { ConfirmationPageComponent } from './confirmation-page/confirmation-page.component';
 
 @NgModule({
-  declarations: [CartComponent, ConfirmationPageComponent],
+  declarations: [CartComponent],
   imports: [CommonModule, CartRoutingModule, SharedModule],
 })
 export class CartModule {}

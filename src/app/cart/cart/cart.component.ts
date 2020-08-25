@@ -130,7 +130,7 @@ export class CartComponent implements OnInit, OnDestroy {
                     console.error(err);
                   }
                 );
-                this.router.navigate(['cart/confirmation', data.orderID]);
+                this.router.navigate(['user/confirmation', data.orderID]);
                 // alert('Transaction approved by ' + details.payer_given_name);
               });
           },

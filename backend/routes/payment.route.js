@@ -15,7 +15,9 @@ router.post(
 );
 
 async function insert(req, res, next) {
-  await paymentController.handleRequest(req, res);
+  await paymentController.handleRequest(req, res).catch((err) => {
+    res.status(500).json({ message: "an error occurred", error: err });
+  });
 }
 
 module.exports = router;

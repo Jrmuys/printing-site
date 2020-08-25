@@ -15,13 +15,29 @@ async function insert(user) {
 }
 
 async function isUserValid(user, password, hashedPassword) {
-  return user && (await bcrypt.compare(password, hashedPassword));
+  return (
+    user &&
+    (await bcrypt.compare(password, hashedPassword).catch((err) => {
+      res.status(400).json({ message: "Authorization failed", error: err });
+    }))
+  );
 }
 
 async function getUserByEmailIdAndPassword(email, password) {
-  let user = await User.findOne({ email });
+  let user = await User.findOne({ email }).catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in finding the model occurred", error: err });
+  });
   if (user) {
-    if (await isUserValid(user, password, user.hashedPassword)) {
+    if (
+      await isUserValid(user, password, user.hashedPassword).catch((err) => {
+        res.status(500).json({
+          message: "An error in validating the user occurred",
+          error: err,
+        });
+      })
+    ) {
       user = user.toObject();
       delete user.hashedPassword;
       return user;
@@ -32,7 +48,11 @@ async function getUserByEmailIdAndPassword(email, password) {
 }
 
 async function getUserById(id) {
-  let user = await User.findById(id);
+  let user = await User.findById(id).catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in finding the user occurred", error: err });
+  });
   // console.log("findById(): User = ", user);
   if (user) {
     user = user.toObject();
@@ -44,7 +64,11 @@ async function getUserById(id) {
 }
 
 async function getUserByEmail(email) {
-  let user = await User.findOne({ email });
+  let user = await User.findOne({ email }).catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in finding the user occurred", error: err });
+  });
   if (user) {
     user = user.toObject();
     delete user.hashedPassword;

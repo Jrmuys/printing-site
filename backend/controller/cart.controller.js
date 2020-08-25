@@ -9,7 +9,14 @@ function createCart(_id) {
     userId: _id,
     totalPrice: 0,
   });
-  cart.save().then(() => {});
+  cart
+    .save()
+    .then(() => {})
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "An error in saving the cart occurred", error: err });
+    });
 }
 
 function addToCart(req, res, next, host) {
@@ -28,17 +35,24 @@ function addToCart(req, res, next, host) {
       $push: { cartItems: cartItem },
     },
     { new: true }
-  ).then((newCart) => {
-    newCart.totalPrice
-      ? (newCart.totalPrice =
-          parseFloat(newCart.totalPrice) + parseFloat(cartItem.itemTotal))
-      : (newCart.totalPrice = cartItem.itemTotal);
-    cart = newCart.save().then((savedCart) => {
-      savedCart
-        ? res.status(201).json({ message: "added successfully" })
-        : res.status(404).json({ message: "Cart not found" });
+  )
+    .then((newCart) => {
+      newCart.totalPrice
+        ? (newCart.totalPrice =
+            parseFloat(newCart.totalPrice) + parseFloat(cartItem.itemTotal))
+        : (newCart.totalPrice = cartItem.itemTotal);
+      cart = newCart.save().then((savedCart) => {
+        savedCart
+          ? res.status(201).json({ message: "added successfully" })
+          : res.status(404).json({ message: "Cart not found" });
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "An error in adding to the cart occurred",
+        error: err,
+      });
     });
-  });
 }
 
 function getCart(req, res, next) {
@@ -48,6 +62,10 @@ function getCart(req, res, next) {
     } else {
       res.status(404).json({ message: "Cart Items not found" });
     }
+  }).catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in getting the cart occurred", error: err });
   });
 }
 
@@ -64,11 +82,18 @@ function updateCart(req, res, next) {
   Cart.findOneAndUpdate(
     { userId: req.user._id },
     { cartItems: cartItems, totalPrice: newTotalPrice }
-  ).then((cart) =>
-    cart
-      ? res.status(201).json({ message: "Updated cart..." })
-      : res.status(404).json({ message: "could not update cart" })
-  );
+  )
+    .then((cart) =>
+      cart
+        ? res.status(201).json({ message: "Updated cart..." })
+        : res.status(404).json({ message: "could not update cart" })
+    )
+    .catch((err) => {
+      res.status(500).json({
+        message: "An error in updating the cart occurred",
+        error: err,
+      });
+    });
 }
 
 function clear(req, res, next) {
@@ -79,9 +104,16 @@ function clear(req, res, next) {
   Cart.findOneAndUpdate(
     { userId: req.user._id },
     { cartItems: [], totalPrice: 0 }
-  ).then(() => {
-    res.status(201).json({ message: "Cart cleared successfully!" });
-  });
+  )
+    .then(() => {
+      res.status(201).json({ message: "Cart cleared successfully!" });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "An error in clearing the cart occurred",
+        error: err,
+      });
+    });
 }
 
 function deleteItem(req, res, next) {
@@ -91,9 +123,17 @@ function deleteItem(req, res, next) {
     { new: true }
   ).then((cart) => {
     cart.totalPrice -= req.body.itemTotal;
-    cart.save().then(() => {
-      res.status(201).json({ message: "Item successfully deleted" });
-    });
+    cart
+      .save()
+      .then(() => {
+        res.status(201).json({ message: "Item successfully deleted" });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: "An error in deleting the cart item occurred",
+          error: err,
+        });
+      });
   });
 }
 

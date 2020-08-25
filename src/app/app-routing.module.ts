@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { BlocksModule } from './blocks/blocks.module';
 import { ForbiddenComponent } from './blocks/forbidden/forbidden.component';
 import { NotFoundComponent } from './blocks/not-found/not-found.component';
@@ -12,7 +13,7 @@ import { MainModule } from './main/main.module';
 import { AuthModule } from './auth/auth.module';
 
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, CanActivate } from '@angular/router';
 
 const routes: Routes = [
   // { path: '', redirectTo: '/order', pathMatch: 'full' },
@@ -36,6 +37,11 @@ const routes: Routes = [
   {
     path: 'forbidden',
     loadChildren: () => BlocksModule,
+  },
+  {
+    path: 'user',
+    loadChildren: () => UserModule,
+    canActivate: [AuthGuardService],
   },
   {
     path: '**',

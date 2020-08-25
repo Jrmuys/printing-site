@@ -45,7 +45,7 @@
               Email: <span>{{ order.customerEmail }}</span>
             </li>
             <li>Customer ID: {{ order.userId }}</li>
-            <li>Payment Status: {{ order.paymentStatus }}</li>
+            <li>Payment Status: {{ order.paymentDetails.paymentStatus }}</li>
             <li>Date of Order: {{ order.date | date }}</li>
           </ul>
         </mat-card-content>

@@ -17,6 +17,7 @@ import {
 import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Vector3 } from 'three';
+import { User } from 'src/app/core/user.model';
 
 export interface Tile {
   color: string;
@@ -44,7 +45,7 @@ export class MainComponent implements OnInit, OnDestroy {
   loading = true;
   private unitSub;
   private userSub: Subscription;
-  user;
+  user: User = null;
 
   ngOnDestroy(): void {
     this.unitSub.unsubscribe();
@@ -82,9 +83,12 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onFilePicked(event: Event) {
+    this.loading = true;
+
     console.log('File picked');
     const file = (event.target as HTMLInputElement).files[0];
     const name = file.name.split('.')[0];
+
     var progress = 0;
     console.log('file:', file);
     this.uploadService
@@ -96,22 +100,41 @@ export class MainComponent implements OnInit, OnDestroy {
         this.model.quantity,
         this.authService.getUser()
       )
-      .subscribe((result) => {
-        console.log(typeof result);
-        this.engServ.createScene(this.rendererCanvas, result.filePath, () => {
-          this.modelVolume =
-            Math.round(this.engServ.getVolumeService() * 100) / 100;
-          this.onUnitSelect();
-          this.model.title = result.title;
-          this.formDisplay = true;
-          this.model.id = result._id;
-          this.model.modelPath = result.filePath;
-          this.model.user = result.user;
-          console.log('Model: ' + JSON.stringify(this.model));
-          this.storeModel(this.model);
-        });
-        this.engServ.animate();
-      });
+      .subscribe(
+        (result) => {
+          this.engServ.testLoadSTL(result.filePath).then((valid) => {
+            if (valid) {
+              console.log('STL is valid', valid);
+              console.log(typeof result);
+              this.engServ.createScene(
+                this.rendererCanvas,
+                result.filePath,
+                () => {
+                  this.modelVolume =
+                    Math.round(this.engServ.getVolumeService() * 100) / 100;
+                  this.onUnitSelect();
+                  this.model.title = result.title;
+                  this.formDisplay = true;
+                  this.model.id = result._id;
+                  this.model.modelPath = result.filePath;
+                  this.model.user = result.user;
+                  console.log('Model: ' + JSON.stringify(this.model));
+                  this.storeModel(this.model);
+                  this.loading = false;
+                  this.engServ.animate();
+                }
+              );
+            } else {
+              console.log(valid);
+              console.error('STL is invalid');
+            }
+          });
+        },
+        (err) => {
+          console.log('error');
+          console.error(err);
+        }
+      );
   }
 
   updateModel() {
@@ -138,36 +161,44 @@ export class MainComponent implements OnInit, OnDestroy {
       this.uploadService
         .getModel(localStorage.getItem('id'))
         .subscribe((res) => {
-          console.log('Getting model with info: ' + JSON.stringify(res));
-          this.model = {
-            id: res._id,
-            title: res.title,
-            modelPath: res.filePath,
-            units: res.units,
-            comment: res.comment,
-            quantity: +res.quantity,
-            user: res.user,
-          };
-          this.engServ.createScene(
-            this.rendererCanvas,
-            this.model.modelPath,
-            () => {
-              this.modelVolume =
-                Math.round(this.engServ.getVolumeService() * 100) / 100;
-              this.onUnitSelect();
-              this.engServ.animate();
-              this.loading = false;
-              this.formDisplay = true;
-              this.boundingVolume = this.engServ.getBoundingBoxVolume();
-              this.boundingDimentions = this.engServ.getBoundingBoxDimensions();
-              this.boundingDimentions.x =
-                Math.round(this.boundingDimentions.x * 10) / 10;
-              this.boundingDimentions.y =
-                Math.round(this.boundingDimentions.y * 10) / 10;
-              this.boundingDimentions.z =
-                Math.round(this.boundingDimentions.z * 10) / 10;
+          this.engServ.testLoadSTL(res.filePath).then((valid) => {
+            if (valid) {
+              console.log('STL is valid', valid);
+              console.log('Getting model with info: ' + JSON.stringify(res));
+              this.model = {
+                id: res._id,
+                title: res.title,
+                modelPath: res.filePath,
+                units: res.units,
+                comment: res.comment,
+                quantity: +res.quantity,
+                user: res.user,
+              };
+              this.engServ.createScene(
+                this.rendererCanvas,
+                this.model.modelPath,
+                () => {
+                  this.modelVolume =
+                    Math.round(this.engServ.getVolumeService() * 100) / 100;
+                  this.onUnitSelect();
+                  this.engServ.animate();
+                  this.loading = false;
+                  this.formDisplay = true;
+                  this.boundingVolume = this.engServ.getBoundingBoxVolume();
+                  this.boundingDimentions = this.engServ.getBoundingBoxDimensions();
+                  this.boundingDimentions.x =
+                    Math.round(this.boundingDimentions.x * 10) / 10;
+                  this.boundingDimentions.y =
+                    Math.round(this.boundingDimentions.y * 10) / 10;
+                  this.boundingDimentions.z =
+                    Math.round(this.boundingDimentions.z * 10) / 10;
+                }
+              );
+            } else {
+              console.log(valid);
+              console.error('STL is invalid');
             }
-          );
+          });
         });
     } else {
       console.log('No model saved');
@@ -188,6 +219,7 @@ export class MainComponent implements OnInit, OnDestroy {
       comment: '',
     };
     this.getStoredModel();
+    this.formDisplay = false;
     var conversionFactor = 1;
     this.unitSub = this.mainService.getUnitSubject().subscribe((data) => {
       console.log('Switching units:' + data);
@@ -215,7 +247,11 @@ export class MainComponent implements OnInit, OnDestroy {
     });
     this.onUnitSelect();
     this.userSub = this.authService.getUserListener().subscribe((user) => {
-      console.log(`Old user:${this.user}, New user: ${user}`);
+      console.log(
+        `Old user:${JSON.stringify(this.user)}, New user: ${JSON.stringify(
+          user
+        )}`
+      );
       if (this.user && !user) {
         this.resetModel();
       }
@@ -254,7 +290,7 @@ export class MainComponent implements OnInit, OnDestroy {
         this.boundingVolume
       );
       this.cartService.getCart();
-      // this.resetModel();
+      this.resetModel();
     }
   }
 

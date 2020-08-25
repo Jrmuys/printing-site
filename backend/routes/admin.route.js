@@ -32,7 +32,20 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/user",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    orders = await Order.find({ userId: req.user._id });
+    if (orders) {
+      res.status(201).json(orders);
+    } else {
+      res.status(404).json({ message: "Orders not found!" });
+    }
+  }
+);
+
+router.get(
+  "/order/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     orderFromDB = await Order.findOne({ orderId: req.params.id });
@@ -55,7 +68,6 @@ router.get(
         console.log("YEP");
       }
 
-      // console.log(order.result.purchase_units[0].shipping);
       res.status(201).json(orderFromDB);
     } else {
       res.status(403).json({ message: "Not authorized for this action!" });
@@ -73,7 +85,12 @@ router.post(
       orderRes = await Order.findOneAndUpdate(
         { orderId: order.orderId },
         { orderItems: order.orderItems, orderStatus: order.orderStatus }
-      );
+      ).catch((err) => {
+        res.status(500).json({
+          message: "An error in updating the order occurred",
+          error: err,
+        });
+      });
       if (orderRes) {
         res.status(201).json({ message: "Order updated successfully" });
       } else {

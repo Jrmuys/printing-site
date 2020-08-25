@@ -67,20 +67,7 @@ router.put(
   async (req, res, next) => {
     console.log("Recieved Model Update Request");
     let filePath = req.body.filePath;
-
     const user = req.body.user;
-    // console.log(email);
-    // if (email != "null") {
-    //   console.log("finding user with email: " + email);
-    //   try {
-    //     user = await User.findOne({ email });
-    //   } catch {
-    //     console.log("user not found");
-    //     user = null;
-    //   }
-    // } else {
-    //   user = null;
-    // }
     const model = new Model();
     Model.updateOne(
       { _id: req.params.id },
@@ -92,24 +79,42 @@ router.put(
         comment: req.body.comment,
         quantity: req.body.quantity,
       }
-    ).then((updatedModel) => {
-      console.log("model updated in db", req.file);
-      console.log("Updated model: ", updatedModel);
-      res.status(200).json(updatedModel);
-    });
+    )
+      .then((updatedModel) => {
+        console.log("model updated in db", req.file);
+        console.log("Updated model: ", updatedModel);
+        res.status(200).json(updatedModel);
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json({
+            message: "An error in updating the model occurred",
+            error: err,
+          });
+      });
   }
 );
 
 router.get("/:id", (req, res, next) => {
-  Model.findById(req.params.id).then((model) => {
-    if (model) {
-      console.log("Model found!");
-      res.status(200).json(model);
-    } else {
-      console.log("model not found");
-      res.status(404).json({ message: "Model not found!" });
-    }
-  });
+  Model.findById(req.params.id)
+    .then((model) => {
+      if (model) {
+        console.log("Model found!");
+        res.status(200).json(model);
+      } else {
+        console.log("model not found");
+        res.status(404).json({ message: "Model not found!" });
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({
+          message: "An error in finding the model occurred",
+          error: err,
+        });
+    });
 });
 
 module.exports = router;

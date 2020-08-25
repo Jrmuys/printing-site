@@ -49,18 +49,6 @@ async function insert(req, res, next) {
     });
 }
 
-// async function getUserByEmailIdAndPassword(req, res, next) {
-//   const user = req.body;
-//   console.log(`searching user for `, user);
-
-//   const savedUser = await userController.getUserByEmailIdAndPassword(
-//     user.email,
-//     user.password
-//   );
-//   req.user = savedUser;
-//   next();
-// }
-
 function test(req, res, next) {
   next();
 }

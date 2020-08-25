@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Order } from 'src/app/core/admin/order.model';
 import { CartItem } from 'src/app/core/cart/cart-item';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { AdminService } from 'src/app/core/admin/admin.service';
   templateUrl: './confirmation-page.component.html',
   styleUrls: ['./confirmation-page.component.scss'],
 })
-export class ConfirmationPageComponent implements OnInit {
+export class ConfirmationPageComponent implements OnInit, OnDestroy {
   id: string;
   private sub: any;
   order: Order;
@@ -17,6 +17,7 @@ export class ConfirmationPageComponent implements OnInit {
   displayedColumns: string[] = ['imgUrl', 'title', 'quantity'];
   orderSub: any;
   error: Error;
+  loading: Boolean = false;
   constructor(
     private route: ActivatedRoute,
     private adminService: AdminService,
@@ -24,6 +25,7 @@ export class ConfirmationPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loading = true;
     this.route.params.subscribe(
       (params) => {
         this.id = params.id;
@@ -35,6 +37,7 @@ export class ConfirmationPageComponent implements OnInit {
               this.order = order;
               this.orderItems = order.orderItems;
               console.log(order);
+              this.loading = false;
             },
             (error) => {
               this.error = error;

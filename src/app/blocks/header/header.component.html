@@ -7,7 +7,10 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>
-    <a routerLink="" class="h1">ThriftyPrint</a>
+    <a routerLink="" class="h1 hide-on-small-screen">ThriftyPrint</a>
+    <a routerLink="" class="h1 show-on-small-screen" style="font-size: large;"
+      >ThriftyPrint</a
+    >
   </span>
   <span class="spacer"></span>
   <ul>
@@ -58,8 +61,17 @@
           >
             {{ user.fullname.split(" ")[0] }}
           </label>
+
+          <a
+            routerLink="user/orders"
+            mat-menu-item
+            class="menu-text"
+            style="color: black;"
+          >
+            My Orders
+          </a>
           <button (click)="logout()" mat-menu-item class="menu-text">
-            logout
+            Logout
           </button>
         </mat-menu>
       </div>

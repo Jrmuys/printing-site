@@ -30,7 +30,11 @@ async function handleRequest(req, res) {
     return res.send(500);
   }
 
-  cart = await Cart.findOne({ userId: req.body.userID });
+  cart = await Cart.findOne({ userId: req.body.userID }).catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in finding the cart occurred", error: err });
+  });
   if (cart) {
     // 5. Validate the transaction details are as expected
     // console.log(
@@ -61,11 +65,20 @@ async function handleRequest(req, res) {
       customerEmail: req.body.userEmail,
       shipping: order.result.purchase_units[0].shipping,
     });
-    await order.save();
+    await order.save().catch((err) => {
+      res
+        .status(500)
+        .json({ message: "An error in saving the order occurred", error: err });
+    });
     await Order.findOneAndUpdate(
       { orderId: req.body.orderID },
       { orderItems: orderArray }
-    );
+    ).catch((err) => {
+      res.status(500).json({
+        message: "An error in updating the order occurred",
+        error: err,
+      });
+    });
   } else {
     return res.send(400);
   }
