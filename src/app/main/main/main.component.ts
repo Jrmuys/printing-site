@@ -66,8 +66,10 @@ export class MainComponent implements OnInit, OnDestroy {
   totalCost: number;
   boundingVolume: number;
   boundingDimentions: Vector3;
-
+  graphics: string;
+  graphicsOptions = ['fancy', 'low'];
   units = ['mm', 'cm', 'in'];
+  graphicsChanged = false;
   // formDisplay = true;
 
   onFormSubmit() {}
@@ -83,6 +85,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onFilePicked(event: Event) {
+    this.setGraphics(localStorage.getItem('graphics') != 'low');
     this.loading = true;
 
     console.log('File picked');
@@ -156,6 +159,8 @@ export class MainComponent implements OnInit, OnDestroy {
     console.log(model.id);
   }
   getStoredModel() {
+    this.setGraphics(localStorage.getItem('graphics') != 'low');
+
     this.loading = true;
     if (localStorage.getItem('id')) {
       this.uploadService
@@ -183,9 +188,10 @@ export class MainComponent implements OnInit, OnDestroy {
                   this.onUnitSelect();
                   this.engServ.animate();
                   this.loading = false;
-                  this.formDisplay = true;
                   this.boundingVolume = this.engServ.getBoundingBoxVolume();
                   this.boundingDimentions = this.engServ.getBoundingBoxDimensions();
+                  this.formDisplay = true;
+
                   this.boundingDimentions.x =
                     Math.round(this.boundingDimentions.x * 10) / 10;
                   this.boundingDimentions.y =
@@ -206,7 +212,25 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
+  onGraphicsPicked(value: string) {
+    this.graphicsChanged = true;
+    console.log('setting Graphics to ', value);
+    localStorage.setItem('graphics', value);
+  }
+
+  setGraphics(fancy: boolean) {
+    console.log('setting graphics... ');
+    console.log('to', fancy);
+
+    this.engServ.setGraphics(fancy);
+  }
+
   ngOnInit(): void {
+    this.graphics = localStorage.getItem('graphics');
+    if (!this.graphics) {
+      localStorage.setItem('graphics', 'fancy');
+      this.graphics = 'fancy';
+    }
     console.log('INIT');
     this.loading = true;
     this.model = {
@@ -218,6 +242,7 @@ export class MainComponent implements OnInit, OnDestroy {
       user: null,
       comment: '',
     };
+
     this.getStoredModel();
     this.formDisplay = false;
     var conversionFactor = 1;

@@ -16,15 +16,51 @@
             height="100px"
           ></canvas>
         </div>
-        <button mat-stroked-button type="button" (click)="filePicker.click()">
-          UPLOAD STL
-        </button>
-        <input
-          type="file"
-          style="visibility: hidden;"
-          #filePicker
-          (change)="onFilePicked($event)"
-        />
+        <div class="w3-row">
+          <div class="w3-col w3-half">
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="filePicker.click()"
+            >
+              UPLOAD STL
+            </button>
+            <input
+              type="file"
+              style="visibility: hidden;"
+              #filePicker
+              (change)="onFilePicked($event)"
+            />
+          </div>
+
+          <div class="w-col w3-half">
+            <mat-radio-group
+              class="example-radio-group form-control"
+              style="float: right;"
+              [(ngModel)]="graphics"
+              name="graphicsSelect"
+              (change)="onUnitSelect()"
+            >
+              <p style="margin: 8px;">Grpahics Quality:</p>
+
+              <mat-radio-button
+                class="example-radio-button"
+                [checked]="graphicsOption === graphics"
+                *ngFor="let graphicsOption of graphicsOptions"
+                [value]="graphicsOption"
+                (change)="onGraphicsPicked(graphicsOption)"
+              >
+                {{ graphicsOption }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-error
+            style="float: right; position: relative;"
+            *ngIf="graphicsChanged"
+          >
+            Reload for change to take effect
+          </mat-error>
+        </div>
       </mat-card>
       <mat-card>
         <form (ngSubmit)="onFormSubmit()" #modelForm="ngForm">

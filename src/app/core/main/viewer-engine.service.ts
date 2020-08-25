@@ -26,10 +26,21 @@ export class ViewerEngineService implements OnDestroy {
   private model: THREE.Mesh;
 
   private frameId: number = null;
+  spotlight: THREE.SpotLight;
 
   public constructor(private ngZone: NgZone) {}
 
   private controls: OrbitControls;
+  private boundingDimesions$;
+
+  public getBoundingDimensionsListener() {
+    return this.boundingDimesions$.asObservable();
+  }
+
+  fancy = true;
+  public setGraphics(fancy: boolean) {
+    this.fancy = fancy;
+  }
 
   public testLoadSTL(path: string): Promise<any> {
     return new Promise((resolve) => {
@@ -63,15 +74,6 @@ export class ViewerEngineService implements OnDestroy {
     // The first step is to get the reference of the canvas element from our HTML document
     console.log('createScene... \ncanvas:', canvas);
     this.canvas = canvas.nativeElement;
-    // console.log('Testing loading STL:');
-    // this.testLoadSTL('./assets/peter.stl').then((result) => {
-    //   if (result) {
-    //     console.log('STL is valid', result);
-    //   } else {
-    //     console.log(result);
-    //     console.error('STL is invalid');
-    //   }
-    // });
 
     this.width = document
       .getElementById('engine')
@@ -91,8 +93,11 @@ export class ViewerEngineService implements OnDestroy {
       preserveDrawingBuffer: true,
     });
     this.renderer.setSize(this.width, this.height);
-
-    // create the scene
+    if (this.fancy) {
+      this.renderer.toneMapping = THREE.ReinhardToneMapping; // create the scene
+      this.renderer.toneMappingExposure = 2.3;
+      this.renderer.shadowMap.enabled = true;
+    }
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -101,15 +106,27 @@ export class ViewerEngineService implements OnDestroy {
       1000
     );
     this.resize();
-    this.camera.position.z = 10;
+    this.camera.position.z = 50;
+    this.camera.position.y = 50;
+    this.camera.position.x = 50;
     this.scene.add(this.camera);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     // soft white light
-    this.light = new THREE.AmbientLight(0x404040);
-    this.light.position.z = 1;
-    this.scene.add(this.light);
-    this.scene.add(new THREE.HemisphereLight(0xffffff, 1.0));
+    if (this.fancy) {
+      this.spotlight = new THREE.SpotLight(0xfffbf2, 4);
+
+      this.spotlight.castShadow = true;
+      this.spotlight.shadow.bias = -0.0001;
+      this.spotlight.shadow.mapSize.width = 1024 * 4;
+      this.spotlight.shadow.mapSize.height = 1024 * 4;
+      this.scene.add(this.spotlight);
+    }
+    // spotlight.position.z = 1;
+    // spotlight.position.x = 5;
+    // spotlight.position.y = 3;
+
+    this.scene.add(new THREE.HemisphereLight(0xe0f3ff, 0x080808, 4.0));
 
     // this.model = new THREE.Mesh(geometry, material);
 
@@ -117,38 +134,35 @@ export class ViewerEngineService implements OnDestroy {
     this.loading = true;
     this.loader.load(filePath, (geometry) => {
       var material = new THREE.MeshPhongMaterial({
-        color: 0x545454,
+        color: 0x333333,
         specular: 50,
-        shininess: 50,
+        shininess: 0,
       });
       console.log('Test');
-      geometry.scale(0.1, 0.1, 0.1);
+      geometry.scale(1, 1, 1);
       this.geometry = geometry;
       this.material = material;
       console.log('Volume: ' + Math.round(this.getVolume()));
-      // this.scene.add(mesh);
       this.model = new THREE.Mesh(this.geometry, this.material);
-      // this.model.position.set(0, 0, 0);
       var center = new THREE.Vector3();
-
+      if (this.fancy) {
+        this.model.receiveShadow = true;
+        this.model.castShadow = true;
+      }
       this.model.geometry.center();
       this.scene.add(this.model);
+      // this.model.rotation.x += 4;
+      // this.model.rotation.y += 41;
+      var boundingBox = new THREE.BoxHelper(this.model, 0xff0000);
+      this.scene.add(boundingBox);
       this.camera.lookAt(this.model.position);
-      this.model.rotation.x += 4;
-      this.model.rotation.y += 41;
+
       this.resize();
       this.loading = false;
       this.getBoundingBoxVolume();
       console.log(this.getSurfaceArea());
       callback();
     });
-
-    // const geometry = new THREE.BoxGeometry(1, 2, 1);
-    // const material = new THREE.MeshPhongMaterial({
-    //   color: 0x999999,
-    //   specular: 50,
-    //   shininess: 50,
-    // });
 
     console.log('Model added');
   }
@@ -206,7 +220,7 @@ export class ViewerEngineService implements OnDestroy {
   }
 
   public animate(): void {
-    // We have to run this outside angular zones,
+    // This is run this outside angular zones
     // because it could trigger heavy changeDetection cycles.
     this.ngZone.runOutsideAngular(() => {
       if (document.readyState !== 'loading') {
@@ -228,12 +242,20 @@ export class ViewerEngineService implements OnDestroy {
   public render(): void {
     try {
       this.controls.update();
+      if (this.spotlight) {
+        this.spotlight.position.set(
+          this.camera.position.x + 10,
+          this.camera.position.y + 10,
+          this.camera.position.z + 10
+        );
+      }
       this.frameId = requestAnimationFrame(() => {
         this.render();
       });
 
       // this.model.rotation.x += 0.01;
       // this.model.rotation.y += 0.01;
+
       this.renderer.render(this.scene, this.camera);
     } catch (error) {
       console.warn('STL not loaded: ' + error);
