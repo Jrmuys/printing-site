@@ -30,6 +30,10 @@ export class AuthService {
     private httpClient: HttpClient,
     private cartService: CartService
   ) {}
+
+  updateUser() {
+    this.userListener$.next(this.getUser());
+  }
   // private http: HttpClient,
   getToken() {
     return this.token;

@@ -54,6 +54,7 @@ export class CartService {
     model: Model,
     image: File,
     price: number,
+    units: string,
     boundingVolume: number
   ) {
     const cartData = new FormData();
@@ -61,6 +62,7 @@ export class CartService {
     cartData.append('price', price.toString());
     cartData.append('image', image, model.title);
     cartData.append('itemTotal', (price * model.quantity).toString());
+    cartData.append('units', units);
     cartData.append('boundingVolume', boundingVolume.toString());
     this.httpClient
       .post<{ cart: CartItem[]; totalPrice: number }>(

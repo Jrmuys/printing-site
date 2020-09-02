@@ -63,7 +63,7 @@
         </div>
       </mat-card>
       <mat-card>
-        <form (ngSubmit)="onFormSubmit()" #modelForm="ngForm">
+        <form  #modelForm="ngForm">
           <div class="form-group w3-row-padding">
             <div class="w3-col s12 l4">
               <mat-form-field>
@@ -180,27 +180,55 @@
               {{ boundingDimentions.x | number }} {{ modelUnit }}
             </span>
           </p>
+<<<<<<< HEAD
+          <p style="text-align: left">
+            Surface Area:
+
+            <span
+              *ngIf="!loading && formDisplay"
+              style="float: right; font-weight: bold"
+            >
+              {{ surfaceArea | number }}
+            </span>
+          </p>
+          <mat-divider style="margin-bottom: 8px" [inset]="true"> </mat-divider>
+=======
           <mat-divider style="margin-bottom: 8px;" [inset]="true">
           </mat-divider>
+>>>>>>> parent of c57310b... Fixed first time use bug
           <div id="textContainer">
             <p style="text-align: left;">
               Cost to print:
 
+<<<<<<< HEAD
+              <span style="float: right; font-weight: bold; color: #cc2400">
+                {{ modelCost | currency }}
+=======
               <span style="float: right; font-weight: bold; color: #cc2400;">
                 ${{ modelCost }}
+>>>>>>> parent of c57310b... Fixed first time use bug
               </span>
             </p>
           </div>
           <div id="textContainer">
+<<<<<<< HEAD
+            <p style="text-align: left">
+              Total price*:
+
+              <span style="float: right; font-weight: bold; color: #cc2400">
+                {{ totalCost | currency }}
+=======
             <p style="text-align: left;">
               Total price:
 
               <span style="float: right; font-weight: bold; color: #cc2400;">
                 ${{ totalCost }}
+>>>>>>> parent of c57310b... Fixed first time use bug
               </span>
             </p>
           </div>
           <mat-divider [inset]="true"></mat-divider>
+          <p>*Does not include shipping costs</p>
           <div>
             <button
               [disabled]="!formDisplay"
