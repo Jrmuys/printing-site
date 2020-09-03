@@ -35,7 +35,8 @@ router.post(
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     let host = req.get("host");
-    // console.log(" Req. body", req.body);
+    console.log(" Req. body", req.body);
+
     cartController.addToCart(req, res, next, host);
   }
 );

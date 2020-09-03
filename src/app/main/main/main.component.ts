@@ -48,7 +48,6 @@ export class MainComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
   user: User = null;
 
-
   @ViewChild('rendererCanvas', { static: true })
   public rendererCanvas: ElementRef<HTMLCanvasElement>;
 
@@ -67,10 +66,11 @@ export class MainComponent implements OnInit, OnDestroy {
   graphicsOptions = ['fancy', 'low'];
   units = ['mm', 'cm', 'in'];
   graphicsChanged = false;
-<<<<<<< HEAD
   surfaceArea: number;
   surfaceAreaCm: number;
   freeUser: boolean = false;
+  dragOver = false;
+  validModel: boolean = true;
 
   ngOnInit(): void {
     this.userSub = this.authService.getUserListener().subscribe((user) => {
@@ -91,7 +91,10 @@ export class MainComponent implements OnInit, OnDestroy {
         if (this.user && !user) {
           this.resetModel();
         }
+      } else {
+        this.freeUser = false;
       }
+
       this.user = user;
     });
 
@@ -114,43 +117,48 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.getStoredModel();
     this.formDisplay = false;
-    var conversionFactor = 1;
-    this.unitSub = this.mainService.getUnitSubject().subscribe((data) => {
-      console.log(this.user.roles);
-      if (!this.freeUser) {
-        console.log('Switching units:' + data);
-        this.modelUnit = data;
-        switch (this.model.units) {
-          case 'mm':
-            this.modelVolumeCm = this.modelVolume / 1000;
-            this.surfaceAreaCm = this.surfaceArea / 100;
-            break;
-          case 'cm':
-            this.modelVolumeCm = this.modelVolume;
-            this.surfaceAreaCm = this.surfaceArea;
-            break;
-          case 'in':
-            this.modelVolumeCm = this.modelVolume * 16.3871;
-            this.surfaceAreaCm = this.surfaceArea * 6.4516;
-            break;
-          default:
-            console.error('Invalid Unit!');
+    this.unitSub = this.mainService.getUnitSubject().subscribe(
+      (data) => {
+        console.log('UNITS CHANGING!!!!!');
+        // console.log(this.user.roles);
+        if (!this.freeUser) {
+          console.log('Switching units:' + data);
+          this.modelUnit = data;
+          switch (this.model.units) {
+            case 'mm':
+              this.modelVolumeCm = this.modelVolume / 1000;
+              this.surfaceAreaCm = this.surfaceArea / 100;
+              break;
+            case 'cm':
+              this.modelVolumeCm = this.modelVolume;
+              this.surfaceAreaCm = this.surfaceArea;
+              break;
+            case 'in':
+              this.modelVolumeCm = this.modelVolume * 16.3871;
+              this.surfaceAreaCm = this.surfaceArea * 6.4516;
+              break;
+            default:
+              console.error('Invalid Unit!');
+          }
+          let plasticVolume =
+            this.modelVolumeCm * 0.37 + this.surfaceAreaCm * 0.083014211;
+          let ONYX_DENSITY = 1.18;
+          let MARKUP = 4;
+          let COST_PER_GRAM = 190 / 944;
+          this.modelCost =
+            Math.round(
+              plasticVolume * ONYX_DENSITY * COST_PER_GRAM * MARKUP * 100
+            ) / 100;
+        } else {
+          this.modelCost = 0.0;
         }
-        let plasticVolume =
-          this.modelVolumeCm * 0.37 + this.surfaceAreaCm * 0.083014211;
-        let ONYX_DENSITY = 1.18;
-        let MARKUP = 4;
-        let COST_PER_GRAM = 190 / 944;
-        this.modelCost =
-          Math.round(
-            plasticVolume * ONYX_DENSITY * COST_PER_GRAM * MARKUP * 100
-          ) / 100;
-      } else {
-        this.modelCost = 0;
+        this.totalCost =
+          Math.round(this.modelCost * this.model.quantity * 100) / 100;
+      },
+      (error) => {
+        console.error('error in unit change', error);
       }
-      this.totalCost =
-        Math.round(this.modelCost * this.model.quantity * 100) / 100;
-    });
+    );
 
     this.onUnitSelect();
     this.authService.updateUser();
@@ -161,11 +169,6 @@ export class MainComponent implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
     if (this.model.modelPath) this.engServ.cleanup();
   }
-=======
-  // formDisplay = true;
-
-  onFormSubmit() {}
->>>>>>> parent of c57310b... Fixed first time use bug
 
   onUnitSelect() {
     console.log('Units have changed to ' + this.model.units + '!');
@@ -207,6 +210,50 @@ export class MainComponent implements OnInit, OnDestroy {
       );
   }
 
+  dropHandler(ev) {
+    console.log('File(s) dropped');
+
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+
+    if (ev.dataTransfer.items) {
+      // Use DataTransferItemList interface to access the file(s)
+
+      if (ev.dataTransfer.items[0].kind === 'file') {
+        var file = ev.dataTransfer.items[0].getAsFile();
+        console.log('test');
+        console.log('... file[' + 0 + '].name = ' + file.name);
+        this.uploadService
+          .upload(
+            file.name,
+            file,
+            this.model.units,
+            this.model.comment,
+            this.model.quantity,
+            this.authService.getUser()
+          )
+          .subscribe(
+            (result) => {
+              this.loadModel(result);
+            },
+            (err) => {
+              console.log('error');
+              console.error(err);
+            }
+          );
+      }
+    }
+
+    this.onFilePicked(ev);
+  }
+
+  dragOverHandler(ev) {
+    console.log('File(s) in drop zone');
+
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+  }
+
   updateModel() {
     console.log('updating model');
     this.uploadService.updateModel(
@@ -234,7 +281,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.uploadService
         .getModel(localStorage.getItem('id'))
         .subscribe((res) => {
-                 this.loadModel(res);
+          this.loadModel(res);
         });
     } else {
       console.log('No model saved');
@@ -332,11 +379,11 @@ export class MainComponent implements OnInit, OnDestroy {
         default:
           console.error('Invalid Unit!');
       }
+      console.log(this.model, image, this.modelCost, this.boundingVolume);
       this.cartService.addCartItem(
         this.model,
         image,
         this.modelCost,
-        this.modelUnit,
         this.boundingVolume
       );
       this.cartService.getCart();

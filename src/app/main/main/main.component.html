@@ -1,20 +1,36 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 
-<div class="w3-main" style="max-width: 1250px; margin: auto;">
+<div class="w3-main" style="max-width: 1250px; margin: auto">
   <div class="w3-row-padding">
     <div class="w3-col s12 m8 l9">
-      <mat-card id="engine" style="max-height: 50rem;">
+      <mat-card id="engine" style="">
         <mat-progress-bar
           *ngIf="loading"
           mode="indeterminate"
         ></mat-progress-bar>
-        <div class="engine-wrapper" width="100%">
-          <canvas
-            #rendererCanvas
-            id="renderCanvas"
-            width="100%"
-            height="100px"
-          ></canvas>
+
+        <div
+          id="drop_zone"
+          (drop)="dragOver = false; dropHandler($event)"
+          (dragover)="dragOver = true; dragOverHandler($event)"
+          (dragleave)="dragOver = false"
+          (dragend)="dragOver = false"
+          [ngClass]="{
+            on_dragover: dragOver,
+            file_loaded: model.modelPath
+          }"
+        >
+          <p *ngIf="!model.modelPath" style="padding: 15px; text-align: center">
+            Drag one or more files to this Drop Zone ...
+          </p>
+          <div class="engine-wrapper" width="100%">
+            <canvas
+              #rendererCanvas
+              id="renderCanvas"
+              width="100%"
+              height="100px"
+            ></canvas>
+          </div>
         </div>
         <div class="w3-row">
           <div class="w3-col w3-half">
@@ -27,7 +43,7 @@
             </button>
             <input
               type="file"
-              style="visibility: hidden;"
+              style="visibility: hidden"
               #filePicker
               (change)="onFilePicked($event)"
             />
@@ -36,12 +52,12 @@
           <div class="w-col w3-half">
             <mat-radio-group
               class="example-radio-group form-control"
-              style="float: right;"
+              style="float: right"
               [(ngModel)]="graphics"
               name="graphicsSelect"
               (change)="onUnitSelect()"
             >
-              <p style="margin: 8px;">Grpahics Quality:</p>
+              <p style="margin: 8px">Grpahics Quality:</p>
 
               <mat-radio-button
                 class="example-radio-button"
@@ -55,7 +71,7 @@
             </mat-radio-group>
           </div>
           <mat-error
-            style="float: right; position: relative;"
+            style="float: right; position: relative"
             *ngIf="graphicsChanged"
           >
             Reload for change to take effect
@@ -63,7 +79,7 @@
         </div>
       </mat-card>
       <mat-card>
-        <form  #modelForm="ngForm">
+        <form #modelForm="ngForm">
           <div class="form-group w3-row-padding">
             <div class="w3-col s12 l4">
               <mat-form-field>
@@ -89,7 +105,7 @@
                 name="unitsSelect"
                 (change)="onUnitSelect()"
                 [disabled]="!formDisplay"
-                ><p style="margin: 6px;">Units:</p>
+                ><p style="margin: 6px">Units:</p>
                 <mat-radio-button
                   class="example-radio-button"
                   [checked]="unit === model.units"
@@ -108,7 +124,7 @@
 
                 <input
                   class="form-control"
-                  style="display: block;"
+                  style="display: block"
                   type="number"
                   matInput
                   [(ngModel)]="model.quantity"
@@ -162,25 +178,24 @@
       </mat-card>
       <mat-card>
         <mat-card-content>
-          <p style="text-align: left;">
+          <p style="text-align: left">
             Model Volume:
-            <span style="float: right; font-weight: bold;">
-              {{ modelVolume }} {{ modelUnit }}^3
+            <span style="float: right; font-weight: bold">
+              {{ modelVolume }} {{ model.units }}^3
             </span>
           </p>
-          <p style="text-align: left;">
+          <p style="text-align: left">
             Dimentions:
 
             <span
               *ngIf="!loading && formDisplay"
-              style="float: right; font-weight: bold;"
+              style="float: right; font-weight: bold"
             >
               {{ boundingDimentions.x | number }} x
               {{ boundingDimentions.y | number }} x
-              {{ boundingDimentions.x | number }} {{ modelUnit }}
+              {{ boundingDimentions.x | number }} {{ model.units }}
             </span>
           </p>
-<<<<<<< HEAD
           <p style="text-align: left">
             Surface Area:
 
@@ -188,42 +203,25 @@
               *ngIf="!loading && formDisplay"
               style="float: right; font-weight: bold"
             >
-              {{ surfaceArea | number }}
+              {{ surfaceArea | number }} {{ model.units }}^2
             </span>
           </p>
           <mat-divider style="margin-bottom: 8px" [inset]="true"> </mat-divider>
-=======
-          <mat-divider style="margin-bottom: 8px;" [inset]="true">
-          </mat-divider>
->>>>>>> parent of c57310b... Fixed first time use bug
           <div id="textContainer">
-            <p style="text-align: left;">
+            <p style="text-align: left">
               Cost to print:
 
-<<<<<<< HEAD
               <span style="float: right; font-weight: bold; color: #cc2400">
                 {{ modelCost | currency }}
-=======
-              <span style="float: right; font-weight: bold; color: #cc2400;">
-                ${{ modelCost }}
->>>>>>> parent of c57310b... Fixed first time use bug
               </span>
             </p>
           </div>
           <div id="textContainer">
-<<<<<<< HEAD
             <p style="text-align: left">
               Total price*:
 
               <span style="float: right; font-weight: bold; color: #cc2400">
                 {{ totalCost | currency }}
-=======
-            <p style="text-align: left;">
-              Total price:
-
-              <span style="float: right; font-weight: bold; color: #cc2400;">
-                ${{ totalCost }}
->>>>>>> parent of c57310b... Fixed first time use bug
               </span>
             </p>
           </div>
@@ -231,11 +229,11 @@
           <p>*Does not include shipping costs</p>
           <div>
             <button
-              [disabled]="!formDisplay"
+              [disabled]="!formDisplay || !validModel"
               mat-flat-button
               color="accent"
               class="button"
-              style="margin-top: 16px;"
+              style="margin-top: 16px"
               (click)="addToCart()"
               routerLink="/cart"
             >
@@ -245,16 +243,14 @@
           </div>
           <div>
             <button
-              [disabled]="!formDisplay"
+              [disabled]="!formDisplay || !validModel"
               mat-flat-button
               color="accent"
               class="button"
-              style="margin-bottom: 0;"
+              style="margin-bottom: 0"
               (click)="addToCart()"
             >
-              <mat-icon>
-                add_shopping_cart
-              </mat-icon>
+              <mat-icon> add_shopping_cart </mat-icon>
               ADD TO CART
             </button>
           </div>

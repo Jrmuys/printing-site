@@ -10,9 +10,9 @@ function CartItem(
   boundingVolume
 ) {
   this.model = model;
-  this.price = price;
+  this.price = price | 0;
   this.imgUrl = imgUrl;
-  this.itemTotal = itemTotal;
+  this.itemTotal = itemTotal | 0;
   this.printStatus = printStatus | "NA";
   this.boundingVolume = boundingVolume;
 }

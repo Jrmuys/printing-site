@@ -5,21 +5,20 @@ const Cart = require("../models/cart.model");
 const CartItem = require("../models/cart-item.model");
 
 function createCart(_id) {
+  console.log("Creating cart");
   cart = new Cart({
     userId: _id,
     totalPrice: 0,
   });
-  cart
-    .save()
-    .then(() => {})
-    .catch((err) => {
-      res
-        .status(500)
-        .json({ message: "An error in saving the cart occurred", error: err });
-    });
+  cart.save().catch((err) => {
+    res
+      .status(500)
+      .json({ message: "An error in saving the cart occurred", error: err });
+  });
 }
 
 function addToCart(req, res, next, host) {
+  console.log("adding to cart...");
   const url = req.protocol + "://" + host;
   const cartItem = new CartItem(
     JSON.parse(req.body.model),
@@ -29,6 +28,7 @@ function addToCart(req, res, next, host) {
     req.body.printStatus,
     req.body.boundingVolume
   );
+  console.log("Cart item,", cartItem);
   Cart.findOneAndUpdate(
     { userId: req.user._id },
     {
@@ -37,17 +37,20 @@ function addToCart(req, res, next, host) {
     { new: true }
   )
     .then((newCart) => {
+      // cart;
+      console.log(newCart);
       newCart.totalPrice
         ? (newCart.totalPrice =
             parseFloat(newCart.totalPrice) + parseFloat(cartItem.itemTotal))
         : (newCart.totalPrice = cartItem.itemTotal);
-      cart = newCart.save().then((savedCart) => {
+      let cart = newCart.save().then((savedCart) => {
         savedCart
           ? res.status(201).json({ message: "added successfully" })
           : res.status(404).json({ message: "Cart not found" });
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         message: "An error in adding to the cart occurred",
         error: err,
@@ -56,17 +59,19 @@ function addToCart(req, res, next, host) {
 }
 
 function getCart(req, res, next) {
-  Cart.findOne({ userId: req.user._id }).then((cart) => {
-    if (cart) {
-      res.status(201).json(cart);
-    } else {
-      res.status(404).json({ message: "Cart Items not found" });
-    }
-  }).catch((err) => {
-    res
-      .status(500)
-      .json({ message: "An error in getting the cart occurred", error: err });
-  });
+  Cart.findOne({ userId: req.user._id })
+    .then((cart) => {
+      if (cart) {
+        res.status(201).json(cart);
+      } else {
+        res.status(404).json({ message: "Cart Items not found" });
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "An error in getting the cart occurred", error: err });
+    });
 }
 
 function updateCart(req, res, next) {

@@ -27,19 +27,13 @@ async function insert(req, res, next) {
 
   await userController
     .insert(savedUser)
-    .then((user) => {
+    .then(async (user) => {
       if (user) {
         req.user = user;
-        userController
-          .getUserByEmail(req.user.email)
-          .next((foundUser) => {
-            req.user = foundUser;
-            cartController.createCart(foundUser._id);
-            next();
-          })
-          .catch((err) => {
-            res.status(500).json({ message: "Could not find user!" });
-          });
+        foundUser = await userController.getUserByEmail(req.user.email);
+        req.user = foundUser;
+        cartController.createCart(foundUser._id);
+        next();
       } else {
         res.status(500).json({ message: "User does not exist!" });
       }

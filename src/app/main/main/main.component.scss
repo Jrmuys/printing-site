@@ -45,3 +45,18 @@ button {
 mat-radio-button {
   margin: 8px;
 }
+#drop_zone {
+  background-color: white;
+  border: 2px dashed black;
+
+  border-radius: 8px;
+}
+
+#drop_zone.on_dragover {
+  background-color: rgb(200, 200, 200) !important;
+}
+
+#drop_zone.file_loaded {
+  border: 0;
+  background-color: white;
+}
