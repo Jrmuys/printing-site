@@ -36,6 +36,7 @@ export class OrderPageComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'imgUrl',
     'title',
+    'units',
     'quantity',
     'price',
     'delete',

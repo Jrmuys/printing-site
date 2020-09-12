@@ -121,25 +121,26 @@ export class MainComponent implements OnInit, OnDestroy {
       (data) => {
         console.log('UNITS CHANGING!!!!!');
         // console.log(this.user.roles);
+        switch (this.model.units) {
+          case 'mm':
+            this.modelVolumeCm = this.modelVolume / 1000;
+            this.surfaceAreaCm = this.surfaceArea / 100;
+            break;
+          case 'cm':
+            this.modelVolumeCm = this.modelVolume;
+            this.surfaceAreaCm = this.surfaceArea;
+            break;
+          case 'in':
+            this.modelVolumeCm = this.modelVolume * 16.3871;
+            this.surfaceAreaCm = this.surfaceArea * 6.4516;
+            break;
+          default:
+            console.error('Invalid Unit!');
+        }
         if (!this.freeUser) {
           console.log('Switching units:' + data);
           this.modelUnit = data;
-          switch (this.model.units) {
-            case 'mm':
-              this.modelVolumeCm = this.modelVolume / 1000;
-              this.surfaceAreaCm = this.surfaceArea / 100;
-              break;
-            case 'cm':
-              this.modelVolumeCm = this.modelVolume;
-              this.surfaceAreaCm = this.surfaceArea;
-              break;
-            case 'in':
-              this.modelVolumeCm = this.modelVolume * 16.3871;
-              this.surfaceAreaCm = this.surfaceArea * 6.4516;
-              break;
-            default:
-              console.error('Invalid Unit!');
-          }
+
           let plasticVolume =
             this.modelVolumeCm * 0.37 + this.surfaceAreaCm * 0.083014211;
           let ONYX_DENSITY = 1.18;

@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 async function insert(user) {
   // make mongoose call to save user in db

@@ -12,8 +12,10 @@ db.once("open", () => {
   console.log("connected to the database");
 });
 
-db.on("error", () => {
-  throw new Error(`unable to connect to the database : ${mongoUri}`);
+db.on("error", (error) => {
+  throw new Error(
+    `unable to connect to the database : ${mongoUri}\nError: ${error}`
+  );
 });
 
 if (config.mongo.isDebug) {

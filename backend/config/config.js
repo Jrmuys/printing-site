@@ -2,7 +2,7 @@ require("dotenv").config();
 const envVars = process.env;
 
 module.exports = {
-  port: envVars.PORT,
+  port: process.env.PORT | 8080,
   env: envVars.NODE_ENV,
   mongo: {
     uri: envVars.MONGODB_URI,

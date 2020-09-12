@@ -11,7 +11,7 @@ const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
  *
  * PayPal HTTP client dependency
  */
-const payPalClient = require("./payPalClient");
+const payPalClient = require("./paypalClient");
 
 // 2. Set up your server to receive a call from the client
 async function handleRequest(req, res) {

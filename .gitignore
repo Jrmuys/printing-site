@@ -51,3 +51,5 @@ Thumbs.db
 #serverfiles
 /backend/modelFiles
 /backend/images
+/backend/backend.zip
+/backend/dist

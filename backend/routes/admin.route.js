@@ -1,18 +1,12 @@
 const express = require("express");
 const config = require("../config/config");
-const http = require("http");
-const https = require("https");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const passport = require("../middleware/passport");
 const paymentController = require("../controller/payment.controller");
 const Order = require("../models/order.model");
 const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
-const payPalClient = require("../controller/payPalClient");
-const { findOneAndUpdate } = require("../models/order.model");
-const { order } = require("paypal-rest-sdk");
-const { consoleTestResultHandler } = require("tslint/lib/test");
-const { throwError } = require("rxjs");
+const payPalClient = require("../controller/paypalClient");
 
 router.get(
   "",
