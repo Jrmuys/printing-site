@@ -19,6 +19,8 @@ if (config.env === "development") {
 // get dist folder
 const distDir = path.join(__dirname, "../dist/printing-site");
 
+app.enable("trust proxy");
+
 // use dist folder as hosting folder by express
 app.use(express.static(distDir));
 
@@ -26,8 +28,8 @@ app.use(express.static(distDir));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api/modelFiles", express.static(path.join("backend/modelFiles")));
-app.use("/api/images", express.static(path.join("backend/images")));
+app.use("/api/modelFiles", express.static(path.join(config.modelsFolder)));
+app.use("/api/images", express.static(path.join(config.imagesFolder)));
 
 // sercure app http
 app.use(helmet());

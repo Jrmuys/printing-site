@@ -1,3 +1,4 @@
+const config = require("../config/config");
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const multer = require("multer");
@@ -6,13 +7,9 @@ const User = require("../models/user.model");
 const Model = require("../models/model.model");
 const router = express.Router();
 
-// const MIME_TYPE_MAP = {
-//   ""
-// }
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "backend/modelFiles");
+    cb(null, config.modelsFolder);
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");
@@ -86,12 +83,10 @@ router.put(
         res.status(200).json(updatedModel);
       })
       .catch((err) => {
-        res
-          .status(500)
-          .json({
-            message: "An error in updating the model occurred",
-            error: err,
-          });
+        res.status(500).json({
+          message: "An error in updating the model occurred",
+          error: err,
+        });
       });
   }
 );
@@ -108,12 +103,10 @@ router.get("/:id", (req, res, next) => {
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message: "An error in finding the model occurred",
-          error: err,
-        });
+      res.status(500).json({
+        message: "An error in finding the model occurred",
+        error: err,
+      });
     });
 });
 

@@ -2,7 +2,7 @@ require("dotenv").config();
 const envVars = process.env;
 
 module.exports = {
-  port: process.env.PORT | 8080,
+  port: envVars.PORT | 8080,
   env: envVars.NODE_ENV,
   mongo: {
     uri: envVars.MONGODB_URI,
@@ -13,4 +13,6 @@ module.exports = {
   expiresIn: envVars.EXPIRES_IN,
   paypalSecret: envVars.PAYPAL_SECRET,
   paypalClient: envVars.PAYPAL_CLIENT,
+  modelsFolder: envVars.MODELS_FOLDER,
+  imagesFolder: envVars.IMAGES_FOLDER,
 };

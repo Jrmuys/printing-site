@@ -18,7 +18,6 @@ import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.componen
 import { MatDialog } from '@angular/material/dialog';
 import { Vector3 } from 'three';
 import { User } from 'src/app/core/user.model';
-import { markTimeline } from 'console';
 
 export interface Tile {
   color: string;
@@ -71,6 +70,12 @@ export class MainComponent implements OnInit, OnDestroy {
   freeUser: boolean = false;
   dragOver = false;
   validModel: boolean = true;
+  printVolumeFit: boolean = true;
+  markforgedPrintVolume = {
+    mm: [320, 132, 154],
+    cm: [32, 13.2, 15.4],
+    in: [23, 13, 14],
+  };
 
   ngOnInit(): void {
     this.userSub = this.authService.getUserListener().subscribe((user) => {
@@ -121,6 +126,17 @@ export class MainComponent implements OnInit, OnDestroy {
       (data) => {
         console.log('UNITS CHANGING!!!!!');
         // console.log(this.user.roles);
+        console.log('Fit check result: ' + this.fitCheck());
+        if (this.fitCheck()) {
+          console.log('This fits...');
+          this.formDisplay = true;
+          this.printVolumeFit = true;
+        } else {
+          console.log("This doesn't...");
+
+          this.formDisplay = false;
+          this.printVolumeFit = false;
+        }
         switch (this.model.units) {
           case 'mm':
             this.modelVolumeCm = this.modelVolume / 1000;
@@ -255,6 +271,56 @@ export class MainComponent implements OnInit, OnDestroy {
     ev.preventDefault();
   }
 
+  fitCheck(): boolean {
+    const dimensions = this.engServ.getBoundingBoxDimensions();
+    console.log(
+      `Checking fit...\nDimensions: ${JSON.stringify(
+        dimensions
+      )}\nUnits: ${JSON.stringify(
+        this.model.units
+      )}\nPrint Volume: ${JSON.stringify(this.markforgedPrintVolume)}`
+    );
+    let fit: boolean;
+    switch (this.model.units) {
+      case 'mm':
+        console.log("It's mm!");
+        if (
+          dimensions.x > this.markforgedPrintVolume.mm[0] ||
+          dimensions.y > this.markforgedPrintVolume.mm[1] ||
+          dimensions.z > this.markforgedPrintVolume.mm[2]
+        ) {
+          console.log("Doesn't fit :(");
+
+          fit = false;
+        } else {
+          console.log('Does fit :)');
+          fit = true;
+        }
+      case 'cm':
+        if (
+          dimensions.x > this.markforgedPrintVolume.cm[0] ||
+          dimensions.y > this.markforgedPrintVolume.cm[1] ||
+          dimensions.z > this.markforgedPrintVolume.cm[2]
+        ) {
+          fit = false;
+        } else {
+          fit = true;
+        }
+      case 'in':
+        if (
+          dimensions.x > this.markforgedPrintVolume.in[0] ||
+          dimensions.y > this.markforgedPrintVolume.in[1] ||
+          dimensions.z > this.markforgedPrintVolume.in[2]
+        ) {
+          fit = false;
+        } else {
+          fit = true;
+        }
+    }
+    console.log("If this prints, I don't know what to do...");
+    return fit;
+  }
+
   updateModel() {
     console.log('updating model');
     this.uploadService.updateModel(
@@ -323,7 +389,13 @@ export class MainComponent implements OnInit, OnDestroy {
             this.loading = false;
             this.boundingVolume = this.engServ.getBoundingBoxVolume();
             this.boundingDimentions = this.engServ.getBoundingBoxDimensions();
-            this.formDisplay = true;
+            if (this.fitCheck()) {
+              this.formDisplay = true;
+              this.printVolumeFit = true;
+            } else {
+              this.formDisplay = false;
+              this.printVolumeFit = false;
+            }
             this.surfaceArea = this.engServ.getSurfaceArea();
 
             this.boundingDimentions.x =

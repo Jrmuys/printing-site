@@ -1,5 +1,5 @@
 const express = require("express");
-
+const config = require("../config/config");
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
 const CartItem = require("../models/cart-item.model");
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    cb(null, "backend/images");
+    cb(null, config.imagesFolder);
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");

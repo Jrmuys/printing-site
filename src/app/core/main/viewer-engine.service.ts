@@ -1,14 +1,22 @@
+import { Subscription } from 'rxjs';
+import { MainService } from './main.service';
 import * as THREE from 'three';
-import { Injectable, OnDestroy, NgZone, ElementRef } from '@angular/core';
+import {
+  Injectable,
+  OnDestroy,
+  NgZone,
+  ElementRef,
+  OnInit,
+} from '@angular/core';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Triangle } from 'three';
+import { Triangle, WireframeGeometry } from 'three';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ViewerEngineService implements OnDestroy {
+export class ViewerEngineService implements OnInit, OnDestroy {
   private canvas: HTMLCanvasElement;
   private renderer: THREE.WebGLRenderer;
   private camera: THREE.PerspectiveCamera;
@@ -20,6 +28,7 @@ export class ViewerEngineService implements OnDestroy {
 
   private width: number;
   private height: number;
+  private boxLines: THREE.LineSegments;
 
   private loading: Boolean;
 
@@ -28,10 +37,13 @@ export class ViewerEngineService implements OnDestroy {
   private frameId: number = null;
   spotlight: THREE.SpotLight;
 
-  public constructor(private ngZone: NgZone) {}
-
   private controls: OrbitControls;
   private boundingDimesions$;
+  private unitSub: Subscription;
+
+  public constructor(private ngZone: NgZone, private mainServ: MainService) {}
+
+  ngOnInit() {}
 
   public getBoundingDimensionsListener() {
     return this.boundingDimesions$.asObservable();
@@ -71,6 +83,49 @@ export class ViewerEngineService implements OnDestroy {
     filePath: string,
     callback
   ): void {
+    this.unitSub = this.mainServ.getUnitSubject().subscribe((unit) => {
+      if (this.boxLines) {
+        this.scene.remove(this.boxLines);
+      }
+      let markforgedPrintVolume = {
+        mm: [320, 132, 154],
+        cm: [32, 13.2, 15.4],
+        in: [23, 13, 14],
+      };
+      let boxSize;
+      switch (unit) {
+        case 'mm':
+          boxSize = markforgedPrintVolume.mm;
+          break;
+        case 'cm':
+          boxSize = markforgedPrintVolume.cm;
+          break;
+        case 'in':
+          boxSize = markforgedPrintVolume.in;
+          break;
+        default:
+          console.error('Invalid Unit!');
+          break;
+      }
+      let boxGeometry = new THREE.BoxBufferGeometry(
+        boxSize[0],
+        boxSize[1],
+        boxSize[2],
+        1,
+        1,
+        1
+      );
+      let boxEdges = new THREE.EdgesGeometry(boxGeometry);
+      let boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      let boxWireframe = new THREE.WireframeGeometry(boxGeometry);
+      this.boxLines = new THREE.LineSegments(
+        boxEdges,
+        new THREE.LineBasicMaterial({ color: 0xff0000 })
+      );
+
+      let boxObject = new THREE.Mesh(boxWireframe, boxMaterial);
+      this.scene.add(this.boxLines);
+    });
     // The first step is to get the reference of the canvas element from our HTML document
     console.log('createScene... \ncanvas:', canvas);
     this.canvas = canvas.nativeElement;
@@ -154,7 +209,7 @@ export class ViewerEngineService implements OnDestroy {
       // this.model.rotation.x += 4;
       // this.model.rotation.y += 41;
       var boundingBox = new THREE.BoxHelper(this.model, 0xff0000);
-      this.scene.add(boundingBox);
+      // this.scene.add(boundingBox);
       this.camera.lookAt(this.model.position);
 
       this.resize();
@@ -185,6 +240,13 @@ export class ViewerEngineService implements OnDestroy {
       sum += this.signedVolumeOfTriangle(p1, p2, p3);
     }
     return sum;
+  }
+
+  public getBoundingDimensions() {
+    const bbox = new THREE.Box3().setFromObject(this.model);
+    const bboxSize = new THREE.Vector3();
+    bbox.getSize(bboxSize);
+    return { x: bboxSize.x, y: bboxSize.y, z: bboxSize.z };
   }
 
   public getBoundingBoxVolume() {
