@@ -1,4 +1,3 @@
-const config = require("../config/config");
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const multer = require("multer");
@@ -9,7 +8,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, config.modelsFolder);
+    cb(null, "modelFiles");
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");

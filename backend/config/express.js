@@ -28,8 +28,8 @@ app.use(express.static(distDir));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api/modelFiles", express.static(path.join(config.modelsFolder)));
-app.use("/api/images", express.static(path.join(config.imagesFolder)));
+app.use("/api/modelFiles", express.static(path.join("modelFiles")));
+app.use("/api/images", express.static(path.join("images")));
 
 // sercure app http
 app.use(helmet());

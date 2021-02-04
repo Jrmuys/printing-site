@@ -53,3 +53,6 @@ Thumbs.db
 /backend/images
 /backend/backend.zip
 /backend/dist
+/backend/node_modules
+
+*.bak
