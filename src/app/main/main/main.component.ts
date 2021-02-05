@@ -281,6 +281,7 @@ export class MainComponent implements OnInit, OnDestroy {
       )}\nPrint Volume: ${JSON.stringify(this.markforgedPrintVolume)}`
     );
     let fit: boolean;
+    console.log(this.model.units);
     switch (this.model.units) {
       case 'mm':
         console.log("It's mm!");
@@ -296,28 +297,37 @@ export class MainComponent implements OnInit, OnDestroy {
           console.log('Does fit :)');
           fit = true;
         }
+        break;
       case 'cm':
+        console.log('Units are cm');
         if (
           dimensions.x > this.markforgedPrintVolume.cm[0] ||
           dimensions.y > this.markforgedPrintVolume.cm[1] ||
           dimensions.z > this.markforgedPrintVolume.cm[2]
         ) {
           fit = false;
+          console.log("doesn't fit");
         } else {
           fit = true;
+          console.log('fits');
         }
+        break;
       case 'in':
+        console.log('units are in');
         if (
           dimensions.x > this.markforgedPrintVolume.in[0] ||
           dimensions.y > this.markforgedPrintVolume.in[1] ||
           dimensions.z > this.markforgedPrintVolume.in[2]
         ) {
           fit = false;
+          console.log("doesn't fit");
         } else {
           fit = true;
+          console.log('fits');
         }
+        break;
     }
-    console.log("If this prints, I don't know what to do...");
+    console.log('END OF FIT\n===============\n Result: ' + fit);
     return fit;
   }
 

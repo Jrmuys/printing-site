@@ -13,6 +13,8 @@ module.exports = {
   expiresIn: envVars.EXPIRES_IN,
   paypalSecret: envVars.PAYPAL_SECRET,
   paypalClient: envVars.PAYPAL_CLIENT,
-  // s3AccessKeyID: envVars.S3_ACCESS_ID,
-  // s3SecretAcessKey: envVars.S3_SECRET_ACCESS_SECRET,
+  s3AccessKeyID: envVars.S3_ACCESS_ID,
+  s3SecretAcessKey: envVars.S3_SECRET_ACCESS_SECRET,
+  s3BucketName: envVars.S3_BUCKET_NAME,
+  awsRegion: envVars.AWS_REGION,
 };

@@ -6,22 +6,69 @@ const User = require("../models/user.model");
 const Model = require("../models/model.model");
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "modelFiles");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname.toLowerCase().split(" ").join("-");
-    console.log("mimetype: ", file.mimetype);
-    cb(null, name + "-" + Date.now() + ".stl");
-  },
+async function createModel(req, res, next) { }
+
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
+const uuid = require('uuid');
+const config = require('../config/config');
+
+AWS.config.update({
+  accessKeyId: config.s3AccessKeyID,
+  secretAccessKey: config.s3SecretAcessKey,
+  signatureVersion: 'v4',
 });
 
-async function createModel(req, res, next) {}
+const S3 = new AWS.S3();
+
+const isAllowedMimetype = (mime) =>
+  ['application/octet-stream'].includes(mime.toString());
+
+const fileFilter = (
+  req,
+  file,
+  callback
+) => {
+  const fileMime = file.mimetype;
+  if (isAllowedMimetype(fileMime)) {
+    callback(null, true);
+  } else {
+    callback(null, false);
+  }
+};
+
+
+
+const getUniqFileName = (originalname) => {
+  const name = uuid();
+  const ext = originalname.split('.').pop();
+  return `${name}.${ext}.stl`;
+};
+
+const handleModelUploadMiddleware = multer({
+  fileFilter,
+  storage: multerS3({
+    s3: S3,
+    bucket: config.s3BucketName,
+    acl: 'public-read',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: function (req, file, cb) {
+      const fileName = getUniqFileName(file.originalname);
+      const s3_inner_directory = 'model_files';
+      const finalPath = `${s3_inner_directory}/${fileName}`;
+
+      file.newName = fileName;
+      file.path = finalPath;
+
+      cb(null, finalPath);
+    },
+  }),
+});
+
 
 router.post(
   "",
-  multer({ storage: storage }).single("model"),
+  handleModelUploadMiddleware.single("model"),
   async (req, res, next) => {
     console.log("Recieved Model Request");
     const url = req.protocol + "://" + req.get("host");
@@ -43,7 +90,7 @@ router.post(
     const model = new Model({
       user: user,
       title: req.body.title,
-      filePath: url + "/api/modelFiles/" + req.file.filename,
+      filePath: req.file.location,
       units: req.body.units,
       comment: req.body.comment,
       quantity: req.body.quantity,
@@ -59,7 +106,7 @@ router.post(
 
 router.put(
   "/:id",
-  multer({ storage: storage }).single("model"),
+  handleModelUploadMiddleware.single("model"),
   async (req, res, next) => {
     console.log("Recieved Model Update Request");
     let filePath = req.body.filePath;
@@ -70,7 +117,7 @@ router.put(
       {
         user: req.body.user,
         title: req.body.title,
-        filePath: req.body.modelPath,
+        filePath: req.file.location,
         units: req.body.units,
         comment: req.body.comment,
         quantity: req.body.quantity,

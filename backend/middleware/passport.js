@@ -18,8 +18,8 @@ const localLogin = new LocalStrategy(
     return user
       ? done(null, user)
       : done(null, false, {
-          error: "Your login details are not valid. Please try again",
-        });
+        error: "Your login details are not valid. Please try again",
+      });
   }
 );
 
@@ -33,8 +33,8 @@ const jwtLogin = new JwtStrategy(
     return user
       ? done(null, user)
       : done(null, false, {
-          error: "Your login details are not valid. Please try again",
-        });
+        error: "Your login details are not valid. Please try again",
+      });
   }
 );
 

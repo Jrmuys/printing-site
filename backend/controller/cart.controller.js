@@ -23,7 +23,7 @@ function addToCart(req, res, next, host) {
   const cartItem = new CartItem(
     JSON.parse(req.body.model),
     parseFloat(req.body.price),
-    url + "/api/images/" + req.file.filename,
+    req.file.location,
     parseFloat(req.body.itemTotal),
     req.body.printStatus,
     req.body.boundingVolume
@@ -41,7 +41,7 @@ function addToCart(req, res, next, host) {
       console.log(newCart);
       newCart.totalPrice
         ? (newCart.totalPrice =
-            parseFloat(newCart.totalPrice) + parseFloat(cartItem.itemTotal))
+          parseFloat(newCart.totalPrice) + parseFloat(cartItem.itemTotal))
         : (newCart.totalPrice = cartItem.itemTotal);
       let cart = newCart.save().then((savedCart) => {
         savedCart
