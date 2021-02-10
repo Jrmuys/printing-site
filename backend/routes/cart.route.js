@@ -65,7 +65,7 @@ const fileFilter = (
 const getUniqFileName = (originalname) => {
   const name = uuid();
   const ext = originalname.split('.').pop();
-  return `${name}.${ext}`;
+  return `${name}.${ext}.png`;
 };
 
 router.post(
@@ -92,6 +92,7 @@ router.post(
   (req, res, next) => {
     let host = req.get("host");
     console.log(" Req. body", req.body);
+    console.log(" File information:", req.file)
 
     cartController.addToCart(req, res, next, host);
   }
