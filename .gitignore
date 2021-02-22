@@ -47,6 +47,7 @@ Thumbs.db
 
 #environment
 .env
+config.env
 
 #serverfiles
 /backend/modelFiles

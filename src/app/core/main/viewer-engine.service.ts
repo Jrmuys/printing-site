@@ -90,7 +90,7 @@ export class ViewerEngineService implements OnInit, OnDestroy {
       let markforgedPrintVolume = {
         mm: [320, 132, 154],
         cm: [32, 13.2, 15.4],
-        in: [23, 13, 14],
+        in: [12.6, 5.2, 6.06],
       };
       let boxSize;
       switch (unit) {
