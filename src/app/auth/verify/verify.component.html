@@ -1,0 +1,41 @@
+<div class="page-wrapper">
+  <mat-card class="login-card">
+    <span style="margin-left: 8px; color: red" *ngIf="error"
+      >Verification invalid, enter your email for another verification.
+    </span>
+    <form
+      (submit)="onSignup(SignupForm)"
+      #SignupForm="ngForm"
+      *ngIf="!isLoading && error"
+    >
+      <mat-form-field>
+        <input
+          matInput
+          name="email"
+          ngModel
+          type="email"
+          placeholder="Email"
+          #emailInput="ngModel"
+          required
+          email
+        />
+        <mat-error *ngIf="emailInput.invalid"
+          >Please enter a valid email.</mat-error
+        >
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        *ngIf="!isLoading && error"
+        [disabled]="!SignupForm.valid"
+      >
+        Resend
+      </button>
+    </form>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <span style="margin-left: 8px" *ngIf="!error"
+      >Successfully activated, please <a [routerLink]="['/auth']">login</a> here
+    </span>
+  </mat-card>
+</div>

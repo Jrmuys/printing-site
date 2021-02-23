@@ -134,6 +134,10 @@ export class AuthService {
     );
   }
 
+  verify(rndString: string) {
+    return this.httpClient.get(`${this.apiUrl}activate/${rndString}`);
+  }
+
   autoAuthUser() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
