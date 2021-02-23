@@ -8,9 +8,15 @@ import { CommonModule } from '@angular/common';
 
 import { MainRoutingModule } from './main-routing.module';
 import { AuthGuardService } from './../core/auth/auth.guard';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
-  declarations: [MainComponent, ViewerEngineComponent, SignInDialogComponent],
+  declarations: [
+    MainComponent,
+    ViewerEngineComponent,
+    SignInDialogComponent,
+    AboutComponent,
+  ],
   imports: [CommonModule, MainRoutingModule, SharedModule],
   providers: [
     {
