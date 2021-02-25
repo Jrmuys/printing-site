@@ -42,7 +42,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { IvyCarouselModule } from 'angular-responsive-carousel';
+import { MatCarouselModule } from '@NgModule/material-carousel';
 
 @NgModule({
   exports: [
@@ -87,10 +87,10 @@ import { IvyCarouselModule } from 'angular-responsive-carousel';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
+    MatCarouselModule,
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    IvyCarouselModule,
   ],
 })
 export class MaterialModule {}

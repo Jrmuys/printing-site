@@ -1,0 +1,31 @@
+<!-- carousel -->
+<div class="carousel">
+  <ng-container *ngFor="let slide of slides; let i = index">
+    <img
+      *ngIf="i === currentSlide"
+      [src]="slide.src"
+      class="slide"
+      [@slideAnimation]="animationType"
+    />
+    <p
+      *ngIf="i === currentSlide"
+      class="bottom-center"
+      style="
+        color: rgb(255, 255, 255);
+        font-size: x-large;
+        transform: translate(-50%, -50%);
+        text-shadow: 0px 0px 20px #000000;
+      "
+    >
+      {{ slide.headline }}
+    </p>
+  </ng-container>
+
+  <!-- controls -->
+  <button class="control prev" (click)="onPreviousClick()">
+    <span class="arrow left"></span>
+  </button>
+  <button class="control next" (click)="onNextClick()">
+    <span class="arrow right"></span>
+  </button>
+</div>

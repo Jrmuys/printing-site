@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { MainRoutingModule } from './main-routing.module';
 import { AuthGuardService } from './../core/auth/auth.guard';
 import { AboutComponent } from './about/about.component';
+import { BlocksModule } from '../blocks/blocks.module';
+import { CarouselComponent } from './carousel/carousel.component';
 
 @NgModule({
   declarations: [
@@ -16,8 +18,9 @@ import { AboutComponent } from './about/about.component';
     ViewerEngineComponent,
     SignInDialogComponent,
     AboutComponent,
+    CarouselComponent,
   ],
-  imports: [CommonModule, MainRoutingModule, SharedModule],
+  imports: [CommonModule, MainRoutingModule, SharedModule, BlocksModule],
   providers: [
     {
       provide: ViewerEngineComponent,

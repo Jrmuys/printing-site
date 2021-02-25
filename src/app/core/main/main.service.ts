@@ -6,13 +6,14 @@ import { Subject, Observable } from 'rxjs';
 })
 export class MainService {
   private unitSubject = new Subject<string>();
+  public unitSubject$ = this.unitSubject.asObservable();
 
   private toggleState = new Subject();
   public toggleState$ = this.toggleState.asObservable();
   private toggleVal = false;
 
   public unitChange(unit: string) {
-    console.log('next unit...', unit);
+    console.log('(main.service) next unit...', unit);
     this.unitSubject.next(unit);
   }
 

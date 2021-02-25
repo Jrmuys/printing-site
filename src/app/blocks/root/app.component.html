@@ -45,6 +45,13 @@
           (click)="sidenav.toggle()"
           >Signup</a
         >
+        <a
+          mat-menu-item
+          routerLink="/about"
+          routerLinkActive="highlight"
+          (click)="sidenav.toggle()"
+          >About</a
+        >
 
         <a
           *ngIf="user && user.roles[0] == 'admin'"
@@ -58,11 +65,11 @@
       <mat-sidenav-content>
         <app-header></app-header>
         <p>Test</p>
-        <div class="main w3-row" style="margin-bottom: 80px;">
+        <div class="main w3-row" style="margin-bottom: 80px">
           <router-outlet class="mat-typography"></router-outlet>
         </div>
-        <div class="w3-row" style="position: fixed; bottom: 0; width: 100%;">
-          <app-footer style="margin-bottom: 0px;"></app-footer>
+        <div class="w3-row" style="position: fixed; bottom: 0; width: 100%">
+          <app-footer style="margin-bottom: 0px"></app-footer>
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>

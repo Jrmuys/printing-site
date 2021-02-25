@@ -8,7 +8,7 @@
   </button>
   <span>
     <a routerLink="" class="h1 hide-on-small-screen">ThriftyPrint</a>
-    <a routerLink="" class="h1 show-on-small-screen" style="font-size: large;"
+    <a routerLink="" class="h1 show-on-small-screen" style="font-size: large"
       >ThriftyPrint</a
     >
   </span>
@@ -24,6 +24,15 @@
         [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="mat-accent"
         >Order</a
+      >
+    </li>
+    <li class="hide-on-small-screen">
+      <a
+        mat-button
+        routerLink="/about"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="mat-accent"
+        >About</a
       >
     </li>
     <li *ngIf="!user" class="hide-on-small-screen">
@@ -44,9 +53,7 @@
     <li>
       <div>
         <a mat-button *ngIf="user" [matMenuTriggerFor]="menu">
-          <mat-icon>
-            account_circle
-          </mat-icon>
+          <mat-icon> account_circle </mat-icon>
           <label class="hide-on-small-screen">
             {{ user.fullname.split(" ")[0] }}
           </label>
@@ -57,7 +64,7 @@
             *ngIf="user"
             mat-menu-item
             class="show-on-small-screen menu-text"
-            style="color: red;"
+            style="color: red"
           >
             {{ user.fullname.split(" ")[0] }}
           </label>
@@ -66,7 +73,7 @@
             routerLink="user/orders"
             mat-menu-item
             class="menu-text"
-            style="color: black;"
+            style="color: black"
           >
             My Orders
           </a>
@@ -83,9 +90,7 @@
         </mat-icon>
       </a>
       <a mat-icon-button *ngIf="!user" routerLink="/auth">
-        <mat-icon>
-          shopping_cart
-        </mat-icon>
+        <mat-icon> shopping_cart </mat-icon>
       </a>
     </li>
   </ul>

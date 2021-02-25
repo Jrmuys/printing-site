@@ -16,6 +16,7 @@ import { CoreModule } from '@angular/flex-layout';
 import { RoleGuardService } from './core/auth/role.guard';
 import { AuthGuardService } from './core/auth/auth.guard';
 import { CommonModule } from '@angular/common';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { CommonModule } from '@angular/common';
     CoreModule,
     MainModule,
     CartModule,
+    MatCarouselModule.forRoot(),
   ],
   providers: [
     {

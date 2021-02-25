@@ -60,7 +60,7 @@ export class ViewerEngineService implements OnInit, OnDestroy {
       loader.load(
         path,
         () => {
-          console.log('stl valid');
+          console.log('(viewer-engine) stl valid');
           resolve(true);
         },
         () => {},
@@ -127,7 +127,7 @@ export class ViewerEngineService implements OnInit, OnDestroy {
       this.scene.add(this.boxLines);
     });
     // The first step is to get the reference of the canvas element from our HTML document
-    console.log('createScene... \ncanvas:', canvas);
+    console.log('(viewer-engine) createScene... \ncanvas:', canvas);
     this.canvas = canvas.nativeElement;
 
     this.width = document
@@ -139,7 +139,9 @@ export class ViewerEngineService implements OnInit, OnDestroy {
     if (this.height > 768) {
       this.height = 768;
     }
-    console.log('Width: ' + this.width + ' Height: ' + this.height);
+    console.log(
+      '(viewer-engine) Width: ' + this.width + ' Height: ' + this.height
+    );
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -193,11 +195,11 @@ export class ViewerEngineService implements OnInit, OnDestroy {
         specular: 50,
         shininess: 0,
       });
-      console.log('Test');
+      console.log('(viewer-engine) Test');
       geometry.scale(1, 1, 1);
       this.geometry = geometry;
       this.material = material;
-      console.log('Volume: ' + Math.round(this.getVolume()));
+      console.log('(viewer-engine) Volume: ' + Math.round(this.getVolume()));
       this.model = new THREE.Mesh(this.geometry, this.material);
       var center = new THREE.Vector3();
       if (this.fancy) {
@@ -219,7 +221,7 @@ export class ViewerEngineService implements OnInit, OnDestroy {
       callback();
     });
 
-    console.log('Model added');
+    console.log('(viewer-engine) Model added');
   }
 
   signedVolumeOfTriangle(p1, p2, p3): number {

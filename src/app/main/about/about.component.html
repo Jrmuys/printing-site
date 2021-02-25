@@ -1,8 +1,38 @@
-<div style="max-width: 1250px; margin: auto">
+<div style="max-width: 1250px; padding-top: 10px; margin: auto">
   <div>
     <mat-card id="about-card">
-      <mat-card-title> About ThriftyPrint </mat-card-title>
-      <mat-card-content> </mat-card-content>
+      <mat-card-title style="font-size: xx-large">
+        About ThriftyPrint
+      </mat-card-title>
+      <mat-card-content style="margin-top: 20px">
+        <p class="paragraph">
+          The Thrifty Bot owns and operates multiple Markforged Onyx One desktop
+          3D printers. This allows us to create parts made from Markforged Onyx.
+          Onyx has a flexural strength of 81 MPa (11.7 ksi) and is very robust.
+          Onyx has an extraordinarily high strength to weight ratio and an ultra
+          smooth surface finish, which makes it ideal for competitive robotics.
+          For more information on Onyx, see the
+          <a
+            href="http://static.markforged.com/downloads/composites-data-sheet.pdf"
+            >manufacturer’s data sheet.</a
+          >
+        </p>
+        <p class="paragraph">
+          We have made several parts for teams and companies alike, and this
+          website’s goal is to make that process as streamlined as possible. We
+          aim for the best possible customer experience with every transaction.
+          If you have ideas to make the site better, please contact us at
+          <a href="mailto:contact@thethriftybot.com"
+            >contact@thethriftybot.com</a
+          >.
+        </p>
+      </mat-card-content>
+      <mat-card-content>
+        <div class="container">
+          <carousel [slides]="slides"></carousel>
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>
+<div style="height: 800px; width: 1100px"></div>
