@@ -12,7 +12,7 @@ import { CarouselComponent } from '../carousel/carousel.component';
 export class AboutComponent implements OnInit {
   @ViewChild(CarouselComponent) carousel: CarouselComponent;
 
-  apiUrl = 'http://localhost:8080/api/images/3DPrintPhotos/';
+  apiUrl = 'https://thriftyprint.io/api/images/3DPrintPhotos/';
   animationType = AnimationType.Slide;
 
   slides: Slide[] = [

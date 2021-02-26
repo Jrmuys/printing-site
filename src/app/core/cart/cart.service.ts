@@ -72,6 +72,7 @@ export class CartService {
       .subscribe((result) => {
         if (result) {
           this.cart = result.cart;
+          console.log('Cart test: ', this.cart);
           this.cartUpdated.next({
             cart: [...this.cart],
             totalPrice: result.totalPrice,

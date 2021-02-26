@@ -12,6 +12,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Triangle, WireframeGeometry } from 'three';
+import { trigger } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root',
@@ -350,10 +351,14 @@ export class ViewerEngineService implements OnInit, OnDestroy {
     this.material.dispose();
   }
   public snapshot(): File {
-    return this.blobToFile(
+    this.scene.remove(this.boxLines);
+    this.renderer.render(this.scene, this.camera);
+    let render: File = this.blobToFile(
       this.convertDataUrlToBlob(this.renderer.domElement.toDataURL()),
       'snapshot'
     );
+    this.scene.add(this.boxLines);
+    return render;
   }
 
   convertDataUrlToBlob(dataUrl): Blob {
