@@ -212,14 +212,14 @@ export class MainComponent implements OnInit, OnDestroy {
           Math.round(
             plasticVolume * ONYX_DENSITY * COST_PER_GRAM * MARKUP * 100
           ) / 100;
-        if (this.modelCost < 5.0) {
-          this.modelCost = 5.0;
-        }
       } else {
         this.modelCost = 0.0;
       }
       this.totalCost =
         Math.round(this.modelCost * this.model.quantity * 100) / 100;
+      if (this.totalCost < 5.0) {
+        this.totalCost = 5.0;
+      }
     } else {
       if (this.debug) {
         console.log(
