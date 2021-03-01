@@ -6,9 +6,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuthRoutingModule } from './auth-routing.module';
+import { RequestResetComponent } from './request-reset/request-reset.component';
+import { ResetComponent } from './reset/reset.component';
 
 @NgModule({
-  declarations: [LoginComponent, SignupComponent, VerifyComponent],
+  declarations: [LoginComponent, SignupComponent, VerifyComponent, RequestResetComponent, ResetComponent],
   imports: [CommonModule, AuthRoutingModule, SharedModule],
 })
 export class AuthModule {}

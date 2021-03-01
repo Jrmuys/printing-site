@@ -1,0 +1,41 @@
+<div class="page-wrapper">
+  <mat-card class="login-card">
+    <span *ngIf="sent && !error"
+      >Email sent Please check your inbox for your password reset link.
+    </span>
+    <span *ngIf="!sent && !isLoading" style="margin-left: 0px">
+      Enter your email to reset your password
+    </span>
+    <form (submit)="onSubmit(EmailForm)" #EmailForm="ngForm" *ngIf="!isLoading">
+      <mat-form-field>
+        <input
+          matInput
+          name="email"
+          ngModel
+          type="email"
+          placeholder="Email"
+          #emailInput="ngModel"
+          required
+          email
+        />
+        <mat-error *ngIf="emailInput.invalid"
+          >Please enter a valid email.</mat-error
+        >
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        *ngIf="!isLoading"
+        [disabled]="!EmailForm.valid"
+      >
+        Reset Password
+      </button>
+    </form>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+    <span style="color: red" *ngIf="sent && error">
+      {{ error }}
+    </span>
+  </mat-card>
+</div>

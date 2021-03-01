@@ -52,6 +52,21 @@ export class AuthService {
     return this.userListener$.getValue();
   }
 
+  requestReset(email: String) {
+    return this.httpClient.put(`${this.apiUrl}reset-request`, { email: email });
+  }
+
+  checkToken(token: String) {
+    return this.httpClient.put(`${this.apiUrl}reset-token`, { token: token });
+  }
+
+  resetPassword(token, password) {
+    return this.httpClient.put(`${this.apiUrl}reset-password`, {
+      token: token,
+      password: password,
+    });
+  }
+
   private setUser(user: User) {
     this.userListener$.next(user);
   }

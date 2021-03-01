@@ -1,0 +1,92 @@
+<div class="page-wrapper">
+  <mat-card class="login-card">
+    <span style="color: red" *ngIf="error && check"
+      >Token invalid or expired, please click
+      <a style="color: red" href="/auth/requestReset">here</a> to resend your
+      link.
+    </span>
+    <span *ngIf="!error && check && !reset"
+      >Token verified, please enter your new password here:
+    </span>
+    <span *ngIf="!error && reset"
+      >Your password has been updated, please
+      <a [routerLink]="['/auth']">login</a>
+    </span>
+    <form
+      (submit)="onSubmit()"
+      [formGroup]="passwordForm"
+      *ngIf="!isLoading && !error && !reset"
+    >
+      <mat-form-field>
+        <input
+          matInput
+          name="password"
+          placeholder="New password"
+          [type]="hide ? 'password' : 'text'"
+          formControlName="password"
+          title="Password"
+        />
+        <mat-icon matSuffix (click)="hide = !hide">{{
+          hide ? "visibility" : "visibility_off"
+        }}</mat-icon>
+        <mat-error *ngIf="passwordForm.get('password').hasError('required')">
+          Please enter your new password
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Confirm password"
+          [type]="hide ? 'password' : 'text'"
+          formControlName="confirmPassword"
+          required
+        />
+        <mat-icon matSuffix (click)="hide = !hide">{{
+          hide ? "visibility" : "visibility_off"
+        }}</mat-icon>
+        <mat-error
+          *ngIf="passwordForm.controls['confirmPassword'].errors?.required"
+        >
+          Please confirm your password.
+        </mat-error>
+        <mat-error
+          *ngIf="passwordForm.controls['confirmPassword'].errors?.minlength"
+        >
+          Password must me at least 8 characters long.
+        </mat-error>
+        <mat-hint
+          style="color: red"
+          *ngIf="
+            !passwordForm.controls['confirmPassword'].errors &&
+            passwordForm.errors?.mismatch &&
+            (passwordForm.controls['confirmPassword'].dirty ||
+              passwordForm.controls['confirmPassword'].touched)
+          "
+        >
+          Passwords must match</mat-hint
+        >
+      </mat-form-field>
+      <!-- 
+      <p
+        style="color: red; float: right"
+
+        Passwords don't match
+      </p> -->
+
+      <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        *ngIf="!isLoading && !error"
+        [disabled]="!passwordForm.valid"
+        style="margin-top: 4px"
+      >
+        Reset Password
+      </button>
+    </form>
+
+    <!-- <button mat-raised-button (click)="debug($event)">Debug</button> -->
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+  </mat-card>
+</div>
