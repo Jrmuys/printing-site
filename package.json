@@ -65,7 +65,7 @@
     "paypal-rest-sdk": "^1.8.1",
     "request": "^2.88.2",
     "rxjs": "~6.5.5",
-    "three": "^0.119.1",
+    "three": ">=0.125.0",
     "three-orbit-controls": "^82.1.0",
     "three-stl-loader": "^1.0.6",
     "tslib": "^2.0.0",
