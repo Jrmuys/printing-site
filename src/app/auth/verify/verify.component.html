@@ -4,7 +4,7 @@
       >Verification invalid, enter your email for another verification.
     </span>
     <form
-      (submit)="onSignup(SignupForm)"
+      (submit)="onSubmit(SignupForm)"
       #SignupForm="ngForm"
       *ngIf="!isLoading && error"
     >
@@ -36,6 +36,12 @@
     <mat-spinner *ngIf="isLoading"></mat-spinner>
     <span style="margin-left: 8px" *ngIf="!error"
       >Successfully activated, please <a [routerLink]="['/auth']">login</a> here
+    </span>
+    <span *ngIf="sent && !error">
+      Verification email resent, please check your inbox.
+    </span>
+    <span *ngIf="sent && error">
+      Error sending verification email, please try again later.
     </span>
   </mat-card>
 </div>
