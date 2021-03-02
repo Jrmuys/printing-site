@@ -5,12 +5,7 @@
     "ng": "ng",
     "server:watch": "nodemon backend",
     "server:start": "node backend/app.js",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "npm run build -- --prod",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
+    "start": "node backend/app.js",
     "debug": "nodemon --nolazy --inspect-brk=5252 backend"
   },
   "private": true,
@@ -96,5 +91,8 @@
     "ts-node": "^8.3.0",
     "tslint": "~6.1.0",
     "typescript": "^3.9.7"
-  }, "engines" : { "node" : ">=0.12" } 
+  },
+  "engines": {
+    "node": ">=0.12"
+  }
 }
