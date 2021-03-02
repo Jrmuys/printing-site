@@ -31,7 +31,7 @@ export class SignupComponent implements OnInit {
     console.log(user);
     this.authService.createUser(user).subscribe(
       () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/verifyprompt']);
       },
       (error) => {
         this.error = error;

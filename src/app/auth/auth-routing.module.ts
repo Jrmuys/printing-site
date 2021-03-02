@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RequestResetComponent } from './request-reset/request-reset.component';
 import { ResetComponent } from './reset/reset.component';
+import { VerifyPromptComponent } from './verify-prompt/verify-prompt.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'requestReset',
     component: RequestResetComponent,
+  },
+  {
+    path: 'verifyprompt',
+    component: VerifyPromptComponent,
   },
 ];
 

@@ -52,6 +52,12 @@ export class AuthService {
     return this.userListener$.getValue();
   }
 
+  resendVerification(email: String) {
+    return this.httpClient.put(`${this.apiUrl}resendActivation`, {
+      email: email,
+    });
+  }
+
   requestReset(email: String) {
     return this.httpClient.put(`${this.apiUrl}reset-request`, { email: email });
   }
