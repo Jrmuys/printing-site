@@ -12,49 +12,49 @@ import { CarouselComponent } from '../carousel/carousel.component';
 export class AboutComponent implements OnInit {
   @ViewChild(CarouselComponent) carousel: CarouselComponent;
 
-  apiUrl = 'https://thriftyprint.io/api/images/3DPrintPhotos/';
+  apiUrl = 'https://thriftyprint.io/api/images/3DPrintPhotos';
   animationType = AnimationType.Slide;
 
   slides: Slide[] = [
     {
       headline: 'Gauge Enclosure',
-      src: `${this.apiUrl}/box.jpg`,
+      src: `${this.apiUrl}/Box.jpg`,
     },
     {
       headline: 'Gauge Enclosure',
-      src: `${this.apiUrl}/gaugebox.jpg`,
+      src: `${this.apiUrl}/Gaugebox.jpg`,
     },
     {
       headline: 'Front Dome Mirror Lever Arm Replica',
-      src: `${this.apiUrl}/leverarm.jpg`,
+      src: `${this.apiUrl}/LeverArm.jpg`,
     },
     {
       headline: 'Ninebot Max Fender Support Arm',
-      src: `${this.apiUrl}/ninebot1.jpg`,
+      src: `${this.apiUrl}/Ninebot1.jpg`,
     },
     {
       headline: 'Ninebot Max Front Mud Flap',
-      src: `${this.apiUrl}/ninebot2.jpg`,
+      src: `${this.apiUrl}/Ninebot2.jpg`,
     },
     {
       headline: '3D Printed HTD Pulley',
-      src: `${this.apiUrl}/pulley.jpg`,
+      src: `${this.apiUrl}/Pulley.jpg`,
     },
     {
       headline: 'Hole Drill Template Tooling Fixture',
-      src: `${this.apiUrl}/template1.jpg`,
+      src: `${this.apiUrl}/Template1.jpg`,
     },
     {
       headline: 'Hole Drill Template Tooling Fixture',
-      src: `${this.apiUrl}/template2.jpg`,
+      src: `${this.apiUrl}/Template2.jpg`,
     },
     {
       headline: '3D Printed Vectored Intake Wheels',
-      src: `${this.apiUrl}/viws.jpg`,
+      src: `${this.apiUrl}/VIWs.jpg`,
     },
     {
       headline: '3D Printed Vectored Intake Wheels',
-      src: `${this.apiUrl}/viws2.jpg`,
+      src: `${this.apiUrl}/VIWs2.jpg`,
     },
   ];
 
