@@ -596,7 +596,7 @@ export class MainComponent implements OnInit, OnDestroy {
           console.error('Invalid Unit!');
       }
       if (this.debug) {
-        console.log(this.model, image, this.modelCost, this.boundingVolume);
+        console.log(this.model, image, this.totalCost, this.boundingVolume);
       }
       this.cartService.addCartItem(
         this.model,
