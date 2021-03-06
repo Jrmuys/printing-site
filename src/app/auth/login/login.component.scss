@@ -11,3 +11,22 @@
 mat-spinner {
   margin: auto;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  text-decoration: none;
+  color: #f0361d;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #f0361d;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: rgb(150, 0, 0);
+}

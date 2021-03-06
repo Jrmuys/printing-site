@@ -36,9 +36,10 @@
       <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">
         Login
       </button>
-      <span style="margin-left: 8px"
-        >Dont have an account?
-        <a [routerLink]="['/auth/signup']">signup</a> here
+      <span class="link" style="margin-left: 8px">
+        &nbsp;
+        <a [routerLink]="['/auth/signup']">signup for an account</a> &nbsp; |
+        &nbsp; <a href="/auth/requestReset">forgot password?</a>
       </span>
     </form>
   </mat-card>

@@ -25,6 +25,7 @@ export class LoginComponent {
         this.router.navigate(['']);
       },
       (error) => {
+        console.log(error);
         this.error = 'User not found';
         this.isLoading = false;
         console.log(this.error);
