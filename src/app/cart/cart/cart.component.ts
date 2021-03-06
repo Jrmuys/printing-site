@@ -141,6 +141,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.cartSub = this.cartService
       .getCartUpdateListener()
       .subscribe((cartData: { cart: CartItem[]; totalPrice: number }) => {
+        console.log('Cart service got updated cart!');
         this.isLoading = false;
         this.totalPrice = cartData.totalPrice;
         this.cart = cartData.cart;

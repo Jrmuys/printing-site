@@ -57,11 +57,13 @@ export class CartService {
     boundingVolume: number
   ) {
     console.log(model, image, price, boundingVolume);
+    let totalPrice = price * model.quantity;
+    if (totalPrice < 5) totalPrice = 5.0;
     const cartData = new FormData();
     cartData.append('model', JSON.stringify(model));
     cartData.append('price', price.toString());
     cartData.append('image', image, model.title);
-    cartData.append('itemTotal', (price * model.quantity).toString());
+    cartData.append('itemTotal', totalPrice.toString());
     cartData.append('units', model.units);
     cartData.append('boundingVolume', boundingVolume.toString());
     this.httpClient
@@ -71,6 +73,7 @@ export class CartService {
       )
       .subscribe((result) => {
         if (result) {
+          console.log(JSON.stringify(result));
           this.cart = result.cart;
           console.log('Cart test: ', this.cart);
           this.cartUpdated.next({
