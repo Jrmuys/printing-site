@@ -3,10 +3,14 @@
     <span style="margin-left: 8px; color: red" *ngIf="error"
       >Verification invalid, enter your email for another verification.
     </span>
+    <span *ngIf="!isLoading && !error && resend">
+      Enter your email to receive another verification email
+    </span>
+
     <form
       (submit)="onSubmit(SignupForm)"
       #SignupForm="ngForm"
-      *ngIf="!isLoading && error"
+      *ngIf="(!isLoading && error) || resend"
     >
       <mat-form-field>
         <input
@@ -27,17 +31,17 @@
         mat-raised-button
         color="accent"
         type="submit"
-        *ngIf="!isLoading && error"
+        *ngIf="(!isLoading && error) || resend"
         [disabled]="!SignupForm.valid"
       >
         Resend
       </button>
     </form>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
-    <span style="margin-left: 8px" *ngIf="!error"
+    <span style="margin-left: 8px" *ngIf="!error && !resend"
       >Successfully activated, please <a [routerLink]="['/auth']">login</a> here
     </span>
-    <span *ngIf="sent && !error">
+    <span *ngIf="sent && !error && !resend">
       Verification email resent, please check your inbox.
     </span>
     <span *ngIf="sent && error">

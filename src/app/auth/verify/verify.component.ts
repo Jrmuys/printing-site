@@ -14,6 +14,7 @@ export class VerifyComponent implements OnInit {
   error: Error;
   validForm: Boolean = false;
   sent: Boolean = false;
+  resend: Boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -49,18 +50,28 @@ export class VerifyComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     console.log(this.router.snapshot.paramMap.get('rdnString'));
-    this.authService
-      .verify(this.router.snapshot.paramMap.get('rdnString'))
-      .subscribe(
-        (result) => {
-          this.isLoading = false;
-          console.log('result: ', result);
-        },
-        (error) => {
-          this.isLoading = false;
-          this.error = error;
-          console.log('error found,', error);
-        }
-      );
+    console.log(this.router.snapshot.paramMap.get('rdnString') == 'resend');
+
+    if (this.router.snapshot.paramMap.get('rdnString') !== 'resend') {
+      this.resend = false;
+
+      this.authService
+        .verify(this.router.snapshot.paramMap.get('rdnString'))
+        .subscribe(
+          (result) => {
+            this.isLoading = false;
+            console.log('result: ', result);
+          },
+          (error) => {
+            this.isLoading = false;
+            this.error = error;
+            console.log('error found,', error);
+          }
+        );
+    } else {
+      this.isLoading = false;
+      this.resend = true;
+      this.error = null;
+    }
   }
 }
