@@ -42,6 +42,10 @@ export class CarouselComponent implements OnInit {
 
   ngOnInit() {
     this.preloadImages(); // for the demo
+    setInterval(() => {
+      this.onNextClick();
+      console.log('interval');
+    }, 5000);
   }
 
   preloadImages() {

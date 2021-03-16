@@ -18,6 +18,7 @@ import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.componen
 import { MatDialog } from '@angular/material/dialog';
 import { Vector3 } from 'three';
 import { User } from 'src/app/core/user.model';
+import { FormControl, Validators } from '@angular/forms';
 
 export interface Tile {
   color: string;
@@ -78,8 +79,11 @@ export class MainComponent implements OnInit, OnDestroy {
     cm: [32, 13.2, 15.4],
     in: [23, 13, 14],
   };
+  rateControl: FormControl;
 
   ngOnInit(): void {
+    // this.rateControl = new FormControl('', [Validators.max(100), Validators.min(0)]);
+
     this.userSub = this.authService.getUserListener().subscribe((user) => {
       if (user) {
         if (this.debug) {

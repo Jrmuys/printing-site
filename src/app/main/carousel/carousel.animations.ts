@@ -12,9 +12,9 @@ export enum AnimationType {
 // =========================
 export const slideIn = animation([
   style({ transform: 'translateX(-100%)' }),
-  animate('200ms ease-in', style({ transform: 'translateX(0%)' })),
+  animate('500ms ease-in', style({ transform: 'translateX(0%)' })),
 ]);
 
 export const slideOut = animation([
-  animate('200ms ease-in', style({ transform: 'translateX(0%)' })),
+  animate('500ms ease-in', style({ transform: 'translateX(0%)' })),
 ]);
