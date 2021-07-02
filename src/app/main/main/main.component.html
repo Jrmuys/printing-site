@@ -4,83 +4,45 @@
   <div class="w3-row-padding">
     <div class="w3-col s12 m8 l9">
       <mat-card id="engine">
-        <mat-progress-bar
-          *ngIf="loading"
-          mode="indeterminate"
-        ></mat-progress-bar>
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-        <div
-          id="drop_zone"
-          (drop)="dragOver = false; dropHandler($event)"
-          (dragover)="dragOver = true; dragOverHandler($event)"
-          (dragleave)="dragOver = false"
-          (dragend)="dragOver = false"
-          [ngClass]="{
+        <div id="drop_zone" (drop)="dragOver = false; dropHandler($event)"
+          (dragover)="dragOver = true; dragOverHandler($event)" (dragleave)="dragOver = false"
+          (dragend)="dragOver = false" [ngClass]="{
             on_dragover: dragOver,
             file_loaded: model.modelPath
-          }"
-        >
+          }">
           <p *ngIf="!model.modelPath" style="padding: 15px; text-align: center">
-            Drag one or more files to this Drop Zone ...
+            Drag an STL file to this Drop Zone...
           </p>
           <div class="engine-wrapper" width="100%">
-            <canvas
-              #rendererCanvas
-              id="renderCanvas"
-              width="100%"
-              height="100px"
-            ></canvas>
-            <p
-              style="position: absolute; top: 90%; left: 50%"
-              *ngIf="!printVolumeFit"
-              style="color: red"
-            >
+            <canvas #rendererCanvas id="renderCanvas" width="100%" height="100px"></canvas>
+            <p style="position: absolute; top: 90%; left: 50%" *ngIf="!printVolumeFit" style="color: red">
               Model does not fit print bed!
             </p>
           </div>
         </div>
         <div class="w3-row">
           <div class="w3-col w3-half">
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="filePicker.click()"
-            >
+            <button *ngIf="!editMode" mat-stroked-button type="button" (click)="filePicker.click()">
               UPLOAD STL
             </button>
-            <input
-              type="file"
-              style="visibility: hidden"
-              #filePicker
-              (change)="onFilePicked($event)"
-            />
+            <input type="file" style="visibility: hidden" #filePicker (change)="onFilePicked($event)" />
           </div>
 
           <div class="w-col w3-half">
-            <mat-radio-group
-              class="example-radio-group form-control"
-              style="float: right"
-              [(ngModel)]="graphics"
-              name="graphicsSelect"
-              (change)="onUnitSelect()"
-            >
+            <mat-radio-group class="example-radio-group form-control" style="float: right" [(ngModel)]="graphics"
+              name="graphicsSelect" (change)="onUnitSelect()">
               <p style="margin: 8px">Grpahics Quality:</p>
 
-              <mat-radio-button
-                class="example-radio-button"
-                [checked]="graphicsOption === graphics"
-                *ngFor="let graphicsOption of graphicsOptions"
-                [value]="graphicsOption"
-                (change)="onGraphicsPicked(graphicsOption)"
-              >
+              <mat-radio-button class="example-radio-button" [checked]="graphicsOption === graphics"
+                *ngFor="let graphicsOption of graphicsOptions" [value]="graphicsOption"
+                (change)="onGraphicsPicked(graphicsOption)">
                 {{ graphicsOption }}
               </mat-radio-button>
             </mat-radio-group>
           </div>
-          <mat-error
-            style="float: right; position: relative"
-            *ngIf="graphicsChanged"
-          >
+          <mat-error style="float: right; position: relative" *ngIf="graphicsChanged">
             Reload for change to take effect
           </mat-error>
         </div>
@@ -90,35 +52,18 @@
           <div class="form-group w3-row-padding">
             <div class="w3-col s12 l4">
               <mat-form-field>
-                <input
-                  class="form-control"
-                  matInput
-                  id="title"
-                  placeholder="Project Title"
-                  [(ngModel)]="model.title"
-                  name="title"
-                  [disabled]="!formDisplay"
-                  #title="ngModel"
-                  required
-                />
+                <input class="form-control" matInput id="title" placeholder="Project Title" [(ngModel)]="model.title"
+                  name="title" [disabled]="!formDisplay" #title="ngModel" required />
                 <mat-error *ngIf="title.valid"></mat-error>
               </mat-form-field>
             </div>
 
             <div class="w3-col s12 m7 l4">
-              <mat-radio-group
-                class="example-radio-group form-control"
-                [(ngModel)]="model.units"
-                name="unitsSelect"
-                (change)="onUnitSelect()"
-                [disabled]="!formDisplay"
-                ><p style="margin: 6px">Units:</p>
-                <mat-radio-button
-                  class="example-radio-button"
-                  [checked]="unit === model.units"
-                  *ngFor="let unit of units"
-                  [value]="unit"
-                >
+              <mat-radio-group class="example-radio-group form-control" [(ngModel)]="model.units" name="unitsSelect"
+                (change)="onUnitSelect()" [disabled]="!formDisplay">
+                <p style="margin: 6px">Units:</p>
+                <mat-radio-button class="example-radio-button" [checked]="unit === model.units"
+                  *ngFor="let unit of units" [value]="unit">
                   {{ unit }}
                 </mat-radio-button>
               </mat-radio-group>
@@ -129,46 +74,22 @@
               <mat-form-field>
                 <mat-label>Quantity</mat-label>
 
-                <input
-                  class="form-control"
-                  style="display: block"
-                  type="number"
-                  min="1"
-                  max="100"
-                  matInput
-                  [(ngModel)]="model.quantity"
-                  #quantity="ngModel"
-                  [disabled]="!formDisplay"
-                  (input)="updateTotal()"
-                  required
-                />
+                <input class="form-control" style="display: block" type="number" min="1" max="100" matInput
+                  [(ngModel)]="model.quantity" name="quantity" #quantity="ngModel" [disabled]="!formDisplay"
+                  (input)="updateTotal()" required />
                 <mat-error *ngIf="!quantity.valid">Enter a quantity</mat-error>
               </mat-form-field>
             </div>
             <div class="w3-col s12">
               <mat-form-field>
-                <textarea
-                  class="form-control"
-                  matInput
-                  [(ngModel)]="model.comment"
-                  name="comment"
-                  #comment="ngModel"
-                  [disabled]="!formDisplay"
-                  placeholder="Special instructions for printing"
-                ></textarea>
-                <mat-error *ngIf="!comment.valid"
-                  >Enter a valid comment</mat-error
-                >
+                <textarea class="form-control" matInput [(ngModel)]="model.comment" name="comment" #comment="ngModel"
+                  [disabled]="!formDisplay" placeholder="Special instructions for printing"></textarea>
+                <mat-error *ngIf="!comment.valid">Enter a valid comment</mat-error>
               </mat-form-field>
             </div>
             <div class="w3-col s12">
-              <button
-                mat-flat-button
-                color="accent"
-                type="submit"
-                [disabled]="!modelForm.form.valid"
-                (click)="updateModel()"
-              >
+              <button mat-flat-button color="accent" type="submit" [disabled]="!modelForm.form.valid"
+                (click)="updateModel()">
                 UPDATE
               </button>
             </div>
@@ -178,12 +99,36 @@
     </div>
     <div class="w3-col s12 m4 l3">
       <mat-card>
-        <mat-card-title>Order</mat-card-title>
-        <mat-card-content
-          >Your model will be printed on a MarkForged 3D Printer using Onyx
-          filament. Find out more on the
-          <a href="/about">about page.</a></mat-card-content
-        >
+
+        <div *ngIf="!editMode">
+          <mat-card-title>Order</mat-card-title>
+          <mat-card-content>Your model will be printed on a MarkForged 3D Printer using Onyx
+            filament. Find out more on the
+            <a href="/about">about page.</a>
+            <br>
+            <br>
+            <p>
+              You can view your model once you upload it. The model will be printed as you specify in the special
+              instructions, not necessarily how it appears in the model viewer.
+            </p>
+
+          </mat-card-content>
+        </div>
+        <div *ngIf="editMode">
+          <mat-card-title>Edit Mode</mat-card-title>
+          <mat-card-content>You are currently editing a cart item. When you are done, click the "Save in Cart" button
+            below. To exit edit mode press the exit button.
+            <br>
+            <br>
+            <button mat-flat-button color="accent" class="button" style="margin-bottom: 0" (click)="exitEditMode()">
+              <mat-icon> exit_to_app </mat-icon>
+              EXIT EDIT MODE
+            </button>
+          </mat-card-content>
+
+
+
+        </div>
       </mat-card>
       <mat-card>
         <mat-card-content>
@@ -196,10 +141,7 @@
           <p style="text-align: left">
             Dimentions:
 
-            <span
-              *ngIf="!loading && formDisplay"
-              style="float: right; font-weight: bold"
-            >
+            <span *ngIf="!loading && formDisplay" style="float: right; font-weight: bold">
               {{ boundingDimentions.x | number }} x
               {{ boundingDimentions.y | number }} x
               {{ boundingDimentions.x | number }} {{ model.units }}
@@ -208,10 +150,7 @@
           <p style="text-align: left">
             Surface Area:
 
-            <span
-              *ngIf="!loading && formDisplay"
-              style="float: right; font-weight: bold"
-            >
+            <span *ngIf="!loading && formDisplay" style="float: right; font-weight: bold">
               {{ surfaceArea | number }} {{ model.units }}^2
             </span>
           </p>
@@ -238,30 +177,24 @@
           <p>*Does not include shipping costs</p>
 
           <div>
-            <button
-              [disabled]="!formDisplay || !validModel || !printVolumeFit"
-              mat-flat-button
-              color="accent"
-              class="button"
-              style="margin-top: 16px"
-              (click)="addToCart()"
-              routerLink="/cart"
-            >
+            <button [disabled]="!formDisplay || !validModel || !printVolumeFit" [hidden]="editMode" mat-flat-button
+              color="accent" class="button" style="margin-top: 16px" (click)="addToCart()" routerLink="/cart">
               <mat-icon>play_arrow </mat-icon>
               ORDER NOW
             </button>
           </div>
           <div>
-            <button
-              [disabled]="!formDisplay || !validModel || !printVolumeFit"
-              mat-flat-button
-              color="accent"
-              class="button"
-              style="margin-bottom: 0"
-              (click)="addToCart()"
-            >
+            <button [disabled]="!formDisplay || !validModel || !printVolumeFit" [hidden]="editMode" mat-flat-button
+              color="accent" class="button" style="margin-bottom: 0" (click)="addToCart()">
               <mat-icon> add_shopping_cart </mat-icon>
               ADD TO CART
+            </button>
+          </div>
+          <div>
+            <button [disabled]="!formDisplay || !validModel || !printVolumeFit" [hidden]="!editMode" mat-flat-button
+              color="accent" class="button" style="margin-bottom: 0" (click)="updateInCart()">
+              <mat-icon> add_shopping_cart </mat-icon>
+              SAVE IN CART
             </button>
           </div>
         </mat-card-content>

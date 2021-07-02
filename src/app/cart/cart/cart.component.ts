@@ -37,7 +37,7 @@ export class CartComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private httpClient: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   private authSub: Subscription;
   private cartSub: Subscription;
@@ -49,6 +49,7 @@ export class CartComponent implements OnInit, OnDestroy {
     'title',
     'quantity',
     'price',
+    'edit',
     'delete',
   ];
   shippingCost: number = 4.99;
@@ -80,7 +81,7 @@ export class CartComponent implements OnInit, OnDestroy {
             let finalTotal: number =
               Math.round(
                 (this.totalPrice + this.totalPrice * 0.05 + this.shippingCost) *
-                  100
+                100
               ) / 100;
             console.log(finalTotal);
             return actions.order.create({
@@ -178,7 +179,7 @@ export class CartComponent implements OnInit, OnDestroy {
       cartItemToUpdate.model.quantity * cartItemToUpdate.price;
     console.log('Updating cart...');
     let cart: CartItem[] = this.cart.map((cartItem) =>
-      cartItem.model.id === cartItem.model.modelPath
+      cartItem.model.id === cartItemToUpdate.model.id
         ? cartItemToUpdate
         : cartItem
     );
@@ -187,6 +188,10 @@ export class CartComponent implements OnInit, OnDestroy {
     this.cartService.updateCartItem(cart).subscribe(() => {
       this.cartService.getCart();
     });
+  }
+
+  onEdit(cartItemToUpdate: CartItem) {
+    this.router.navigate([`/edit/${cartItemToUpdate.model.id}`]);
   }
 
   onDelete(cartItemToDelete: CartItem) {

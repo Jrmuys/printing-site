@@ -9,7 +9,7 @@ import { Model } from '../model.model';
   providedIn: 'root',
 })
 export class CartService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
   private apiUrl: string = '/api/cart';
   private cart: CartItem[];
   private cartUpdated = new Subject<{ cart: CartItem[]; totalPrice: number }>();
@@ -40,6 +40,18 @@ export class CartService {
         this.cartCount = this.cart.length;
         this.cartItemCount.next(this.cart.length);
       });
+  }
+
+  public getCartItem(id: String): CartItem {
+    let foundElement: CartItem = null;
+    this.cart.forEach((element) => {
+      console.log("Comparing: ", element.model.id, " and ", id)
+      if (element.model.id == id) {
+        console.log("Found matching ID");
+        foundElement = element;
+      }
+    });
+    return foundElement;
   }
 
   public clearCart() {
@@ -93,4 +105,17 @@ export class CartService {
     console.log('updating cart...');
     return this.httpClient.post(this.apiUrl + '/update', updatedCart);
   }
+
+  updateCartItemSingular(cartItem: CartItem) {
+    let updateCartObservable;
+    this.cart.forEach((item, index, array) => {
+      if (item.model.id == cartItem.model.id) {
+        array[index] = cartItem;
+        updateCartObservable = this.updateCartItem(array);
+        return;
+      }
+    });
+    return updateCartObservable;
+  }
+
 }

@@ -5,10 +5,16 @@ import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   {
+    path: 'edit/:id',
+    pathMatch: 'full',
+    component: MainComponent,
+  },
+  {
     path: '',
     pathMatch: 'full',
     component: MainComponent,
   },
+
   {
     path: 'about',
     pathMatch: 'full',
@@ -20,4 +26,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MainRoutingModule {}
+export class MainRoutingModule { }

@@ -17,6 +17,7 @@ import { RoleGuardService } from './core/auth/role.guard';
 import { AuthGuardService } from './core/auth/auth.guard';
 import { CommonModule } from '@angular/common';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -31,6 +32,8 @@ import { MatCarouselModule } from '@ngbmodule/material-carousel';
     CoreModule,
     MainModule,
     CartModule,
+    ToastrModule,
+    ToastrModule.forRoot(), // ToastrModule added
     MatCarouselModule.forRoot(),
   ],
   providers: [
@@ -48,4 +51,4 @@ import { MatCarouselModule } from '@ngbmodule/material-carousel';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

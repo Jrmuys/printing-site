@@ -1,4 +1,5 @@
-import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { Observable, Subscription } from 'rxjs';
 import { CartService } from './../../core/cart/cart.service';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { Model } from '../../core/model.model';
@@ -19,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Vector3 } from 'three';
 import { User } from 'src/app/core/user.model';
 import { FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router'
+import { CartItem } from 'src/app/core/cart/cart-item';
 
 export interface Tile {
   color: string;
@@ -40,8 +43,10 @@ export class MainComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private cartService: CartService,
     private signInDialog: MatDialog,
-    private router: Router
-  ) {}
+    private router: Router,
+    private toastr: ToastrService,
+    private route: ActivatedRoute
+  ) { }
 
   loading = true;
   private unitSub;
@@ -55,6 +60,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   debug: boolean = true;
 
+  editMode: Boolean;
   model: Model;
   modelCost;
   modelVolume;
@@ -135,8 +141,25 @@ export class MainComponent implements OnInit, OnDestroy {
       user: null,
       comment: '',
     };
+    var url: string = this.router.url;
+    if (url.substr(0, 5) == "/edit") {
+      this.editMode = true;
+      let editId: string = this.route.snapshot.paramMap.get('id');
+      if (editId) {
+        this.uploadService
+          .getModel(editId)
+          .subscribe((res) => {
+            this.loadModel(res);
+          });
+      }
 
-    this.getStoredModel();
+
+    } else {
+      this.editMode = false;
+      this.getStoredModel();
+
+    }
+
     this.formDisplay = false;
     this.unitSub = this.mainService.unitSubject$.subscribe(
       (data) => {
@@ -233,6 +256,10 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
+  showSuccess() {
+    this.toastr.success('Model Loaded');
+  }
+
   ngOnDestroy(): void {
     this.unitSub.unsubscribe();
     this.userSub.unsubscribe();
@@ -243,8 +270,8 @@ export class MainComponent implements OnInit, OnDestroy {
     if (this.debug) {
       console.log(
         '(main-component) --- onUnitSelect(): Units have changed to ' +
-          this.model.units +
-          '!'
+        this.model.units +
+        '!'
       );
     }
     this.mainService.unitChange(this.model.units);
@@ -255,7 +282,9 @@ export class MainComponent implements OnInit, OnDestroy {
       Math.round(this.modelCost * this.model.quantity * 100) / 100;
   }
 
+
   onFilePicked(event: Event) {
+    this.validModel = false;
     this.setGraphics(localStorage.getItem('graphics') != 'low');
     this.loading = true;
 
@@ -281,6 +310,8 @@ export class MainComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           this.loadModel(result);
+          this.uploadTest(result);
+
         },
         (err) => {
           if (this.debug) {
@@ -291,7 +322,20 @@ export class MainComponent implements OnInit, OnDestroy {
       );
   }
 
+  exitEditMode() {
+    this.router.navigate(['']);
+  }
+
   dropHandler(ev) {
+
+    if (this.editMode) {
+      console.log("Edit mode detected, no uploading files");
+      this.toastr.error(`Can't upload files`, `Editing Cart Item`);
+      return;
+    }
+
+    this.validModel = false;
+
     if (this.debug) {
       console.log('(main-component) File(s) dropped');
     }
@@ -324,6 +368,7 @@ export class MainComponent implements OnInit, OnDestroy {
           .subscribe(
             (result) => {
               this.loadModel(result);
+              this.uploadTest(result);
             },
             (err) => {
               if (this.debug) {
@@ -336,6 +381,15 @@ export class MainComponent implements OnInit, OnDestroy {
     }
 
     this.onFilePicked(ev);
+  }
+  uploadTest(result: { _id: string; user: User; title: string; filePath: string; units: string; comment: string; quantity: string; }) {
+    this.engServ.testLoadSTL(result.filePath).then((valid) => {
+      if (valid) {
+        this.toastr.success('Model Uploaded');
+      } else {
+        this.toastr.error('Please upload a valid STL', 'Upload failure');
+      }
+    });
   }
 
   dragOverHandler(ev) {
@@ -457,6 +511,8 @@ export class MainComponent implements OnInit, OnDestroy {
       this.model.quantity,
       this.model.user
     );
+
+
   }
 
   storeModel(model: Model) {
@@ -493,9 +549,10 @@ export class MainComponent implements OnInit, OnDestroy {
     units: string;
     comment: string;
     quantity: string;
-  }) {
+  }): void {
     this.engServ.testLoadSTL(res.filePath).then((valid) => {
       if (valid) {
+        this.validModel = true;
         if (this.debug) {
           console.log('(main-component) STL is valid', valid);
         }
@@ -547,6 +604,7 @@ export class MainComponent implements OnInit, OnDestroy {
         if (this.debug) {
           console.log(valid);
         }
+        this.validModel = false;
         console.error('STL is invalid');
       }
     });
@@ -570,6 +628,59 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.engServ.setGraphics(fancy);
   }
+
+  updateInCart() {
+    this.updateModel();
+    if (!this.authService.getUser()) {
+      const dialogRef = this.signInDialog.open(SignInDialogComponent);
+      dialogRef.afterClosed().subscribe((result) => {
+        result ? this.router.navigate(['/login']) : console.log(closed);
+      });
+    } else {
+      switch (this.model.units) {
+        case 'mm':
+          this.boundingVolume *= 6.10237e-5;
+          break;
+        case 'cm':
+          this.boundingVolume *= 0.0610237;
+          break;
+        case 'in':
+          break;
+        default:
+          console.error('Invalid Unit!');
+      }
+      if (this.debug) {
+        console.log(this.model, this.totalCost, this.boundingVolume);
+      }
+
+      let cartItem: CartItem = this.cartService.getCartItem(this.model.id);
+      console.log(cartItem);
+      if (cartItem) {
+        cartItem.itemTotal = this.totalCost;
+        cartItem.model = this.model;
+        cartItem.price = this.modelCost;
+        cartItem.units = this.model.units;
+        cartItem.boundingVolume = this.boundingVolume.toString();
+        let cartObservable: Observable<Object> = this.cartService.updateCartItemSingular(cartItem)
+        if (cartObservable) {
+          cartObservable.subscribe(() => {
+            this.cartService.getCart();
+            this.toastr.success('Cart Updated');
+            this.router.navigate(['/cart']);
+          })
+
+        } else {
+          this.toastr.warning("Could not update cart item");
+        }
+
+      } else {
+        console.warn("Could not update cart item");
+        this.toastr.warning('Please try again later', 'Could Not Update Cart');
+
+      }
+    }
+  }
+
 
   addToCart() {
     this.updateModel();
@@ -610,6 +721,8 @@ export class MainComponent implements OnInit, OnDestroy {
       );
       this.cartService.getCart();
       this.resetModel();
+      this.toastr.success('Added to Cart');
+
     }
   }
 

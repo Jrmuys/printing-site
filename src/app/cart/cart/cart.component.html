@@ -1,9 +1,6 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 
-<div
-  class="w3-row-padding"
-  style="max-width: 1250px; margin: auto; padding-top: 16px;"
->
+<div class="w3-row-padding" style="max-width: 1250px; margin: auto; padding-top: 16px;">
   <div class="w3-col s12 l9">
     <mat-card>
       <a routerLink="" mat-flat-button color="primary">
@@ -31,12 +28,7 @@
           <th mat-header-cell *matHeaderCellDef>Quantity</th>
           <td mat-cell *matCellDef="let element">
             <mat-form-field class="example-form-field">
-              <input
-                type="number"
-                matInput
-                (change)="onUpdate(element)"
-                [(ngModel)]="element.model.quantity"
-              />
+              <input type="number" matInput (change)="onUpdate(element)" [(ngModel)]="element.model.quantity" />
             </mat-form-field>
           </td>
           <td mat-footer-cell *matFooterCellDef></td>
@@ -53,25 +45,27 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="delete">
+        <ng-container matColumnDef="edit">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <button
-              mat-stroked-button
-              color="warn"
-              (click)="onDelete(element)"
-              class="delete-button"
-            >
-              DELETE
+            <button mat-flat-button color="primary" (click)="onEdit(element)" class="edit-button">
+              EDIT
             </button>
           </td>
           <td mat-footer-cell *matFooterCellDef>
-            <button
-              mat-flat-button
-              color="warn"
-              (click)="onClear()"
-              class="delete-button"
-            >
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-stroked-button color="warn" (click)="onDelete(element)" class="delete-button">
+              DELETE
+            </button>
+          </td>
+
+          <td mat-footer-cell *matFooterCellDef>
+            <button mat-flat-button color="warn" (click)="onClear()" class="delete-button">
               CLEAR
             </button>
           </td>
