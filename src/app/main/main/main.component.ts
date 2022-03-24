@@ -92,27 +92,27 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.userSub = this.authService.getUserListener().subscribe((user) => {
       if (user) {
-        if (this.debug) {
-          console.log('(main-component) test USEUSEUE');
-        }
+
+        this.debug && console.log('(main-component) test USEUSEUE');
+
         if (user.roles.find((role) => role === 'freeUser')) {
-          if (this.debug) {
-            console.log('(main-component) Free user');
-          }
+
+          this.debug && console.log('(main-component) Free user');
+
           this.freeUser = true;
         } else {
           this.freeUser = false;
-          if (this.debug) {
-            console.log('(main-component) Not a free user');
-          }
+
+          this.debug && console.log('(main-component) Not a free user');
+
         }
-        if (this.debug) {
-          console.log(
-            `Old user:${JSON.stringify(this.user)}, New user: ${JSON.stringify(
-              user
-            )}`
-          );
-        }
+
+        this.debug && console.log(
+          `Old user:${JSON.stringify(this.user)}, New user: ${JSON.stringify(
+            user
+          )}`
+        );
+
         if (this.user && !user) {
           this.resetModel();
         }
@@ -128,9 +128,9 @@ export class MainComponent implements OnInit, OnDestroy {
       localStorage.setItem('graphics', 'fancy');
       this.graphics = 'fancy';
     }
-    if (this.debug) {
-      console.log('(main-component) INIT');
-    }
+
+    this.debug && console.log('(main-component) INIT');
+
     this.loading = true;
     this.model = {
       id: null,
@@ -175,36 +175,36 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   private unitChangeCB(data: string) {
-    if (this.debug) {
-      console.log(
-        '(main-component) Changing Units \n================================'
-      );
-    }
+
+    this.debug && console.log(
+      '(main-component) Changing Units \n================================'
+    );
+
     if (this.model.id != null) {
-      if (this.debug) {
-        console.log('(main-component) --- ucCB: model exists');
-      }
-      // if (this.debug) { console.log(this.user.roles);
-      if (this.debug) {
-        console.log('(main-component) --- ucCB: doing fit check...');
-      }
+
+      this.debug && console.log('(main-component) --- ucCB: model exists');
+
+      // if (this.debug) { this.debug && console.log(this.user.roles);
+
+      this.debug && console.log('(main-component) --- ucCB: doing fit check...');
+
       if (this.fitCheck()) {
-        if (this.debug) {
-          console.log('(main-component) This fits...');
-        }
+
+        this.debug && console.log('(main-component) This fits...');
+
         this.formDisplay = true;
         this.printVolumeFit = true;
       } else {
-        if (this.debug) {
-          console.log("(main-component) --- ucCB: This doesn't...");
-        }
+
+        this.debug && console.log("(main-component) --- ucCB: This doesn't...");
+
 
         this.formDisplay = true;
         this.printVolumeFit = false;
       }
-      if (this.debug) {
-        console.log('(main-component) --- ucCB: checking volume/sa for units');
-      }
+
+      this.debug && console.log('(main-component) --- ucCB: checking volume/sa for units');
+
       switch (this.model.units) {
         case 'mm':
           this.modelVolumeCm = this.modelVolume / 1000;
@@ -221,13 +221,13 @@ export class MainComponent implements OnInit, OnDestroy {
         default:
           console.error('--- ucCB: Invalid Unit!');
       }
-      if (this.debug) {
-        console.log('(main-component) --- ucCB: Free user? ', this.freeUser);
-      }
+
+      this.debug && console.log('(main-component) --- ucCB: Free user? ', this.freeUser);
+
       if (!this.freeUser) {
-        if (this.debug) {
-          console.log('(main-component) --- ucCB: Switching units:' + data);
-        }
+
+        this.debug && console.log('(main-component) --- ucCB: Switching units:' + data);
+
         this.modelUnit = data;
 
         let plasticVolume =
@@ -248,11 +248,11 @@ export class MainComponent implements OnInit, OnDestroy {
         this.totalCost = 5.0;
       }
     } else {
-      if (this.debug) {
-        console.log(
-          '(main-component) --- ucCB: model does not exist, skipping callback'
-        );
-      }
+
+      this.debug && console.log(
+        '(main-component) --- ucCB: model does not exist, skipping callback'
+      );
+
     }
   }
 
@@ -267,13 +267,13 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onUnitSelect() {
-    if (this.debug) {
-      console.log(
-        '(main-component) --- onUnitSelect(): Units have changed to ' +
-        this.model.units +
-        '!'
-      );
-    }
+
+    this.debug && console.log(
+      '(main-component) --- onUnitSelect(): Units have changed to ' +
+      this.model.units +
+      '!'
+    );
+
     this.mainService.unitChange(this.model.units);
   }
 
@@ -288,16 +288,16 @@ export class MainComponent implements OnInit, OnDestroy {
     this.setGraphics(localStorage.getItem('graphics') != 'low');
     this.loading = true;
 
-    if (this.debug) {
-      console.log('(main-component) --- onFilePicked(): File picked');
-    }
+
+    this.debug && console.log('(main-component) --- onFilePicked(): File picked');
+
     const file = (event.target as HTMLInputElement).files[0];
     const name = file.name.split('.')[0];
 
     var progress = 0;
-    if (this.debug) {
-      console.log('(main-component) --- onFilePicked(): file:', file);
-    }
+
+    this.debug && console.log('(main-component) --- onFilePicked(): file:', file);
+
     this.uploadService
       .upload(
         name,
@@ -314,9 +314,9 @@ export class MainComponent implements OnInit, OnDestroy {
 
         },
         (err) => {
-          if (this.debug) {
-            console.log('(main-component) --- onFilePicked(): error');
-          }
+
+          this.debug && console.log('(main-component) --- onFilePicked(): error');
+
           console.error(err);
         }
       );
@@ -329,16 +329,16 @@ export class MainComponent implements OnInit, OnDestroy {
   dropHandler(ev) {
 
     if (this.editMode) {
-      console.log("Edit mode detected, no uploading files");
+      this.debug && console.log("Edit mode detected, no uploading files");
       this.toastr.error(`Can't upload files`, `Editing Cart Item`);
       return;
     }
 
     this.validModel = false;
 
-    if (this.debug) {
-      console.log('(main-component) File(s) dropped');
-    }
+
+    this.debug && console.log('(main-component) File(s) dropped');
+
 
     // Prevent default behavior (Prevent file from being opened)
     ev.preventDefault();
@@ -348,14 +348,14 @@ export class MainComponent implements OnInit, OnDestroy {
 
       if (ev.dataTransfer.items[0].kind === 'file') {
         var file = ev.dataTransfer.items[0].getAsFile();
-        if (this.debug) {
-          console.log('(main-component) test');
-        }
-        if (this.debug) {
-          console.log(
-            '(main-component) ... file[' + 0 + '].name = ' + file.name
-          );
-        }
+
+        this.debug && console.log('(main-component) test');
+
+
+        this.debug && console.log(
+          '(main-component) ... file[' + 0 + '].name = ' + file.name
+        );
+
         this.uploadService
           .upload(
             file.name,
@@ -371,9 +371,9 @@ export class MainComponent implements OnInit, OnDestroy {
               this.uploadTest(result);
             },
             (err) => {
-              if (this.debug) {
-                console.log('(main-component) error');
-              }
+
+              this.debug && console.log('(main-component) error');
+
               console.error(err);
             }
           );
@@ -393,115 +393,115 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   dragOverHandler(ev) {
-    if (this.debug) {
-      console.log('(main-component) File(s) in drop zone');
-    }
+
+    this.debug && console.log('(main-component) File(s) in drop zone');
+
 
     // Prevent default behavior (Prevent file from being opened)
     ev.preventDefault();
   }
 
   fitCheck(): boolean {
-    if (this.debug) {
-      console.log('(main-component) --- fitCheck():', this.model.id);
-    }
+
+    this.debug && console.log('(main-component) --- fitCheck():', this.model.id);
+
     if (this.model.id) {
       const dimensions = this.engServ.getBoundingBoxDimensions();
-      if (this.debug) {
-        console.log(
-          `(main-component) --- fitCheck(): Checking fit...\nDimensions: ${JSON.stringify(
-            dimensions
-          )}\nUnits: ${JSON.stringify(
-            this.model.units
-          )}\nPrint Volume: ${JSON.stringify(this.markforgedPrintVolume)}`
-        );
-      }
+
+      this.debug && console.log(
+        `(main-component) --- fitCheck(): Checking fit...\nDimensions: ${JSON.stringify(
+          dimensions
+        )}\nUnits: ${JSON.stringify(
+          this.model.units
+        )}\nPrint Volume: ${JSON.stringify(this.markforgedPrintVolume)}`
+      );
+
       let fit: boolean;
-      if (this.debug) {
-        console.log(this.model.units);
-      }
+
+      this.debug && console.log(this.model.units);
+
       switch (this.model.units) {
         case 'mm':
-          if (this.debug) {
-            console.log("(main-component) --- fitCheck(): It's mm!");
-          }
+
+          this.debug && console.log("(main-component) --- fitCheck(): It's mm!");
+
           if (
             dimensions.x > this.markforgedPrintVolume.mm[0] ||
             dimensions.y > this.markforgedPrintVolume.mm[1] ||
             dimensions.z > this.markforgedPrintVolume.mm[2]
           ) {
-            if (this.debug) {
-              console.log("(main-component) --- fitCheck(): Doesn't fit :(");
-            }
+
+            this.debug && console.log("(main-component) --- fitCheck(): Doesn't fit :(");
+
 
             fit = false;
           } else {
-            if (this.debug) {
-              console.log('(main-component) --- fitCheck(): Does fit :)');
-            }
+
+            this.debug && console.log('(main-component) --- fitCheck(): Does fit :)');
+
             fit = true;
           }
           break;
         case 'cm':
-          if (this.debug) {
-            console.log('(main-component) --- fitCheck(): Units are cm');
-          }
+
+          this.debug && console.log('(main-component) --- fitCheck(): Units are cm');
+
           if (
             dimensions.x > this.markforgedPrintVolume.cm[0] ||
             dimensions.y > this.markforgedPrintVolume.cm[1] ||
             dimensions.z > this.markforgedPrintVolume.cm[2]
           ) {
             fit = false;
-            if (this.debug) {
-              console.log("(main-component) --- fitCheck(): doesn't fit");
-            }
+
+            this.debug && console.log("(main-component) --- fitCheck(): doesn't fit");
+
           } else {
             fit = true;
-            if (this.debug) {
-              console.log('(main-component) --- fitCheck(): fits');
-            }
+
+            this.debug && console.log('(main-component) --- fitCheck(): fits');
+
           }
           break;
         case 'in':
-          if (this.debug) {
-            console.log('(main-component) --- fitCheck(): units are in');
-          }
+
+          this.debug && console.log('(main-component) --- fitCheck(): units are in');
+
           if (
             dimensions.x > this.markforgedPrintVolume.in[0] ||
             dimensions.y > this.markforgedPrintVolume.in[1] ||
             dimensions.z > this.markforgedPrintVolume.in[2]
           ) {
             fit = false;
-            if (this.debug) {
-              console.log("(main-component) --- fitCheck(): doesn't fit");
-            }
+
+            this.debug && console.log("(main-component) --- fitCheck(): doesn't fit");
+
           } else {
             fit = true;
-            if (this.debug) {
-              console.log('(main-component) --- fitCheck(): fits');
-            }
+
+            this.debug && console.log('(main-component) --- fitCheck(): fits');
+
           }
           break;
       }
-      if (this.debug) {
-        console.log(
-          '(main-component) --- fitCheck(): END OF FIT\n==============================\n Result: ',
-          fit
-        );
-      }
+
+      this.debug && console.log(
+        '(main-component) --- fitCheck(): END OF FIT\n==============================\n Result: ',
+        fit
+      );
+
       return fit;
     } else {
-      if (this.debug) {
-        console.log('(main-component) --- fitCheck(): no model found');
-      }
+
+      this.debug && console.log('(main-component) --- fitCheck(): no model found');
+
       return true;
     }
   }
 
   updateModel() {
-    if (this.debug) {
-      console.log('(main-component) updating model');
-    }
+
+    this.debug && console.log('(main-component) updating model');
+
     this.uploadService.updateModel(
       this.model.id,
       this.model.title,
@@ -518,9 +518,9 @@ export class MainComponent implements OnInit, OnDestroy {
   storeModel(model: Model) {
     localStorage.setItem('modelSaved', 'true');
     localStorage.setItem('id', model.id);
-    if (this.debug) {
-      console.log(model.id);
-    }
+
+    this.debug && console.log(model.id);
+
   }
 
   getStoredModel() {
@@ -534,9 +534,9 @@ export class MainComponent implements OnInit, OnDestroy {
           this.loadModel(res);
         });
     } else {
-      if (this.debug) {
-        console.log('(main-component) No model saved');
-      }
+
+      this.debug && console.log('(main-component) No model saved');
+
       this.loading = false;
     }
   }
@@ -553,14 +553,10 @@ export class MainComponent implements OnInit, OnDestroy {
     this.engServ.testLoadSTL(res.filePath).then((valid) => {
       if (valid) {
         this.validModel = true;
-        if (this.debug) {
-          console.log('(main-component) STL is valid', valid);
-        }
-        if (this.debug) {
-          console.log(
-            '(main-component) Getting model with info: ' + JSON.stringify(res)
-          );
-        }
+        this.debug && console.log('(main-component) STL is valid', valid);
+        this.debug && console.log(
+          '(main-component) Getting model with info: ' + JSON.stringify(res)
+        );
         this.model = {
           id: res._id,
           title: res.title,
@@ -601,9 +597,7 @@ export class MainComponent implements OnInit, OnDestroy {
           }
         );
       } else {
-        if (this.debug) {
-          console.log(valid);
-        }
+        this.debug && console.log(valid);
         this.validModel = false;
         console.error('STL is invalid');
       }
@@ -612,19 +606,15 @@ export class MainComponent implements OnInit, OnDestroy {
 
   onGraphicsPicked(value: string) {
     this.graphicsChanged = true;
-    if (this.debug) {
-      console.log('(main-component) setting Graphics to ', value);
-    }
+    this.debug && console.log('(main-component) setting Graphics to ', value);
+
     localStorage.setItem('graphics', value);
   }
 
   setGraphics(fancy: boolean) {
-    if (this.debug) {
-      console.log('(main-component) setting graphics... ');
-    }
-    if (this.debug) {
-      console.log('(main-component) to', fancy);
-    }
+    this.debug && console.log('(main-component) setting graphics... ');
+    this.debug && console.log('(main-component) to', fancy);
+
 
     this.engServ.setGraphics(fancy);
   }
@@ -634,7 +624,7 @@ export class MainComponent implements OnInit, OnDestroy {
     if (!this.authService.getUser()) {
       const dialogRef = this.signInDialog.open(SignInDialogComponent);
       dialogRef.afterClosed().subscribe((result) => {
-        result ? this.router.navigate(['/login']) : console.log(closed);
+        result ? this.router.navigate(['/login']) : this.debug && console.log(closed);
       });
     } else {
       switch (this.model.units) {
@@ -649,12 +639,12 @@ export class MainComponent implements OnInit, OnDestroy {
         default:
           console.error('Invalid Unit!');
       }
-      if (this.debug) {
-        console.log(this.model, this.totalCost, this.boundingVolume);
-      }
+
+      this.debug && console.log(this.model, this.totalCost, this.boundingVolume);
+
 
       let cartItem: CartItem = this.cartService.getCartItem(this.model.id);
-      console.log(cartItem);
+      this.debug && console.log(cartItem);
       if (cartItem) {
         cartItem.itemTotal = this.totalCost;
         cartItem.model = this.model;
@@ -684,19 +674,19 @@ export class MainComponent implements OnInit, OnDestroy {
 
   addToCart() {
     this.updateModel();
-    if (this.debug) {
-      console.log(this.authService.getUser());
-    }
+
+    this.debug && console.log(this.authService.getUser());
+
     if (!this.authService.getUser()) {
       const dialogRef = this.signInDialog.open(SignInDialogComponent);
       dialogRef.afterClosed().subscribe((result) => {
-        result ? this.router.navigate(['/login']) : console.log(closed);
+        result ? this.router.navigate(['/login']) : this.debug && console.log(closed);
       });
     } else {
       // let boundingVolume = this.engServ.getBoundingBoxVolume();
-      if (this.debug) {
-        console.log('(main-component) bounding volume: ', this.boundingVolume);
-      }
+
+      this.debug && console.log('(main-component) bounding volume: ', this.boundingVolume);
+
       let image = this.engServ.snapshot();
       switch (this.model.units) {
         case 'mm':
@@ -710,9 +700,9 @@ export class MainComponent implements OnInit, OnDestroy {
         default:
           console.error('Invalid Unit!');
       }
-      if (this.debug) {
-        console.log(this.model, image, this.totalCost, this.boundingVolume);
-      }
+
+      this.debug && console.log(this.model, image, this.totalCost, this.boundingVolume);
+
       this.cartService.addCartItem(
         this.model,
         image,
